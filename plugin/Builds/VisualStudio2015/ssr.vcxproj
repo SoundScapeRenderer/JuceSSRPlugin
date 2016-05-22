@@ -131,6 +131,54 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\audio\ssr code\audioplayer.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\audiorecorder.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\configuration.cpp"/>
+    <ClCompile Include="..\..\..\audio\ssr code\directionalpoint.cpp"/>
+    <ClCompile Include="..\..\..\audio\ssr code\orientation.cpp"/>
+    <ClCompile Include="..\..\..\audio\ssr code\position.cpp"/>
+    <ClCompile Include="..\..\..\audio\ssr code\razor-ahrs\Example.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\razor-ahrs\RazorAHRS.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\scene.cpp"/>
+    <ClCompile Include="..\..\..\audio\ssr code\ssr_aap.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\ssr_binaural.cpp"/>
+    <ClCompile Include="..\..\..\audio\ssr code\ssr_brs.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\ssr_generic.cpp"/>
+    <ClCompile Include="..\..\..\audio\ssr code\ssr_global.cpp"/>
+    <ClCompile Include="..\..\..\audio\ssr code\ssr_nfc_hoa.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\ssr_vbap.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\ssr_wfs.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\trackerintersense.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\trackerpolhemus.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\trackerrazor.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\trackervrpn.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\xmlparser.cpp"/>
     <ClCompile Include="..\..\..\audio\src\PluginProcessor.cpp"/>
     <ClCompile Include="..\..\..\audio\src\SynthParams.cpp"/>
     <ClCompile Include="..\..\..\gui\PluginEditor.cpp"/>
@@ -1270,6 +1318,70 @@
     <ClCompile Include="..\..\..\juce\modules\juce_audio_plugin_client\VST3\juce_VST3_Wrapper.cpp"/>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\audio\apf\biquad.h"/>
+    <ClInclude Include="..\..\..\audio\apf\blockdelayline.h"/>
+    <ClInclude Include="..\..\..\audio\apf\combine_channels.h"/>
+    <ClInclude Include="..\..\..\audio\apf\commandqueue.h"/>
+    <ClInclude Include="..\..\..\audio\apf\container.h"/>
+    <ClInclude Include="..\..\..\audio\apf\convolver.h"/>
+    <ClInclude Include="..\..\..\audio\apf\default_thread_policy.h"/>
+    <ClInclude Include="..\..\..\audio\apf\denormalprevention.h"/>
+    <ClInclude Include="..\..\..\audio\apf\dummy_thread_policy.h"/>
+    <ClInclude Include="..\..\..\audio\apf\fftwtools.h"/>
+    <ClInclude Include="..\..\..\audio\apf\iterator.h"/>
+    <ClInclude Include="..\..\..\audio\apf\jack_policy.h"/>
+    <ClInclude Include="..\..\..\audio\apf\jackclient.h"/>
+    <ClInclude Include="..\..\..\audio\apf\lockfreefifo.h"/>
+    <ClInclude Include="..\..\..\audio\apf\math.h"/>
+    <ClInclude Include="..\..\..\audio\apf\mextools.h"/>
+    <ClInclude Include="..\..\..\audio\apf\mimoprocessor.h"/>
+    <ClInclude Include="..\..\..\audio\apf\mimoprocessor_file_io.h"/>
+    <ClInclude Include="..\..\..\audio\apf\misc.h"/>
+    <ClInclude Include="..\..\..\audio\apf\parameter_map.h"/>
+    <ClInclude Include="..\..\..\audio\apf\pointer_policy.h"/>
+    <ClInclude Include="..\..\..\audio\apf\portaudio_policy.h"/>
+    <ClInclude Include="..\..\..\audio\apf\posix_thread_policy.h"/>
+    <ClInclude Include="..\..\..\audio\apf\rtlist.h"/>
+    <ClInclude Include="..\..\..\audio\apf\shareddata.h"/>
+    <ClInclude Include="..\..\..\audio\apf\sndfiletools.h"/>
+    <ClInclude Include="..\..\..\audio\apf\stopwatch.h"/>
+    <ClInclude Include="..\..\..\audio\apf\stringtools.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\aaprenderer.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\audioplayer.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\audiorecorder.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\binauralrenderer.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\brsrenderer.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\configuration.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\controller.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\directionalpoint.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\genericrenderer.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\hoacoefficients.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\laplace_coeffs_double.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\laplace_coeffs_float.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\loudspeaker.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\loudspeakerrenderer.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\maptools.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\nfchoarenderer.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\orientation.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\position.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\posixpathtools.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\publisher.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\razor-ahrs\RazorAHRS.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\rendererbase.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\rendersubscriber.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\scene.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\source.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\ssr_global.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\subscriber.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\timetools.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\tracker.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\trackerintersense.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\trackerpolhemus.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\trackerrazor.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\trackervrpn.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\vbaprenderer.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\wfsrenderer.h"/>
+    <ClInclude Include="..\..\..\audio\ssr code\xmlparser.h"/>
     <ClInclude Include="..\..\..\audio\inc\Filter.h"/>
     <ClInclude Include="..\..\..\audio\inc\HostParam.h"/>
     <ClInclude Include="..\..\..\audio\inc\Param.h"/>
@@ -1738,6 +1850,11 @@
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h"/>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\audio\ssr code\coding_style.txt"/>
+    <None Include="..\..\..\audio\ssr code\Doxyfile"/>
+    <None Include="..\..\..\audio\ssr code\Makefile.am"/>
+    <None Include="..\..\..\audio\ssr code\razor-ahrs\GPL.txt"/>
+    <None Include="..\..\..\audio\ssr code\razor-ahrs\README.txt"/>
     <None Include="..\..\..\juce\modules\juce_audio_basics\juce_module_info"/>
     <None Include="..\..\..\juce\modules\juce_audio_devices\juce_module_info"/>
     <None Include="..\..\..\juce\modules\juce_audio_formats\juce_module_info"/>

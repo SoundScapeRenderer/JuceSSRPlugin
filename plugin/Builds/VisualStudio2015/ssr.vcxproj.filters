@@ -8,6 +8,15 @@
     <Filter Include="ssr\audio">
       <UniqueIdentifier>{E2FD0048-617A-E5EF-BC5C-7B61D8C8C5A2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ssr\audio\apf">
+      <UniqueIdentifier>{643B1E67-4A3D-001F-57A8-5B70D9D89359}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ssr\audio\ssr code">
+      <UniqueIdentifier>{AEDA6E4B-A988-D632-833F-B1CC95DFCA30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ssr\audio\ssr code\razor-ahrs">
+      <UniqueIdentifier>{833F6035-A78C-5F86-1A7D-C62D03121A24}</UniqueIdentifier>
+    </Filter>
     <Filter Include="ssr\audio\inc">
       <UniqueIdentifier>{8849CE45-709E-9B7B-DBCA-A2A066E35B80}</UniqueIdentifier>
     </Filter>
@@ -331,6 +340,72 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\audio\ssr code\audioplayer.cpp">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\audiorecorder.cpp">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\configuration.cpp">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\directionalpoint.cpp">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\orientation.cpp">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\position.cpp">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\razor-ahrs\Example.cpp">
+      <Filter>ssr\audio\ssr code\razor-ahrs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\razor-ahrs\RazorAHRS.cpp">
+      <Filter>ssr\audio\ssr code\razor-ahrs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\scene.cpp">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\ssr_aap.cpp">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\ssr_binaural.cpp">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\ssr_brs.cpp">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\ssr_generic.cpp">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\ssr_global.cpp">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\ssr_nfc_hoa.cpp">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\ssr_vbap.cpp">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\ssr_wfs.cpp">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\trackerintersense.cpp">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\trackerpolhemus.cpp">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\trackerrazor.cpp">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\trackervrpn.cpp">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\audio\ssr code\xmlparser.cpp">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\audio\src\PluginProcessor.cpp">
       <Filter>ssr\audio\src</Filter>
     </ClCompile>
@@ -1599,6 +1674,198 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\audio\apf\biquad.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\blockdelayline.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\combine_channels.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\commandqueue.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\container.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\convolver.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\default_thread_policy.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\denormalprevention.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\dummy_thread_policy.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\fftwtools.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\iterator.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\jack_policy.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\jackclient.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\lockfreefifo.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\math.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\mextools.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\mimoprocessor.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\mimoprocessor_file_io.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\misc.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\parameter_map.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\pointer_policy.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\portaudio_policy.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\posix_thread_policy.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\rtlist.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\shareddata.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\sndfiletools.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\stopwatch.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\apf\stringtools.h">
+      <Filter>ssr\audio\apf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\aaprenderer.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\audioplayer.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\audiorecorder.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\binauralrenderer.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\brsrenderer.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\configuration.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\controller.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\directionalpoint.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\genericrenderer.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\hoacoefficients.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\laplace_coeffs_double.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\laplace_coeffs_float.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\loudspeaker.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\loudspeakerrenderer.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\maptools.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\nfchoarenderer.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\orientation.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\position.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\posixpathtools.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\publisher.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\razor-ahrs\RazorAHRS.h">
+      <Filter>ssr\audio\ssr code\razor-ahrs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\rendererbase.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\rendersubscriber.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\scene.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\source.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\ssr_global.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\subscriber.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\timetools.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\tracker.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\trackerintersense.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\trackerpolhemus.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\trackerrazor.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\trackervrpn.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\vbaprenderer.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\wfsrenderer.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\audio\ssr code\xmlparser.h">
+      <Filter>ssr\audio\ssr code</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\audio\inc\Filter.h">
       <Filter>ssr\audio\inc</Filter>
     </ClInclude>
@@ -2999,6 +3266,21 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\audio\ssr code\coding_style.txt">
+      <Filter>ssr\audio\ssr code</Filter>
+    </None>
+    <None Include="..\..\..\audio\ssr code\Doxyfile">
+      <Filter>ssr\audio\ssr code</Filter>
+    </None>
+    <None Include="..\..\..\audio\ssr code\Makefile.am">
+      <Filter>ssr\audio\ssr code</Filter>
+    </None>
+    <None Include="..\..\..\audio\ssr code\razor-ahrs\GPL.txt">
+      <Filter>ssr\audio\ssr code\razor-ahrs</Filter>
+    </None>
+    <None Include="..\..\..\audio\ssr code\razor-ahrs\README.txt">
+      <Filter>ssr\audio\ssr code\razor-ahrs</Filter>
+    </None>
     <None Include="..\..\..\juce\modules\juce_audio_basics\juce_module_info">
       <Filter>Juce Modules\juce_audio_basics</Filter>
     </None>
