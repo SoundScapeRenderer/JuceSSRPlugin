@@ -21,11 +21,7 @@
 #include <stdexcept>
 #include <sstream>
 
-#ifdef _WIN32
-#include <io.h>
-#else
 #include <unistd.h>  // for write(), close(), ...
-#endif
 #include <termios.h> // for cfsetispeed(), ...
 #include <fcntl.h>   // for open(), ...
 #include <errno.h>

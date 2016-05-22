@@ -34,11 +34,6 @@
 #include <config.h> // for ENABLE_*, HAVE_*, WITH_*
 #endif
 
-#ifdef _WIN32
-#define HAVE_STRUCT_TIMESPEC
-#define _TIMESPEC_DEFINED
-#endif
-
 // TODO: move these includes to a more suitable location?
 //#include "apf/jack_policy.h"
 //#include "apf/posix_thread_policy.h"
@@ -86,7 +81,7 @@
 #include "scene.h"  // for Scene
 #include "rendersubscriber.h"
 
-//#include "posixpathtools.h"
+#include "posixpathtools.h"
 #include "apf/math.h"
 #include "apf/stringtools.h"
 
@@ -415,7 +410,7 @@ class Controller<Renderer>::query_state
 
     void query()
     {
-      _state = _renderer.get_transport_state();
+      _state = _renderer.get_transport_state(); 
       _cpu_load = _renderer.get_cpu_load();
 
       auto output_list = output_list_t(_renderer.get_output_list());
@@ -1294,7 +1289,7 @@ template<typename Renderer>
 void
 Controller<Renderer>::transport_start()
 {
-  _renderer.transport_start();
+    _renderer.transport_start();
 }
 
 // non-const because audioplayer could be started
@@ -1313,7 +1308,7 @@ bool
 Controller<Renderer>::transport_locate(float time)
 {
   // convert time to samples (cut decimal part)
-  return _renderer.transport_locate(
+    return _renderer.transport_locate(
       static_cast<jack_nframes_t>(time * _renderer.sample_rate()));
 }
 

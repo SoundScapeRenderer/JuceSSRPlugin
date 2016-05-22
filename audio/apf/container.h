@@ -288,6 +288,7 @@ class fixed_vector : private std::vector<T, Allocator>
 template<typename T, typename Allocator = std::allocator<T>>
 class fixed_list : public std::list<T, Allocator>
 {
+    typedef std::list<T, Allocator> _base;
 public:
     //fixed_list() = default;
     fixed_list(fixed_list&&) = default;
@@ -316,6 +317,22 @@ public:
         , const Allocator& a = Allocator())
         : _base(il, a)
     {}
+
+    /// Move list element @p from one place @p to another.
+    /// @p from is placed in front of @p to.
+    /// No memory is allocated/deallocated, no content is copied.
+    void move(iterator from, iterator to)
+    {
+        _base::splice(to, *this, from);
+    }
+
+    /// Move range (from @p first to @p last) to @p target.
+    /// The range is placed in front of @p target.
+    /// No memory is allocated/deallocated, no content is copied.
+    void move(iterator first, iterator last, iterator target)
+    {
+        _base::splice(target, *this, first, last);
+    }
 
 };
 

@@ -300,7 +300,7 @@ void BinauralRenderer::Source::_process()
       }
 
       // no volume increase for sources closer than 0.5m
-      source_distance = max(source_distance, 0.5f);
+      source_distance = std::max(source_distance, 0.5f);
 
       weight *= 0.5f / source_distance; // 1/r
       // weight *= 0.25f / sqrt(source_distance); // 1/sqrt(r)

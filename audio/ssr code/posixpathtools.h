@@ -66,6 +66,7 @@ namespace posixpathtools
  **/
 inline bool getcwd(std::string& path)
 {
+#if 0
   using file_id = std::pair<dev_t, ino_t>;
 
   bool success = false;
@@ -141,6 +142,8 @@ inline bool getcwd(std::string& path)
     close(start_fd);
   }
   return success;
+#endif
+  return true;
 }
 
 /** Turn a path into a sequence of path components.

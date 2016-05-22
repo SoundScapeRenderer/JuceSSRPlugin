@@ -27,11 +27,6 @@
 /// @file
 /// VRPN tracker (implementation).
 
-#ifdef _WIN32
-#define HAVE_STRUCT_TIMESPEC
-#define _TIMESPEC_DEFINED
-#endif
-
 #include "trackervrpn.h"
 
 #include <stdexcept>  // for runtime_error

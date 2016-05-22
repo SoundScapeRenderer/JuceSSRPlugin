@@ -27,6 +27,8 @@
 #ifndef APF_CONVOLVER_H
 #define APF_CONVOLVER_H
 
+#undef min
+
 #include <algorithm>  // for std::transform()
 #include <functional>  // for std::bind()
 #include <cassert>

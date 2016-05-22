@@ -27,6 +27,8 @@
 #ifndef APF_FFTWTOOLS_H
 #define APF_FFTWTOOLS_H
 
+#undef max
+
 #include <fftw3.h>
 
 #include <utility>  // for std::forward
@@ -92,13 +94,15 @@ struct fftw_allocator
   pointer allocate(size_type n, const void* hint = nullptr)
   {
     (void)hint;
-    return static_cast<pointer>(fftw<T>::malloc(sizeof(value_type) * n));
+    //return static_cast<pointer>(fftw<T>::malloc(sizeof(value_type) * n));
+    return static_cast<pointer>(malloc(sizeof(value_type) * n));
   }
 
   void deallocate(pointer p, size_type n)
   {
     (void)n;
-    fftw<T>::free(p);
+    //fftw<T>::free(p);
+    free(p);
   }
 
   void construct(pointer p, const T& t) { new (p) T(t); }
