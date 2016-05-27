@@ -87,6 +87,8 @@
 
 using Node = XMLParser::Node; ///< a node of the DOM tree
 
+#undef max
+
 namespace ssr
 {
 
@@ -378,10 +380,12 @@ Controller<Renderer>::Controller(int argc, char* argv[])
 
   if (_conf.freewheeling)
   {
+#if 0
     if (!_renderer.set_freewheel(1))
     {
       throw std::runtime_error("Unable to switch to freewheeling mode!");
     }
+#endif
   }
 
 #ifdef ENABLE_IP_INTERFACE
@@ -410,9 +414,14 @@ class Controller<Renderer>::query_state
 
     void query()
     {
+#if 0
       _state = _renderer.get_transport_state(); 
       _cpu_load = _renderer.get_cpu_load();
-
+#else
+        _state.first = true;
+        _state.second = 0;
+        _cpu_load = 0.5f;
+#endif
       auto output_list = output_list_t(_renderer.get_output_list());
 
       _master_level = typename Renderer::sample_type();
@@ -1289,7 +1298,9 @@ template<typename Renderer>
 void
 Controller<Renderer>::transport_start()
 {
+#if 0
     _renderer.transport_start();
+#endif
 }
 
 // non-const because audioplayer could be started
@@ -1297,7 +1308,9 @@ template<typename Renderer>
 void
 Controller<Renderer>::transport_stop()
 {
+#if 0
   _renderer.transport_stop();
+#endif
 }
 
 /** Skips the scene to a specified instant of time
@@ -1307,9 +1320,13 @@ template<typename Renderer>
 bool
 Controller<Renderer>::transport_locate(float time)
 {
+#if 0
   // convert time to samples (cut decimal part)
     return _renderer.transport_locate(
       static_cast<jack_nframes_t>(time * _renderer.sample_rate()));
+#else
+    return true;
+#endif
 }
 
 /** Create a new source.
@@ -1703,8 +1720,12 @@ template<typename Renderer>
 void
 Controller<Renderer>::_add_transport_state(Node& node) const
 {
+#if 0
   node.new_child("transport"
       , _renderer.get_transport_state().first ? "start" : "stop");
+#else
+    node.new_child("transport", "stop");
+#endif
 }
 
 template<typename Renderer>

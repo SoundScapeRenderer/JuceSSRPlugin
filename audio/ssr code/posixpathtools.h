@@ -41,6 +41,10 @@
 //#include <sys/stat.h> // for stat and mkdir (on Mac OSX)
 //#include <unistd.h>  // for chdir(), fchdir(), close()
 
+#include <Windows.h>
+#include <string.h>
+#include <iostream>
+
 /** helper functions for filename and path manipulation.
  *
  * @warning Code in this file is highly platform dependent!
@@ -66,7 +70,14 @@ namespace posixpathtools
  **/
 inline bool getcwd(std::string& path)
 {
-#if 0
+#if 1
+    char buffer[MAX_PATH];
+    GetModuleFileName(NULL, buffer, MAX_PATH);
+    std::string::size_type pos = std::string(buffer).find_last_of("\\/");
+    path = std::string(buffer).substr(0, pos);
+
+    return true;
+#else
   using file_id = std::pair<dev_t, ino_t>;
 
   bool success = false;
@@ -143,7 +154,6 @@ inline bool getcwd(std::string& path)
   }
   return success;
 #endif
-  return true;
 }
 
 /** Turn a path into a sequence of path components.
