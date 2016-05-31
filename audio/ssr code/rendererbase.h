@@ -60,15 +60,15 @@ namespace ssr
  **/
 template<typename Derived>
 class RendererBase : public apf::MimoProcessor<Derived
-                     , APF_MIMOPROCESSOR_INTERFACE_POLICY
-                     , APF_MIMOPROCESSOR_THREAD_POLICY
-                     , SSR_QUERY_POLICY>
+    , APF_MIMOPROCESSOR_INTERFACE_POLICY
+    , APF_MIMOPROCESSOR_THREAD_POLICY
+    , SSR_QUERY_POLICY>
 {
-  private:
+private:
     using _base = apf::MimoProcessor<Derived, APF_MIMOPROCESSOR_INTERFACE_POLICY
-      , APF_MIMOPROCESSOR_THREAD_POLICY, SSR_QUERY_POLICY>;
+        , APF_MIMOPROCESSOR_THREAD_POLICY, SSR_QUERY_POLICY>;
 
-  public:
+public:
     using typename _base::rtlist_t;
     using typename _base::ScopedLock;
     using typename _base::sample_type;
@@ -86,24 +86,24 @@ class RendererBase : public apf::MimoProcessor<Derived
     // doesn't copy the buffers anyway at some point (as most renderers do).
     class Input : public _base::Input
     {
-      public:
+    public:
         using iterator = typename std::vector<sample_type>::const_iterator;
         using typename _base::Input::Params;
 
         explicit Input(const Params& p)
-          : _base::Input(p)
-          , _buffer(this->parent.block_size())
+            : _base::Input(p)
+            , _buffer(this->parent.block_size())
         {}
 
         APF_PROCESS(Input, _base::Input)
         {
-          std::copy(this->buffer.begin(), this->buffer.end(), _buffer.begin());
+            std::copy(this->buffer.begin(), this->buffer.end(), _buffer.begin());
         }
 
         iterator begin() const { return _buffer.begin(); }
         iterator end() const { return _buffer.end(); }
 
-      private:
+    private:
         std::vector<sample_type> _buffer;
     };
 #else
@@ -113,46 +113,46 @@ class RendererBase : public apf::MimoProcessor<Derived
 
     struct State
     {
-      State(apf::CommandQueue& fifo, const apf::parameter_map& params)
-        : reference_position(fifo)
-        , reference_orientation(fifo, Orientation(90))
-        , reference_offset_position(fifo)
-        , reference_offset_orientation(fifo)
-        , master_volume(fifo, 1)
-        , processing(fifo, true)
-        , amplitude_reference_distance(fifo
-            , params.get("amplitude_reference_distance", 3))
-      {}
+        State(apf::CommandQueue& fifo, const apf::parameter_map& params)
+            : reference_position(fifo)
+            , reference_orientation(fifo, Orientation(90))
+            , reference_offset_position(fifo)
+            , reference_offset_orientation(fifo)
+            , master_volume(fifo, 1)
+            , processing(fifo, true)
+            , amplitude_reference_distance(fifo
+                , params.get("amplitude_reference_distance", 3))
+        {}
 
-      apf::SharedData<Position> reference_position;
-      apf::SharedData<Orientation> reference_orientation;
-      apf::SharedData<Position> reference_offset_position;
-      apf::SharedData<Orientation> reference_offset_orientation;
-      apf::SharedData<sample_type> master_volume;
-      apf::SharedData<bool> processing;
-      apf::SharedData<sample_type> amplitude_reference_distance;
+        apf::SharedData<Position> reference_position;
+        apf::SharedData<Orientation> reference_orientation;
+        apf::SharedData<Position> reference_offset_position;
+        apf::SharedData<Orientation> reference_offset_orientation;
+        apf::SharedData<sample_type> master_volume;
+        apf::SharedData<bool> processing;
+        apf::SharedData<sample_type> amplitude_reference_distance;
     } state;
 
     // If you don't need a list proxy, just use a reference to the list
     template<typename L, typename ListProxy, typename DataMember>
     class AddToSublistCommand : public apf::CommandQueue::Command
     {
-      public:
+    public:
         AddToSublistCommand(L input, ListProxy output, DataMember member)
-          : _input(input)
-          , _output(output)
-          , _member(member)
+            : _input(input)
+            , _output(output)
+            , _member(member)
         {}
 
         virtual void execute()
         {
-          apf::distribute_list(_input, _output, _member);
+            apf::distribute_list(_input, _output, _member);
         }
 
         // Empty function, because no cleanup is necessary. 
         virtual void cleanup() {}
 
-      private:
+    private:
         L _input;
         ListProxy _output;
         DataMember _member;
@@ -161,32 +161,32 @@ class RendererBase : public apf::MimoProcessor<Derived
     template<typename L, typename ListProxy, typename DataMember>
     void add_to_sublist(const L& input, ListProxy output, DataMember member)
     {
-      _fifo.push(new AddToSublistCommand<L, ListProxy, DataMember>(
+        _fifo.push(new AddToSublistCommand<L, ListProxy, DataMember>(
             input, output, member));
     }
 
     template<typename L, typename ListProxy, typename DataMember>
     class RemFromSublistCommand : public apf::CommandQueue::Command
     {
-      public:
+    public:
         RemFromSublistCommand(const L input, ListProxy output
             , DataMember member)
-          : _input(input)
-          , _output(output)
-          , _member(member)
+            : _input(input)
+            , _output(output)
+            , _member(member)
         {}
 
         virtual void execute()
         {
-          apf::undistribute_list(_input, _output, _member, _garbage);
+            apf::undistribute_list(_input, _output, _member, _garbage);
         }
 
         virtual void cleanup()
         {
-          // Nothing to be done. _garbage is taken care of in the destructor.
+            // Nothing to be done. _garbage is taken care of in the destructor.
         }
 
-      private:
+    private:
         const L _input;
         ListProxy _output;
         DataMember _member;
@@ -196,7 +196,7 @@ class RendererBase : public apf::MimoProcessor<Derived
     template<typename L, typename ListProxy, typename DataMember>
     void rem_from_sublist(const L& input, ListProxy output, DataMember member)
     {
-      _fifo.push(new RemFromSublistCommand<L, ListProxy, DataMember>(
+        _fifo.push(new RemFromSublistCommand<L, ListProxy, DataMember>(
             input, output, member));
     }
 
@@ -214,6 +214,16 @@ class RendererBase : public apf::MimoProcessor<Derived
     // TODO: proper solution for getting the reproduction setup
     template<typename SomeListType>
     void get_loudspeakers(SomeListType&) {}
+
+    // for JACK, only
+    //! \todo MH check wether/where these are needed
+    bool set_freewheel(int onoff) const { return false; }
+    void transport_start() const {}
+    void transport_stop() const {}
+    bool transport_locate(float) const { return false;  }
+    std::pair<bool, uint32_t> get_transport_state() const { return std::pair<bool, uint32_t>(false, 0); }
+    float get_cpu_load() const { return .0f; }
+    // end of JACK, only
 
     std::unique_ptr<ScopedLock> get_scoped_lock()
     {

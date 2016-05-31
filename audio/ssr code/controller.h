@@ -788,6 +788,8 @@ Controller<Renderer>::load_scene(const std::string& scene_file_name)
     return true;
   }
 
+#if 0
+  //! \todo file loading
   std::string file_extension = posixpathtools::get_file_extension(scene_file_name);
 
   if (file_extension == "")
@@ -969,6 +971,8 @@ Controller<Renderer>::load_scene(const std::string& scene_file_name)
       return false;
     }
   }
+
+#endif
 
   this->transport_locate(0); // go to beginning of audio files
   // TODO: only start processing if it was on before
@@ -1764,6 +1768,7 @@ void
 Controller<Renderer>::_add_sources(Node& node
     , const std::string& scene_file_name) const
 {
+#if 0
   typename SourceCopy::container_t sources;
   _scene.get_sources(sources);
   for (const auto& source: sources)
@@ -1826,6 +1831,7 @@ Controller<Renderer>::_add_sources(Node& node
 
     // TODO: save doppler effect setting (source.doppler_effect)
   }
+#endif
 }
 
 template<typename Renderer>

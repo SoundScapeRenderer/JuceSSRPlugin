@@ -164,7 +164,7 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2015 targetFolder="Builds/VisualStudio2015" vstFolder="../vst/">
+    <VS2015 targetFolder="Builds/VisualStudio2015" vstFolder="../vst/" extraDefs="NOMINMAX">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
                        isDebug="1" optimisation="1" targetName="ssr" headerPath="../../../gui&#10;../../../audio/inc&#10;../../../audio/&#10;../../../lib/"

@@ -92,13 +92,13 @@ struct fftw_allocator
   pointer allocate(size_type n, const void* hint = nullptr)
   {
     (void)hint;
-    return static_cast<pointer>(fftw<T>::malloc(sizeof(value_type) * n));
+    return static_cast<pointer>(fftw_malloc(sizeof(value_type) * n));
   }
 
   void deallocate(pointer p, size_type n)
   {
     (void)n;
-    fftw<T>::free(p);
+    fftw_free(p);
   }
 
   void construct(pointer p, const T& t) { new (p) T(t); }
@@ -111,7 +111,6 @@ struct fftw_allocator
 
   template<typename U>
   struct rebind { using other = fftw_allocator<U>; };
-
   // Not sure if the following are necessary ...
 
   fftw_allocator() {}
