@@ -40,8 +40,10 @@
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ssr</TargetName>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath);../../../lib/</LibraryPath>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">ssr</TargetName>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath);../../../lib/</LibraryPath>
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -56,7 +58,7 @@
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\..\juce\modules;..\..\..\vst;../../../gui;../../../audio/inc;../../../audio/;../../../lib/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;NOMINMAX;JUCER_VS2015_78A5022=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;DEBUG;_DEBUG;NOMINMAX;JUCER_VS2015_78A5022=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader/>
@@ -79,7 +81,9 @@
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <AdditionalLibraryDirectories>../../../lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
+      <AdditionalDependencies>libfftw3-3.lib;libfftw3f-3.lib;libfftw3l-3.lib;libiconv.lib;libsndfile-1.lib;libxml2.lib;libxml2_a.lib;libxml2_a_dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/FORCE:multiple %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Bscmake>
@@ -98,7 +102,7 @@
     <ClCompile>
       <Optimization>Full</Optimization>
       <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\..\juce\modules;..\..\..\vst;../../../gui;../../../audio/inc;../../../audio/;../../../lib/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;NOMINMAX;JUCER_VS2015_78A5022=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;NOMINMAX;JUCER_VS2015_78A5022=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader/>
@@ -122,7 +126,9 @@
       <TargetMachine>MachineX86</TargetMachine>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <AdditionalLibraryDirectories>../../../lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
+      <AdditionalDependencies>libfftw3-3.lib;libfftw3f-3.lib;libfftw3l-3.lib;libiconv.lib;libsndfile-1.lib;libxml2.lib;libxml2_a.lib;libxml2_a_dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/FORCE:multiple %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Bscmake>
@@ -155,7 +161,9 @@
     <ClCompile Include="..\..\..\audio\ssr code\ssr_brs.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr code\ssr_generic.cpp"/>
+    <ClCompile Include="..\..\..\audio\ssr code\ssr_generic.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\audio\ssr code\ssr_global.cpp"/>
     <ClCompile Include="..\..\..\audio\ssr code\ssr_nfc_hoa.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -1284,6 +1292,7 @@
     <ClCompile Include="..\..\..\juce\modules\juce_video\native\juce_win32_QuickTimeMovieComponent.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\BinaryData.cpp"/>
     <ClCompile Include="..\..\..\juce\modules\juce_audio_plugin_client\AAX\juce_AAX_Wrapper.cpp"/>
     <ClCompile Include="..\..\..\juce\modules\juce_audio_basics\juce_audio_basics.cpp"/>
     <ClCompile Include="..\..\..\juce\modules\juce_audio_devices\juce_audio_devices.cpp"/>
@@ -1847,9 +1856,50 @@
     <ClInclude Include="..\..\..\juce\modules\juce_video\capture\juce_CameraDevice.h"/>
     <ClInclude Include="..\..\..\juce\modules\juce_video\juce_video.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\AppConfig.h"/>
+    <ClInclude Include="..\..\JuceLibraryCode\BinaryData.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h"/>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\ssr data\asdf.xsd"/>
+    <None Include="..\..\..\ssr data\images\listener.png"/>
+    <None Include="..\..\..\ssr data\images\listener_background.png"/>
+    <None Include="..\..\..\ssr data\images\listener_shadow.png"/>
+    <None Include="..\..\..\ssr data\images\pause_button.png"/>
+    <None Include="..\..\..\ssr data\images\pause_button_pressed.png"/>
+    <None Include="..\..\..\ssr data\images\play_button.png"/>
+    <None Include="..\..\..\ssr data\images\play_button_pressed.png"/>
+    <None Include="..\..\..\ssr data\images\processing_button.png"/>
+    <None Include="..\..\..\ssr data\images\processing_button_pressed.png"/>
+    <None Include="..\..\..\ssr data\images\scene_menu_item.png"/>
+    <None Include="..\..\..\ssr data\images\scene_menu_item_selected.png"/>
+    <None Include="..\..\..\ssr data\images\skip_back_button.png"/>
+    <None Include="..\..\..\ssr data\images\skip_back_button_pressed.png"/>
+    <None Include="..\..\..\ssr data\images\source_shadow.png"/>
+    <None Include="..\..\..\ssr data\images\ssr_logo.png"/>
+    <None Include="..\..\..\ssr data\images\ssr_logo_large.png"/>
+    <None Include="..\..\..\ssr data\impulse_responses\hrirs\hrirs_fabian.wav"/>
+    <None Include="..\..\..\ssr data\impulse_responses\hrirs\hrirs_fabian_documentation.pdf"/>
+    <None Include="..\..\..\ssr data\impulse_responses\wfs_prefilters\wfs_prefilter_100_1300_44100.wav"/>
+    <None Include="..\..\..\ssr data\impulse_responses\wfs_prefilters\wfs_prefilter_100_1300_48000.wav"/>
+    <None Include="..\..\..\ssr data\impulse_responses\wfs_prefilters\wfs_prefilter_100_1800_44100.wav"/>
+    <None Include="..\..\..\ssr data\impulse_responses\wfs_prefilters\wfs_prefilter_100_1800_48000.wav"/>
+    <None Include="..\..\..\ssr data\impulse_responses\wfs_prefilters\wfs_prefilter_120_1500_44100.wav"/>
+    <None Include="..\..\..\ssr data\local_ssr.sh"/>
+    <None Include="..\..\..\ssr data\Makefile.am"/>
+    <None Include="..\..\..\ssr data\reproduction_setups\2.0.asd"/>
+    <None Include="..\..\..\ssr data\reproduction_setups\2.1.asd"/>
+    <None Include="..\..\..\ssr data\reproduction_setups\5.1.asd"/>
+    <None Include="..\..\..\ssr data\reproduction_setups\8channels.asd"/>
+    <None Include="..\..\..\ssr data\reproduction_setups\asdf2html.xsl"/>
+    <None Include="..\..\..\ssr data\reproduction_setups\circle.asd"/>
+    <None Include="..\..\..\ssr data\reproduction_setups\loudspeaker_setup_with_nearly_all_features.asd"/>
+    <None Include="..\..\..\ssr data\reproduction_setups\rostock_horizontal.asd"/>
+    <None Include="..\..\..\ssr data\reproduction_setups\rounded_rectangle.asd"/>
+    <None Include="..\..\..\ssr data\scenes\asdf2html.xsl"/>
+    <None Include="..\..\..\ssr data\scenes\live_input.asd"/>
+    <None Include="..\..\..\ssr data\ssr"/>
+    <None Include="..\..\..\ssr data\ssr.conf.example"/>
+    <None Include="..\..\..\ssr data\ssr.conf.local"/>
     <None Include="..\..\..\audio\ssr code\coding_style.txt"/>
     <None Include="..\..\..\audio\ssr code\Doxyfile"/>
     <None Include="..\..\..\audio\ssr code\Makefile.am"/>

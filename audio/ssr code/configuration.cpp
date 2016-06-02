@@ -35,7 +35,7 @@
 #endif
 
 #include <cassert>      // for assert()
-#include <getopt.h>     // for getopt_long()
+//#include <getopt.h>     // for getopt_long()
 #include <cstdlib>      // for getenv(), ...
 #include <cstring>
 #include <stdio.h>
@@ -44,6 +44,9 @@
 #include "apf/stringtools.h"
 #include "ssr_global.h" // for ssr::verbose, WARNING(), ...
 #include "xmlparser.h"  // TODO: move this somewhere else
+#include <Windows.h>
+
+#define SSR_DATA_DIR "../.."
 
 using posixpathtools::make_path_relative_to_current_dir;
 using apf::str::S2A;
@@ -64,10 +67,10 @@ namespace // anonymous
     {
       std::cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
         "It's ... " << std::flush;
-      sleep(3);
+      Sleep(3/1000);
       std::cout << "the ";
     }
-    std::cout << PACKAGE_STRING "\n" SSR_COPYRIGHT << std::endl;
+    std::cout << /*PACKAGE_STRING*/ "\n" /*SSR_COPYRIGHT*/ << std::endl;
 #ifdef ENABLE_ISATTY
     if (isatty(1))
     {
@@ -104,7 +107,7 @@ namespace // anonymous
         "\n";
     }
 #endif
-    std::cout << "\n" SSR_AUTHORS "\n\n";
+    std::cout << "\n" /*SSR_AUTHORS*/ "\n\n";
   }
 }
 
@@ -288,10 +291,11 @@ ssr::conf_struct ssr::configuration(int& argc, char* argv[])
 //" --               All arguments after \"--\" are ignored.\n"
 #endif
 "\n"
-"Report bugs to: <" PACKAGE_BUGREPORT ">\n"
-"SSR home page: <" PACKAGE_URL ">\n"
+"Report bugs to: <" /*PACKAGE_BUGREPORT*/ ">\n"
+"SSR home page: <" /*PACKAGE_URL*/ ">\n"
 ;
 
+#if 0
   // the special argument "--" forces the end of option scanning
 
   const struct option longopts[] =
@@ -527,7 +531,7 @@ ssr::conf_struct ssr::configuration(int& argc, char* argv[])
   {
     VERBOSE2(entry.first << " = " << entry.second);
   }
-
+#endif
   return conf;
 }
 
@@ -738,10 +742,10 @@ int ssr::load_config_file(const char *filename, conf_struct& conf){
     }
     else if (!strcmp(key, "IN_PHASE_RENDERING"))
     {
-      if (!strcasecmp(value,"TRUE")) conf.renderer_params.set("in_phase", true);
-      else if (!strcasecmp(value,"true")) conf.renderer_params.set("in_phase", true);
-      else if (!strcasecmp(value,"FALSE")) conf.renderer_params.set("in_phase", false);
-      else if (!strcasecmp(value,"false")) conf.renderer_params.set("in_phase", false);
+      if (!stricmp(value,"TRUE")) conf.renderer_params.set("in_phase", true);
+      else if (!stricmp(value,"true")) conf.renderer_params.set("in_phase", true);
+      else if (!stricmp(value,"FALSE")) conf.renderer_params.set("in_phase", false);
+      else if (!stricmp(value,"false")) conf.renderer_params.set("in_phase", false);
       else SSRERROR("I don't understand the option '" << value
           << "' for in-phase rendering.");
     }
@@ -760,12 +764,12 @@ int ssr::load_config_file(const char *filename, conf_struct& conf){
     }
     else if (!strcmp(key, "FREEWHEEL"))
     {
-      if (!strcasecmp(value, "yes")) conf.freewheeling = true;
+      if (!stricmp(value, "yes")) conf.freewheeling = true;
       else conf.freewheeling = false;
     }
     else if (!strcmp(key, "GUI"))
     {
-      if (!strcasecmp(value, "on")) conf.gui = true;
+      if (!stricmp(value, "on")) conf.gui = true;
       else conf.gui= false;
     }
     else if (!strcmp(key, "NETWORK_INTERFACE"))
@@ -804,7 +808,7 @@ int ssr::load_config_file(const char *filename, conf_struct& conf){
     }
     else if (!strcmp(key, "LOOP"))
     {
-      if (!strcasecmp(value, "yes")) conf.loop = true;
+      if (!stricmp(value, "yes")) conf.loop = true;
       else conf.loop = false;
     }
     else

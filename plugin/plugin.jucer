@@ -11,6 +11,90 @@
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="3.2.0"
               companyName="QU Lab, TU Berlin" companyWebsite="http://www.qu.tu-berlin.de">
   <MAINGROUP id="KEM0W7" name="ssr">
+    <GROUP id="{2F948DE4-F9C4-14BA-D49A-B21CB547997D}" name="ssr data">
+      <FILE id="Pes73y" name="asdf.xsd" compile="0" resource="0" file="../ssr data/asdf.xsd"/>
+      <GROUP id="{1D6918C2-9EAC-9450-3611-A8E70C2A2363}" name="images">
+        <FILE id="DXj8gn" name="listener.png" compile="0" resource="1" file="../ssr data/images/listener.png"/>
+        <FILE id="twupOO" name="listener_background.png" compile="0" resource="1"
+              file="../ssr data/images/listener_background.png"/>
+        <FILE id="Panwlp" name="listener_shadow.png" compile="0" resource="1"
+              file="../ssr data/images/listener_shadow.png"/>
+        <FILE id="mBeQ5T" name="pause_button.png" compile="0" resource="1"
+              file="../ssr data/images/pause_button.png"/>
+        <FILE id="Vb59ow" name="pause_button_pressed.png" compile="0" resource="1"
+              file="../ssr data/images/pause_button_pressed.png"/>
+        <FILE id="VsvBGa" name="play_button.png" compile="0" resource="1" file="../ssr data/images/play_button.png"/>
+        <FILE id="jvMRLQ" name="play_button_pressed.png" compile="0" resource="1"
+              file="../ssr data/images/play_button_pressed.png"/>
+        <FILE id="U63mkw" name="processing_button.png" compile="0" resource="1"
+              file="../ssr data/images/processing_button.png"/>
+        <FILE id="Aiy0Ij" name="processing_button_pressed.png" compile="0"
+              resource="1" file="../ssr data/images/processing_button_pressed.png"/>
+        <FILE id="AsaGPa" name="scene_menu_item.png" compile="0" resource="1"
+              file="../ssr data/images/scene_menu_item.png"/>
+        <FILE id="DMnwsQ" name="scene_menu_item_selected.png" compile="0" resource="1"
+              file="../ssr data/images/scene_menu_item_selected.png"/>
+        <FILE id="bfKGcT" name="skip_back_button.png" compile="0" resource="1"
+              file="../ssr data/images/skip_back_button.png"/>
+        <FILE id="Y1UzC5" name="skip_back_button_pressed.png" compile="0" resource="1"
+              file="../ssr data/images/skip_back_button_pressed.png"/>
+        <FILE id="rv9dad" name="source_shadow.png" compile="0" resource="1"
+              file="../ssr data/images/source_shadow.png"/>
+        <FILE id="fR9ohl" name="ssr_logo.png" compile="0" resource="1" file="../ssr data/images/ssr_logo.png"/>
+        <FILE id="NCPFw9" name="ssr_logo_large.png" compile="0" resource="1"
+              file="../ssr data/images/ssr_logo_large.png"/>
+      </GROUP>
+      <GROUP id="{0B6829D9-80BC-FAB4-C20C-EC681B7DBF50}" name="impulse_responses">
+        <GROUP id="{43EAB7F7-8CB9-CAC0-1D1F-AB8CBB5D8C11}" name="hrirs">
+          <FILE id="cjTqHE" name="hrirs_fabian.wav" compile="0" resource="0"
+                file="../ssr data/impulse_responses/hrirs/hrirs_fabian.wav"/>
+          <FILE id="oyS3vb" name="hrirs_fabian_documentation.pdf" compile="0"
+                resource="0" file="../ssr data/impulse_responses/hrirs/hrirs_fabian_documentation.pdf"/>
+        </GROUP>
+        <GROUP id="{03CBFA90-8886-E2CC-8A51-266103F3A4A3}" name="wfs_prefilters">
+          <FILE id="S8Lnpx" name="wfs_prefilter_100_1300_44100.wav" compile="0"
+                resource="0" file="../ssr data/impulse_responses/wfs_prefilters/wfs_prefilter_100_1300_44100.wav"/>
+          <FILE id="YnEp8G" name="wfs_prefilter_100_1300_48000.wav" compile="0"
+                resource="0" file="../ssr data/impulse_responses/wfs_prefilters/wfs_prefilter_100_1300_48000.wav"/>
+          <FILE id="tMHga9" name="wfs_prefilter_100_1800_44100.wav" compile="0"
+                resource="0" file="../ssr data/impulse_responses/wfs_prefilters/wfs_prefilter_100_1800_44100.wav"/>
+          <FILE id="naE4fR" name="wfs_prefilter_100_1800_48000.wav" compile="0"
+                resource="0" file="../ssr data/impulse_responses/wfs_prefilters/wfs_prefilter_100_1800_48000.wav"/>
+          <FILE id="uDuw5W" name="wfs_prefilter_120_1500_44100.wav" compile="0"
+                resource="0" file="../ssr data/impulse_responses/wfs_prefilters/wfs_prefilter_120_1500_44100.wav"/>
+        </GROUP>
+      </GROUP>
+      <FILE id="DDm9vF" name="local_ssr.sh" compile="0" resource="0" file="../ssr data/local_ssr.sh"/>
+      <FILE id="HRiOZD" name="Makefile.am" compile="0" resource="0" file="../ssr data/Makefile.am"/>
+      <GROUP id="{BB69D8CB-4637-B3FE-1FA7-4201AFD042F1}" name="matlab_scripts">
+        <FILE id="tmSsMN" name="make_wfs_prefilter.m" compile="1" resource="0"
+              file="../ssr data/matlab_scripts/make_wfs_prefilter.m"/>
+        <FILE id="n7sR4J" name="prepare_hrirs_kemar.m" compile="1" resource="0"
+              file="../ssr data/matlab_scripts/prepare_hrirs_kemar.m"/>
+      </GROUP>
+      <GROUP id="{89D83D21-DBC0-9D7C-838A-6F9CC5975160}" name="reproduction_setups">
+        <FILE id="U8FIqQ" name="2.0.asd" compile="0" resource="0" file="../ssr data/reproduction_setups/2.0.asd"/>
+        <FILE id="f7RTiW" name="2.1.asd" compile="0" resource="0" file="../ssr data/reproduction_setups/2.1.asd"/>
+        <FILE id="YW7PVM" name="5.1.asd" compile="0" resource="0" file="../ssr data/reproduction_setups/5.1.asd"/>
+        <FILE id="iKqz94" name="8channels.asd" compile="0" resource="0" file="../ssr data/reproduction_setups/8channels.asd"/>
+        <FILE id="dNrOgs" name="asdf2html.xsl" compile="0" resource="0" file="../ssr data/reproduction_setups/asdf2html.xsl"/>
+        <FILE id="PN4qy2" name="circle.asd" compile="0" resource="0" file="../ssr data/reproduction_setups/circle.asd"/>
+        <FILE id="zhAeKQ" name="loudspeaker_setup_with_nearly_all_features.asd"
+              compile="0" resource="0" file="../ssr data/reproduction_setups/loudspeaker_setup_with_nearly_all_features.asd"/>
+        <FILE id="yiuauB" name="rostock_horizontal.asd" compile="0" resource="0"
+              file="../ssr data/reproduction_setups/rostock_horizontal.asd"/>
+        <FILE id="o0D1VP" name="rounded_rectangle.asd" compile="0" resource="0"
+              file="../ssr data/reproduction_setups/rounded_rectangle.asd"/>
+      </GROUP>
+      <GROUP id="{EA1FCB19-1E75-1DF3-FB3E-E83BC32BEC1E}" name="scenes">
+        <FILE id="Qn86bc" name="asdf2html.xsl" compile="0" resource="0" file="../ssr data/scenes/asdf2html.xsl"/>
+        <FILE id="GkyA6T" name="live_input.asd" compile="0" resource="0" file="../ssr data/scenes/live_input.asd"/>
+      </GROUP>
+      <FILE id="rjyTAO" name="ssr" compile="0" resource="0" file="../ssr data/ssr"/>
+      <FILE id="DEqJ65" name="ssr.conf.example" compile="0" resource="0"
+            file="../ssr data/ssr.conf.example"/>
+      <FILE id="hkfpsu" name="ssr.conf.local" compile="0" resource="0" file="../ssr data/ssr.conf.local"/>
+    </GROUP>
     <GROUP id="{A6FE9AE3-DD36-B929-426D-C7F2D5DFE4ED}" name="audio">
       <GROUP id="{B633BD5B-8E58-F399-197E-8A43D5BD9110}" name="apf">
         <FILE id="oDtAv2" name="biquad.h" compile="0" resource="0" file="../audio/apf/biquad.h"/>
@@ -111,7 +195,7 @@
         <FILE id="X9e62d" name="ssr_binaural.cpp" compile="1" resource="0"
               file="../audio/ssr code/ssr_binaural.cpp"/>
         <FILE id="xtI9oG" name="ssr_brs.cpp" compile="0" resource="0" file="../audio/ssr code/ssr_brs.cpp"/>
-        <FILE id="IAkFz1" name="ssr_generic.cpp" compile="1" resource="0" file="../audio/ssr code/ssr_generic.cpp"/>
+        <FILE id="IAkFz1" name="ssr_generic.cpp" compile="0" resource="0" file="../audio/ssr code/ssr_generic.cpp"/>
         <FILE id="Nxu9Tl" name="ssr_global.cpp" compile="1" resource="0" file="../audio/ssr code/ssr_global.cpp"/>
         <FILE id="sI6pY5" name="ssr_global.h" compile="0" resource="0" file="../audio/ssr code/ssr_global.h"/>
         <FILE id="Lr44Jb" name="ssr_nfc_hoa.cpp" compile="0" resource="0" file="../audio/ssr code/ssr_nfc_hoa.cpp"/>
@@ -164,14 +248,16 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2015 targetFolder="Builds/VisualStudio2015" vstFolder="../vst/" extraDefs="NOMINMAX">
+    <VS2015 targetFolder="Builds/VisualStudio2015" vstFolder="../vst/" extraDefs="NOMINMAX"
+            externalLibraries="libfftw3-3.lib&#10;libfftw3f-3.lib&#10;libfftw3l-3.lib&#10;libiconv.lib&#10;libsndfile-1.lib&#10;libxml2.lib&#10;libxml2_a.lib&#10;libxml2_a_dll.lib"
+            extraLinkerFlags="">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
                        isDebug="1" optimisation="1" targetName="ssr" headerPath="../../../gui&#10;../../../audio/inc&#10;../../../audio/&#10;../../../lib/"
-                       libraryPath=""/>
+                       libraryPath="../../../lib/" defines=""/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
                        isDebug="0" optimisation="3" targetName="ssr" headerPath="../../../gui&#10;../../../audio/inc&#10;../../../audio/&#10;../../../lib/"
-                       libraryPath=""/>
+                       libraryPath="../../../lib/" defines=""/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../juce/modules"/>

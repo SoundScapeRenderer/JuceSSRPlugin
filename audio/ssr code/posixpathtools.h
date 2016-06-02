@@ -41,6 +41,8 @@
 //#include <sys/stat.h> // for stat and mkdir (on Mac OSX)
 //#include <unistd.h>  // for chdir(), fchdir(), close()
 
+#include <Windows.h>
+
 /** helper functions for filename and path manipulation.
  *
  * @warning Code in this file is highly platform dependent!
@@ -66,6 +68,7 @@ namespace posixpathtools
  **/
 inline bool getcwd(std::string& path)
 {
+#if 0
   using file_id = std::pair<dev_t, ino_t>;
 
   bool success = false;
@@ -141,6 +144,15 @@ inline bool getcwd(std::string& path)
     close(start_fd);
   }
   return success;
+#else
+    // The directory path returned by native GetCurrentDirectory() no end backslash
+    const unsigned long maxDir = 260;
+    char currentDir[maxDir];
+    GetCurrentDirectory(maxDir, currentDir);
+    path = std::string(currentDir);
+
+    return true;
+#endif
 }
 
 /** Turn a path into a sequence of path components.
