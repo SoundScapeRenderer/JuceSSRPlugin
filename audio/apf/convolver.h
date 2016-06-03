@@ -414,7 +414,7 @@ class OutputBase
     fftw<float>::scoped_plan _ifft_plan;
 };
 
-OutputBase::OutputBase(const Input& input)
+inline OutputBase::OutputBase(const Input& input)
   : _empty_partition(0)
   // Initialize with empty partition
   , _filter_ptrs(input.partitions(), &_empty_partition)
@@ -435,7 +435,7 @@ OutputBase::OutputBase(const Input& input)
  * Output::set_filter().
  * @return pointer to the first sample of the convolved (and weighted) signal
  **/
-float*
+inline float*
 OutputBase::convolve(float weight)
 {
   _multiply_spectra();
@@ -467,7 +467,7 @@ OutputBase::convolve(float weight)
   return &second_half[0];
 }
 
-void
+inline void
 OutputBase::_multiply_partition_cpp(const float* signal, const float* filter)
 {
   // see http://www.ludd.luth.se/~torger/brutefir.html#bruteconv_4
@@ -546,7 +546,7 @@ OutputBase::_multiply_partition_simd(const float* signal, const float* filter)
 #endif
 
 /// Complex multiplication of input and filter spectra
-void
+inline void
 OutputBase::_multiply_spectra()
 {
   // Clear IFFT buffer (must be actually filled with zeros!)
@@ -578,7 +578,7 @@ OutputBase::_multiply_spectra()
   }
 }
 
-void
+inline void
 OutputBase::_unsort_coefficients()
 {
   fixed_vector<float> buffer(_partition_size);
@@ -612,7 +612,7 @@ OutputBase::_unsort_coefficients()
   std::copy(buffer.begin(), buffer.end(), _output_buffer.begin());
 }
 
-void
+inline void
 OutputBase::_ifft()
 {
   _unsort_coefficients();
@@ -646,7 +646,7 @@ class Output : public OutputBase
  * @param filter Container with filter partitions. If too few partitions are
  *   given, the rest is set to zero, if too many are given, the rest is ignored.
  **/
-void
+inline void
 Output::set_filter(const Filter& filter)
 {
   auto partition = filter.begin();
@@ -670,7 +670,7 @@ Output::set_filter(const Filter& filter)
  *   older partitions may still change! If the queues are empty, no crossfade is
  *   necessary (except @p weight was changed in convolve()).
  **/
-bool
+inline bool
 Output::queues_empty() const
 {
   if (_queues.empty()) return true;
@@ -687,7 +687,7 @@ Output::queues_empty() const
  * If queues_empty() returns @b true, calling this function is unnecessary.
  * @note This can lead to artifacts, so a crossfade is recommended.
  **/
-void
+inline void
 Output::rotate_queues()
 {
   auto target = _filter_ptrs.begin();
