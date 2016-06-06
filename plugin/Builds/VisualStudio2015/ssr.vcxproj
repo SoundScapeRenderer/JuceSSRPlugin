@@ -83,7 +83,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <AdditionalLibraryDirectories>../../../lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
-      <AdditionalDependencies>libfftw3-3.lib;libfftw3f-3.lib;libfftw3l-3.lib;libiconvStatic.lib;libiconvStaticD.lib;libsndfileStatic.lib;libxml2.lib;libxml2_a.lib;libxml2_a_dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfftw-3.3.lib;libfftwf-3.3.lib;libiconvStatic.lib;libiconvStaticD.lib;libsndfileStatic.lib;libxml2.lib;libxml2_a.lib;libxml2_a_dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/FORCE:multiple %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Bscmake>
@@ -128,7 +128,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalLibraryDirectories>../../../lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
-      <AdditionalDependencies>libfftw3-3.lib;libfftw3f-3.lib;libfftw3l-3.lib;libiconvStatic.lib;libiconvStaticD.lib;libsndfileStatic.lib;libxml2.lib;libxml2_a.lib;libxml2_a_dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfftw-3.3.lib;libfftwf-3.3.lib;libiconvStatic.lib;libiconvStaticD.lib;libsndfileStatic.lib;libxml2.lib;libxml2_a.lib;libxml2_a_dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/FORCE:multiple %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Bscmake>
