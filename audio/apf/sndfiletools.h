@@ -31,11 +31,6 @@
 
 #include "apf/stringtools.h"
 
-/**
-* NOTE: Lese file und speicher sampleRate und numChannels in handle.
-* Audioblock durch JUCE, genauso wie numChannels und sampleRate -> sndfile überflüssig eigl.
-*/
-
 namespace apf
 {
 
