@@ -16,7 +16,7 @@
 
 //==============================================================================
 PluginAudioProcessor::PluginAudioProcessor()
-    //: renderer(apf::parameter_map())
+    : renderer(apf::parameter_map())
 {
     positionInfo[0].resetToDefault();
     positionInfo[1].resetToDefault();
@@ -140,15 +140,10 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    //// mimoprocessor_file_io.h
-    //renderer.audio_callback(getBlockSize()
-    //    , buffer.getArrayOfWritePointers()
-    //    , buffer.getArrayOfWritePointers() + getNumInputChannels());
-}
-
-void PluginAudioProcessor::processBinaural(AudioSampleBuffer &buffer)
-{
-    ignoreUnused(buffer);
+    // mimoprocessor_file_io.h
+    renderer.audio_callback(getBlockSize()
+        , buffer.getArrayOfWritePointers()
+        , buffer.getArrayOfWritePointers() + getNumInputChannels());
 }
 
 void PluginAudioProcessor::updateHostInfo()

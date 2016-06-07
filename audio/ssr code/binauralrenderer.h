@@ -115,7 +115,7 @@ class BinauralRenderer::SourceChannel : public apf::conv::Output
 };
 
 void
-BinauralRenderer::_load_hrtfs(const std::string& filename, size_t size)
+inline BinauralRenderer::_load_hrtfs(const std::string& filename, size_t size)
 {
   auto hrir_file = apf::load_sndfile(filename, this->sample_rate(), 0);
 
@@ -207,7 +207,7 @@ class BinauralRenderer::Output : public _base::Output
       , apf::raised_cosine_fade<sample_type>> _combiner;
 };
 
-void BinauralRenderer::load_reproduction_setup()
+inline void BinauralRenderer::load_reproduction_setup()
 {
   // TODO: read settings from proper reproduction system
 
@@ -264,7 +264,7 @@ class BinauralRenderer::Source : public apf::conv::Input, public _base::Source
     apf::BlockParameter<float> _weight;
 };
 
-void BinauralRenderer::Source::_process()
+inline void BinauralRenderer::Source::_process()
 {
   float interp_factor = 0.0f;
   float weight = 0.0f;

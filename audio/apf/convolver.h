@@ -158,7 +158,7 @@ class TransformBase
     const size_t _partition_size;
 };
 
-TransformBase::TransformBase(size_t block_size_)
+inline TransformBase::TransformBase(size_t block_size_)
   : _block_size(block_size_)
   , _partition_size(2 * _block_size)
 {
@@ -176,7 +176,7 @@ TransformBase::TransformBase(size_t block_size_)
  * It is not necessary to re-use plans in other convolver instances.
   **/
 TransformBase::plan_ptr
-TransformBase::_create_plan(float* array) const
+inline TransformBase::_create_plan(float* array) const
 {
   return plan_ptr(new scoped_plan(fftw<float>::plan_r2r_1d, int(_partition_size)
       , array, array, FFTW_R2HC, FFTW_PATIENT));
@@ -190,7 +190,7 @@ TransformBase::_create_plan(float* array) const
  * @param[out] filter Target container
  **/
 template<typename In>
-void
+inline void
 TransformBase::prepare_filter(In first, In last, Filter& filter) const
 {
   for (auto& partition: filter)
@@ -210,7 +210,7 @@ TransformBase::prepare_filter(In first, In last, Filter& filter) const
  **/
 template<typename In>
 In
-TransformBase::prepare_partition(In first, In last, fft_node& partition) const
+inline TransformBase::prepare_partition(In first, In last, fft_node& partition) const
 {
   assert(size_t(std::distance(partition.begin(), partition.end()))
       == _partition_size);
@@ -237,7 +237,7 @@ TransformBase::prepare_partition(In first, In last, fft_node& partition) const
  * multiplication of the spectra.
  **/
 void
-TransformBase::_sort_coefficients(float* data) const
+inline TransformBase::_sort_coefficients(float* data) const
 {
   auto buffer = fixed_vector<float>(_partition_size);
 
