@@ -223,7 +223,6 @@
         <FILE id="ZAmry4" name="xmlparser.h" compile="0" resource="0" file="../audio/ssr code/xmlparser.h"/>
       </GROUP>
       <GROUP id="{F05E4230-DDE1-80EB-AD76-67AF0037AB4A}" name="inc">
-        <FILE id="jqDkSb" name="Filter.h" compile="0" resource="0" file="../audio/inc/Filter.h"/>
         <FILE id="aOGMZf" name="HostParam.h" compile="0" resource="0" file="../audio/inc/HostParam.h"/>
         <FILE id="g8T70W" name="Param.h" compile="0" resource="0" file="../audio/inc/Param.h"/>
         <FILE id="iSDKrX" name="PluginProcessor.h" compile="0" resource="0"
@@ -253,10 +252,10 @@
             extraLinkerFlags="">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="1" optimisation="1" targetName="ssr" headerPath="../../../gui&#10;../../../audio/inc&#10;../../../audio/&#10;../../../lib/"
+                       isDebug="1" optimisation="1" targetName="plugin" headerPath="../../../gui&#10;../../../audio/inc&#10;../../../audio/&#10;../../../lib/"
                        libraryPath="../../../lib/" defines=""/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="0" optimisation="3" targetName="ssr" headerPath="../../../gui&#10;../../../audio/inc&#10;../../../audio/&#10;../../../lib/"
+                       isDebug="0" optimisation="3" targetName="plugin" headerPath="../../../gui&#10;../../../audio/inc&#10;../../../audio/&#10;../../../lib/"
                        libraryPath="../../../lib/" defines=""/>
       </CONFIGURATIONS>
       <MODULEPATHS>

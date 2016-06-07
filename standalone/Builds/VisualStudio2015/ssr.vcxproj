@@ -12,17 +12,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{FBDE0344-0898-44CA-70CA-2AC3B03CC608}</ProjectGuid>
+    <ProjectGuid>{6CE4BE25-5619-1A82-ED4F-C598C609281B}</ProjectGuid>
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v140</PlatformToolset>
@@ -38,10 +38,10 @@
   </PropertyGroup>
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">plugin</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">standalone</TargetName>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath);../../../lib/</LibraryPath>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">plugin</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">standalone</TargetName>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath);../../../lib/</LibraryPath>
     <PlatformToolset>v140</PlatformToolset>
@@ -57,9 +57,9 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\..\juce\modules;..\..\..\vst;../../../gui;../../../audio/inc;../../../audio/;../../../lib/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\..\juce\modules;../../../gui;../../../audio/inc;../../../audio/;../../../lib/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;DEBUG;_DEBUG;NOMINMAX;JUCER_VS2015_78A5022=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader/>
       <AssemblerListingLocation>$(IntDir)\</AssemblerListingLocation>
@@ -73,22 +73,21 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <OutputFile>$(OutDir)\plugin.dll</OutputFile>
+      <OutputFile>$(OutDir)\standalone.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>libcmt.lib; msvcrt.lib;;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(IntDir)\plugin.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(IntDir)\standalone.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <AdditionalLibraryDirectories>../../../lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
       <AdditionalDependencies>libfftw3-3.lib;libfftw3f-3.lib;libfftw3l-3.lib;libiconvStatic.lib;libiconvStaticD.lib;libsndfileStatic.lib;libxml2.lib;libxml2_a.lib;libxml2_a_dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/FORCE:multiple %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>$(IntDir)\plugin.bsc</OutputFile>
+      <OutputFile>$(IntDir)\standalone.bsc</OutputFile>
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -101,9 +100,9 @@
     </Midl>
     <ClCompile>
       <Optimization>Full</Optimization>
-      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\..\juce\modules;..\..\..\vst;../../../gui;../../../audio/inc;../../../audio/;../../../lib/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\..\juce\modules;../../../gui;../../../audio/inc;../../../audio/;../../../lib/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;NOMINMAX;JUCER_VS2015_78A5022=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader/>
       <AssemblerListingLocation>$(IntDir)\</AssemblerListingLocation>
@@ -117,11 +116,11 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <OutputFile>$(OutDir)\plugin.dll</OutputFile>
+      <OutputFile>$(OutDir)\standalone.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(IntDir)\plugin.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(IntDir)\standalone.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <OptimizeReferences>true</OptimizeReferences>
@@ -129,68 +128,18 @@
       <AdditionalLibraryDirectories>../../../lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
       <AdditionalDependencies>libfftw3-3.lib;libfftw3f-3.lib;libfftw3l-3.lib;libiconvStatic.lib;libiconvStaticD.lib;libsndfileStatic.lib;libxml2.lib;libxml2_a.lib;libxml2_a_dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/FORCE:multiple %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>$(IntDir)\plugin.bsc</OutputFile>
+      <OutputFile>$(IntDir)\standalone.bsc</OutputFile>
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\audio\ssr code\audioplayer.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr code\audiorecorder.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr code\configuration.cpp"/>
-    <ClCompile Include="..\..\..\audio\ssr code\directionalpoint.cpp"/>
-    <ClCompile Include="..\..\..\audio\ssr code\orientation.cpp"/>
-    <ClCompile Include="..\..\..\audio\ssr code\position.cpp"/>
-    <ClCompile Include="..\..\..\audio\ssr code\razor-ahrs\Example.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr code\razor-ahrs\RazorAHRS.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr code\scene.cpp"/>
-    <ClCompile Include="..\..\..\audio\ssr code\ssr_aap.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr code\ssr_binaural.cpp"/>
-    <ClCompile Include="..\..\..\audio\ssr code\ssr_brs.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr code\ssr_generic.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr code\ssr_global.cpp"/>
-    <ClCompile Include="..\..\..\audio\ssr code\ssr_nfc_hoa.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr code\ssr_vbap.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr code\ssr_wfs.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr code\trackerintersense.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr code\trackerpolhemus.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr code\trackerrazor.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr code\trackervrpn.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr code\xmlparser.cpp"/>
     <ClCompile Include="..\..\..\audio\src\PluginProcessor.cpp"/>
     <ClCompile Include="..\..\..\audio\src\SynthParams.cpp"/>
     <ClCompile Include="..\..\..\gui\PluginEditor.cpp"/>
     <ClCompile Include="..\..\..\gui\PlugUI.cpp"/>
+    <ClCompile Include="..\..\Source\Main.cpp"/>
     <ClCompile Include="..\..\..\juce\modules\juce_audio_basics\buffers\juce_AudioDataConverters.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -408,6 +357,27 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\juce\modules\juce_audio_processors\scanning\juce_PluginListComponent.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\juce\modules\juce_audio_utils\gui\juce_AudioAppComponent.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\juce\modules\juce_audio_utils\gui\juce_AudioDeviceSelectorComponent.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\juce\modules\juce_audio_utils\gui\juce_AudioThumbnail.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\juce\modules\juce_audio_utils\gui\juce_AudioThumbnailCache.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\juce\modules\juce_audio_utils\gui\juce_AudioVisualiserComponent.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\juce\modules\juce_audio_utils\gui\juce_MidiKeyboardComponent.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\juce\modules\juce_audio_utils\players\juce_AudioProcessorPlayer.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\juce\modules\juce_core\text\juce_Base64.cpp">
@@ -1292,12 +1262,11 @@
     <ClCompile Include="..\..\..\juce\modules\juce_video\native\juce_win32_QuickTimeMovieComponent.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\BinaryData.cpp"/>
-    <ClCompile Include="..\..\..\juce\modules\juce_audio_plugin_client\AAX\juce_AAX_Wrapper.cpp"/>
     <ClCompile Include="..\..\..\juce\modules\juce_audio_basics\juce_audio_basics.cpp"/>
     <ClCompile Include="..\..\..\juce\modules\juce_audio_devices\juce_audio_devices.cpp"/>
     <ClCompile Include="..\..\..\juce\modules\juce_audio_formats\juce_audio_formats.cpp"/>
     <ClCompile Include="..\..\..\juce\modules\juce_audio_processors\juce_audio_processors.cpp"/>
+    <ClCompile Include="..\..\..\juce\modules\juce_audio_utils\juce_audio_utils.cpp"/>
     <ClCompile Include="..\..\..\juce\modules\juce_core\juce_core.cpp"/>
     <ClCompile Include="..\..\..\juce\modules\juce_cryptography\juce_cryptography.cpp"/>
     <ClCompile Include="..\..\..\juce\modules\juce_data_structures\juce_data_structures.cpp"/>
@@ -1306,91 +1275,9 @@
     <ClCompile Include="..\..\..\juce\modules\juce_gui_basics\juce_gui_basics.cpp"/>
     <ClCompile Include="..\..\..\juce\modules\juce_gui_extra\juce_gui_extra.cpp"/>
     <ClCompile Include="..\..\..\juce\modules\juce_opengl\juce_opengl.cpp"/>
-    <ClCompile Include="..\..\..\juce\modules\juce_audio_plugin_client\utility\juce_PluginUtilities.cpp"/>
-    <ClCompile Include="..\..\..\juce\modules\juce_audio_plugin_client\RTAS\juce_RTAS_DigiCode1.cpp">
-      <CallingConvention>StdCall</CallingConvention>
-    </ClCompile>
-    <ClCompile Include="..\..\..\juce\modules\juce_audio_plugin_client\RTAS\juce_RTAS_DigiCode2.cpp">
-      <CallingConvention>StdCall</CallingConvention>
-    </ClCompile>
-    <ClCompile Include="..\..\..\juce\modules\juce_audio_plugin_client\RTAS\juce_RTAS_DigiCode3.cpp">
-      <CallingConvention>StdCall</CallingConvention>
-    </ClCompile>
-    <ClCompile Include="..\..\..\juce\modules\juce_audio_plugin_client\RTAS\juce_RTAS_WinUtilities.cpp">
-      <CallingConvention>StdCall</CallingConvention>
-    </ClCompile>
-    <ClCompile Include="..\..\..\juce\modules\juce_audio_plugin_client\RTAS\juce_RTAS_Wrapper.cpp">
-      <CallingConvention>StdCall</CallingConvention>
-    </ClCompile>
     <ClCompile Include="..\..\..\juce\modules\juce_video\juce_video.cpp"/>
-    <ClCompile Include="..\..\..\juce\modules\juce_audio_plugin_client\VST\juce_VST_Wrapper.cpp"/>
-    <ClCompile Include="..\..\..\juce\modules\juce_audio_plugin_client\VST3\juce_VST3_Wrapper.cpp"/>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\audio\apf\biquad.h"/>
-    <ClInclude Include="..\..\..\audio\apf\blockdelayline.h"/>
-    <ClInclude Include="..\..\..\audio\apf\combine_channels.h"/>
-    <ClInclude Include="..\..\..\audio\apf\commandqueue.h"/>
-    <ClInclude Include="..\..\..\audio\apf\container.h"/>
-    <ClInclude Include="..\..\..\audio\apf\convolver.h"/>
-    <ClInclude Include="..\..\..\audio\apf\default_thread_policy.h"/>
-    <ClInclude Include="..\..\..\audio\apf\denormalprevention.h"/>
-    <ClInclude Include="..\..\..\audio\apf\dummy_thread_policy.h"/>
-    <ClInclude Include="..\..\..\audio\apf\fftwtools.h"/>
-    <ClInclude Include="..\..\..\audio\apf\iterator.h"/>
-    <ClInclude Include="..\..\..\audio\apf\jack_policy.h"/>
-    <ClInclude Include="..\..\..\audio\apf\jackclient.h"/>
-    <ClInclude Include="..\..\..\audio\apf\lockfreefifo.h"/>
-    <ClInclude Include="..\..\..\audio\apf\math.h"/>
-    <ClInclude Include="..\..\..\audio\apf\mextools.h"/>
-    <ClInclude Include="..\..\..\audio\apf\mimoprocessor.h"/>
-    <ClInclude Include="..\..\..\audio\apf\mimoprocessor_file_io.h"/>
-    <ClInclude Include="..\..\..\audio\apf\misc.h"/>
-    <ClInclude Include="..\..\..\audio\apf\parameter_map.h"/>
-    <ClInclude Include="..\..\..\audio\apf\pointer_policy.h"/>
-    <ClInclude Include="..\..\..\audio\apf\portaudio_policy.h"/>
-    <ClInclude Include="..\..\..\audio\apf\posix_thread_policy.h"/>
-    <ClInclude Include="..\..\..\audio\apf\rtlist.h"/>
-    <ClInclude Include="..\..\..\audio\apf\shareddata.h"/>
-    <ClInclude Include="..\..\..\audio\apf\sndfiletools.h"/>
-    <ClInclude Include="..\..\..\audio\apf\stopwatch.h"/>
-    <ClInclude Include="..\..\..\audio\apf\stringtools.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\aaprenderer.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\audioplayer.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\audiorecorder.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\binauralrenderer.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\brsrenderer.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\configuration.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\controller.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\directionalpoint.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\genericrenderer.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\hoacoefficients.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\laplace_coeffs_double.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\laplace_coeffs_float.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\loudspeaker.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\loudspeakerrenderer.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\maptools.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\nfchoarenderer.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\orientation.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\position.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\posixpathtools.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\publisher.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\razor-ahrs\RazorAHRS.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\rendererbase.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\rendersubscriber.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\scene.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\source.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\ssr_global.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\subscriber.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\timetools.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\tracker.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\trackerintersense.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\trackerpolhemus.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\trackerrazor.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\trackervrpn.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\vbaprenderer.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\wfsrenderer.h"/>
-    <ClInclude Include="..\..\..\audio\ssr code\xmlparser.h"/>
     <ClInclude Include="..\..\..\audio\inc\HostParam.h"/>
     <ClInclude Include="..\..\..\audio\inc\Param.h"/>
     <ClInclude Include="..\..\..\audio\inc\PluginProcessor.h"/>
@@ -1454,15 +1341,6 @@
     <ClInclude Include="..\..\..\juce\modules\juce_audio_formats\codecs\juce_WindowsMediaAudioFormat.h"/>
     <ClInclude Include="..\..\..\juce\modules\juce_audio_formats\sampler\juce_Sampler.h"/>
     <ClInclude Include="..\..\..\juce\modules\juce_audio_formats\juce_audio_formats.h"/>
-    <ClInclude Include="..\..\..\juce\modules\juce_audio_plugin_client\RTAS\juce_RTAS_DigiCode_Header.h"/>
-    <ClInclude Include="..\..\..\juce\modules\juce_audio_plugin_client\utility\juce_CarbonVisibility.h"/>
-    <ClInclude Include="..\..\..\juce\modules\juce_audio_plugin_client\utility\juce_CheckSettingMacros.h"/>
-    <ClInclude Include="..\..\..\juce\modules\juce_audio_plugin_client\utility\juce_FakeMouseMoveGenerator.h"/>
-    <ClInclude Include="..\..\..\juce\modules\juce_audio_plugin_client\utility\juce_IncludeModuleHeaders.h"/>
-    <ClInclude Include="..\..\..\juce\modules\juce_audio_plugin_client\utility\juce_IncludeSystemHeaders.h"/>
-    <ClInclude Include="..\..\..\juce\modules\juce_audio_plugin_client\utility\juce_PluginHostType.h"/>
-    <ClInclude Include="..\..\..\juce\modules\juce_audio_plugin_client\utility\juce_WindowsHooks.h"/>
-    <ClInclude Include="..\..\..\juce\modules\juce_audio_plugin_client\juce_audio_plugin_client.h"/>
     <ClInclude Include="..\..\..\juce\modules\juce_audio_processors\processors\juce_AudioPlayHead.h"/>
     <ClInclude Include="..\..\..\juce\modules\juce_audio_processors\processors\juce_AudioPluginInstance.h"/>
     <ClInclude Include="..\..\..\juce\modules\juce_audio_processors\processors\juce_AudioProcessor.h"/>
@@ -1485,6 +1363,15 @@
     <ClInclude Include="..\..\..\juce\modules\juce_audio_processors\scanning\juce_PluginDirectoryScanner.h"/>
     <ClInclude Include="..\..\..\juce\modules\juce_audio_processors\scanning\juce_PluginListComponent.h"/>
     <ClInclude Include="..\..\..\juce\modules\juce_audio_processors\juce_audio_processors.h"/>
+    <ClInclude Include="..\..\..\juce\modules\juce_audio_utils\gui\juce_AudioAppComponent.h"/>
+    <ClInclude Include="..\..\..\juce\modules\juce_audio_utils\gui\juce_AudioDeviceSelectorComponent.h"/>
+    <ClInclude Include="..\..\..\juce\modules\juce_audio_utils\gui\juce_AudioThumbnail.h"/>
+    <ClInclude Include="..\..\..\juce\modules\juce_audio_utils\gui\juce_AudioThumbnailBase.h"/>
+    <ClInclude Include="..\..\..\juce\modules\juce_audio_utils\gui\juce_AudioThumbnailCache.h"/>
+    <ClInclude Include="..\..\..\juce\modules\juce_audio_utils\gui\juce_AudioVisualiserComponent.h"/>
+    <ClInclude Include="..\..\..\juce\modules\juce_audio_utils\gui\juce_MidiKeyboardComponent.h"/>
+    <ClInclude Include="..\..\..\juce\modules\juce_audio_utils\players\juce_AudioProcessorPlayer.h"/>
+    <ClInclude Include="..\..\..\juce\modules\juce_audio_utils\juce_audio_utils.h"/>
     <ClInclude Include="..\..\..\juce\modules\juce_core\text\juce_Base64.h"/>
     <ClInclude Include="..\..\..\juce\modules\juce_core\text\juce_CharacterFunctions.h"/>
     <ClInclude Include="..\..\..\juce\modules\juce_core\text\juce_CharPointer_ASCII.h"/>
@@ -1855,60 +1742,14 @@
     <ClInclude Include="..\..\..\juce\modules\juce_video\capture\juce_CameraDevice.h"/>
     <ClInclude Include="..\..\..\juce\modules\juce_video\juce_video.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\AppConfig.h"/>
-    <ClInclude Include="..\..\JuceLibraryCode\BinaryData.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h"/>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\ssr data\asdf.xsd"/>
-    <None Include="..\..\..\ssr data\images\listener.png"/>
-    <None Include="..\..\..\ssr data\images\listener_background.png"/>
-    <None Include="..\..\..\ssr data\images\listener_shadow.png"/>
-    <None Include="..\..\..\ssr data\images\pause_button.png"/>
-    <None Include="..\..\..\ssr data\images\pause_button_pressed.png"/>
-    <None Include="..\..\..\ssr data\images\play_button.png"/>
-    <None Include="..\..\..\ssr data\images\play_button_pressed.png"/>
-    <None Include="..\..\..\ssr data\images\processing_button.png"/>
-    <None Include="..\..\..\ssr data\images\processing_button_pressed.png"/>
-    <None Include="..\..\..\ssr data\images\scene_menu_item.png"/>
-    <None Include="..\..\..\ssr data\images\scene_menu_item_selected.png"/>
-    <None Include="..\..\..\ssr data\images\skip_back_button.png"/>
-    <None Include="..\..\..\ssr data\images\skip_back_button_pressed.png"/>
-    <None Include="..\..\..\ssr data\images\source_shadow.png"/>
-    <None Include="..\..\..\ssr data\images\ssr_logo.png"/>
-    <None Include="..\..\..\ssr data\images\ssr_logo_large.png"/>
-    <None Include="..\..\..\ssr data\impulse_responses\hrirs\hrirs_fabian.wav"/>
-    <None Include="..\..\..\ssr data\impulse_responses\hrirs\hrirs_fabian_documentation.pdf"/>
-    <None Include="..\..\..\ssr data\impulse_responses\wfs_prefilters\wfs_prefilter_100_1300_44100.wav"/>
-    <None Include="..\..\..\ssr data\impulse_responses\wfs_prefilters\wfs_prefilter_100_1300_48000.wav"/>
-    <None Include="..\..\..\ssr data\impulse_responses\wfs_prefilters\wfs_prefilter_100_1800_44100.wav"/>
-    <None Include="..\..\..\ssr data\impulse_responses\wfs_prefilters\wfs_prefilter_100_1800_48000.wav"/>
-    <None Include="..\..\..\ssr data\impulse_responses\wfs_prefilters\wfs_prefilter_120_1500_44100.wav"/>
-    <None Include="..\..\..\ssr data\local_ssr.sh"/>
-    <None Include="..\..\..\ssr data\Makefile.am"/>
-    <None Include="..\..\..\ssr data\reproduction_setups\2.0.asd"/>
-    <None Include="..\..\..\ssr data\reproduction_setups\2.1.asd"/>
-    <None Include="..\..\..\ssr data\reproduction_setups\5.1.asd"/>
-    <None Include="..\..\..\ssr data\reproduction_setups\8channels.asd"/>
-    <None Include="..\..\..\ssr data\reproduction_setups\asdf2html.xsl"/>
-    <None Include="..\..\..\ssr data\reproduction_setups\circle.asd"/>
-    <None Include="..\..\..\ssr data\reproduction_setups\loudspeaker_setup_with_nearly_all_features.asd"/>
-    <None Include="..\..\..\ssr data\reproduction_setups\rostock_horizontal.asd"/>
-    <None Include="..\..\..\ssr data\reproduction_setups\rounded_rectangle.asd"/>
-    <None Include="..\..\..\ssr data\scenes\asdf2html.xsl"/>
-    <None Include="..\..\..\ssr data\scenes\live_input.asd"/>
-    <None Include="..\..\..\ssr data\ssr"/>
-    <None Include="..\..\..\ssr data\ssr.conf.example"/>
-    <None Include="..\..\..\ssr data\ssr.conf.local"/>
-    <None Include="..\..\..\audio\ssr code\coding_style.txt"/>
-    <None Include="..\..\..\audio\ssr code\Doxyfile"/>
-    <None Include="..\..\..\audio\ssr code\Makefile.am"/>
-    <None Include="..\..\..\audio\ssr code\razor-ahrs\GPL.txt"/>
-    <None Include="..\..\..\audio\ssr code\razor-ahrs\README.txt"/>
     <None Include="..\..\..\juce\modules\juce_audio_basics\juce_module_info"/>
     <None Include="..\..\..\juce\modules\juce_audio_devices\juce_module_info"/>
     <None Include="..\..\..\juce\modules\juce_audio_formats\juce_module_info"/>
-    <None Include="..\..\..\juce\modules\juce_audio_plugin_client\juce_module_info"/>
     <None Include="..\..\..\juce\modules\juce_audio_processors\juce_module_info"/>
+    <None Include="..\..\..\juce\modules\juce_audio_utils\juce_module_info"/>
     <None Include="..\..\..\juce\modules\juce_core\juce_module_info"/>
     <None Include="..\..\..\juce\modules\juce_cryptography\juce_module_info"/>
     <None Include="..\..\..\juce\modules\juce_data_structures\juce_module_info"/>
@@ -1918,7 +1759,6 @@
     <None Include="..\..\..\juce\modules\juce_gui_extra\juce_module_info"/>
     <None Include="..\..\..\juce\modules\juce_opengl\juce_module_info"/>
     <None Include="..\..\..\juce\modules\juce_video\juce_module_info"/>
-    <None Include="..\..\..\juce\modules\juce_audio_plugin_client\RTAS\juce_RTAS_WinResources.rsr"/>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include=".\resources.rc"/>

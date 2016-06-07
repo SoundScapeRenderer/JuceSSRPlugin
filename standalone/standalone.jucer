@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="gb8eHM" name="ssr" projectType="guiapp" version="1.0.0" bundleIdentifier="de.tu-berlin.qu.ssrstandalone"
+              includeBinaryInAppConfig="1" jucerVersion="3.2.0" companyName="QU Lab, TU Berlin"
+              companyWebsite="http://www.qu.tu-berlin.de">
+  <MAINGROUP id="EgmEsS" name="ssr">
+    <GROUP id="{B34AD2A1-B9DC-9F4A-B8C1-C639906E6312}" name="audio">
+      <GROUP id="{FBC0B1DF-BEE2-357B-2D4E-08C7F03685AA}" name="inc">
+        <FILE id="Js4zJz" name="HostParam.h" compile="0" resource="0" file="../audio/inc/HostParam.h"/>
+        <FILE id="N5zpDY" name="Param.h" compile="0" resource="0" file="../audio/inc/Param.h"/>
+        <FILE id="wG5bd2" name="PluginProcessor.h" compile="0" resource="0"
+              file="../audio/inc/PluginProcessor.h"/>
+        <FILE id="KACPut" name="SynthParams.h" compile="0" resource="0" file="../audio/inc/SynthParams.h"/>
+      </GROUP>
+      <GROUP id="{B9C9E0A8-99F6-C6E5-85F9-53911923394F}" name="src">
+        <FILE id="CrW3P9" name="PluginProcessor.cpp" compile="1" resource="0"
+              file="../audio/src/PluginProcessor.cpp"/>
+        <FILE id="gYqefv" name="SynthParams.cpp" compile="1" resource="0" file="../audio/src/SynthParams.cpp"/>
+      </GROUP>
+    </GROUP>
+    <GROUP id="{F6382FEF-D578-65A9-AE2B-732BBA4674EA}" name="gui">
+      <GROUP id="{97002C86-853A-E142-A502-E0F82A3882D2}" name="panels">
+        <FILE id="i81AfE" name="PanelBase.h" compile="0" resource="0" file="../gui/panels/PanelBase.h"/>
+      </GROUP>
+      <FILE id="eGCmM0" name="PluginEditor.cpp" compile="1" resource="0"
+            file="../gui/PluginEditor.cpp"/>
+      <FILE id="EWfpfp" name="PluginEditor.h" compile="0" resource="0" file="../gui/PluginEditor.h"/>
+      <FILE id="uQCqo9" name="PlugUI.cpp" compile="1" resource="0" file="../gui/PlugUI.cpp"/>
+      <FILE id="SuUk13" name="PlugUI.h" compile="0" resource="0" file="../gui/PlugUI.h"/>
+    </GROUP>
+    <GROUP id="{2F300B23-92D5-3B2C-E37F-EAD1E0B25A60}" name="Source">
+      <FILE id="Sj0bU7" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <VS2015 targetFolder="Builds/VisualStudio2015" extraDefs="NOMINMAX" externalLibraries="libfftw3-3.lib&#10;libfftw3f-3.lib&#10;libfftw3l-3.lib&#10;libiconvStatic.lib&#10;libiconvStaticD.lib&#10;libsndfileStatic.lib&#10;libxml2.lib&#10;libxml2_a.lib&#10;libxml2_a_dll.lib"
+            extraLinkerFlags="">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="1" optimisation="1" targetName="standalone" headerPath="../../../gui&#10;../../../audio/inc&#10;../../../audio/&#10;../../../lib/"
+                       libraryPath="../../../lib/"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="0" optimisation="3" targetName="standalone" libraryPath="../../../lib/"
+                       headerPath="../../../gui&#10;../../../audio/inc&#10;../../../audio/&#10;../../../lib/"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../juce/modules"/>
+        <MODULEPATH id="juce_events" path="../juce/modules"/>
+        <MODULEPATH id="juce_graphics" path="../juce/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../juce/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../juce/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../juce/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../juce/modules"/>
+        <MODULEPATH id="juce_video" path="../juce/modules"/>
+        <MODULEPATH id="juce_opengl" path="../juce/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../juce/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../juce/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../juce/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../juce/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../juce/modules"/>
+      </MODULEPATHS>
+    </VS2015>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_devices" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_formats" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_utils" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_core" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_cryptography" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_events" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_gui_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_opengl" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_video" showAllCode="1" useLocalCopy="0"/>
+  </MODULES>
+  <JUCEOPTIONS/>
+</JUCERPROJECT>
