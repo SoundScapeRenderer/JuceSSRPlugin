@@ -11,6 +11,10 @@
 #ifndef __XML_THREADS_H__
 #define __XML_THREADS_H__
 
+#ifndef LIBXML_STATIC
+#define LIBXML_STATIC
+#endif
+
 #include <libxml/xmlversion.h>
 
 #ifdef __cplusplus

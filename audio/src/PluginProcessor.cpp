@@ -16,7 +16,9 @@
 
 //==============================================================================
 PluginAudioProcessor::PluginAudioProcessor()
+#if USE_SSR == 1
     : renderer(apf::parameter_map())
+#endif
 {
     positionInfo[0].resetToDefault();
     positionInfo[1].resetToDefault();
@@ -140,10 +142,12 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
+#if USE_SSR == 1
     // mimoprocessor_file_io.h
     renderer.audio_callback(getBlockSize()
         , buffer.getArrayOfWritePointers()
         , buffer.getArrayOfWritePointers() + getNumInputChannels());
+#endif
 }
 
 void PluginAudioProcessor::updateHostInfo()

@@ -243,7 +243,7 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2015 targetFolder="Builds/VisualStudio2015" extraDefs="NOMINMAX" externalLibraries="libfftw3-3.lib&#10;libfftw3f-3.lib&#10;libfftw3l-3.lib&#10;libiconvStatic.lib&#10;libiconvStaticD.lib&#10;libsndfileStatic.lib&#10;libxml2.lib&#10;libxml2_a.lib&#10;libxml2_a_dll.lib"
+    <VS2015 targetFolder="Builds/VisualStudio2015" extraDefs="NOMINMAX" externalLibraries="libfftw3-3.lib&#10;libfftw3f-3.lib&#10;libfftw3l-3.lib&#10;libsndfileStatic.lib&#10;libxml2Static.lib"
             extraLinkerFlags="">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"

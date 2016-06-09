@@ -10,6 +10,10 @@
 #ifndef __XML_EXPORTS_H__
 #define __XML_EXPORTS_H__
 
+#ifndef LIBXML_STATIC
+#define LIBXML_STATIC
+#endif
+
 /**
  * XMLPUBFUN, XMLPUBVAR, XMLCALL
  *
@@ -43,7 +47,7 @@
 /**
  * XMLCDECL:
  *
- * Macro which declares the calling convention for exported functions that 
+ * Macro which declares the calling convention for exported functions that
  * use '...'.
  */
 #define XMLCDECL
@@ -115,7 +119,7 @@
    */
   #if defined(IN_LIBXML) && !defined(LIBXML_STATIC)
     #define XMLPUBFUN __declspec(dllexport)
-    #define XMLPUBVAR __declspec(dllexport)
+    #define XMLPUBVAR __declspec(dllexport) extern
   #else
     #define XMLPUBFUN
     #if !defined(LIBXML_STATIC)
