@@ -248,7 +248,7 @@
   </MAINGROUP>
   <EXPORTFORMATS>
     <VS2015 targetFolder="Builds/VisualStudio2015" vstFolder="../vst/" extraDefs="NOMINMAX"
-            externalLibraries="libfftw3-3.lib&#10;libfftw3f-3.lib&#10;libfftw3l-3.lib&#10;libsndfileStatic.lib&#10;libxml2Static.lib"
+            externalLibraries="libfftw-3.3_d.lib&#10;libfftwf-3.3_d.lib&#10;libsndfileStatic.lib&#10;libxml2Static.lib"
             extraLinkerFlags="">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
