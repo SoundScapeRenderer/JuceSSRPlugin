@@ -39,7 +39,7 @@
 #endif
 
 // force plugin to run by using test values for sampleRate and blockSize
-#define USE_TEST_PARAMS 1
+#define USE_TEST_PARAMS 0
 
 namespace apf
 {

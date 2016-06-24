@@ -16,9 +16,6 @@
 
 //==============================================================================
 PluginAudioProcessor::PluginAudioProcessor()
-#if USE_SSR == 1
-    : renderer(apf::parameter_map())
-#endif
 {
     positionInfo[0].resetToDefault();
     positionInfo[1].resetToDefault();
@@ -120,6 +117,10 @@ void PluginAudioProcessor::changeProgramName (int index, const String& newName)
 void PluginAudioProcessor::prepareToPlay (double sRate, int samplesPerBlock)
 {
     ignoreUnused(sRate, samplesPerBlock);
+    apf::parameter_map params;
+    params.set<int>("sample_rate", static_cast<int>(sRate));
+    params.set<int>("block_size", samplesPerBlock);
+    renderer.reset(new ssr::BinauralRenderer(params));
 }
 
 void PluginAudioProcessor::releaseResources()
@@ -144,7 +145,7 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
 
 #if USE_SSR == 1
     // mimoprocessor_file_io.h
-    renderer.audio_callback(getBlockSize()
+    renderer->audio_callback(getBlockSize()
         , buffer.getArrayOfWritePointers()
         , buffer.getArrayOfWritePointers() + getNumInputChannels());
 #endif

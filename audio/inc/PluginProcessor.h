@@ -75,7 +75,7 @@ private:
     void updateHostInfo();
 
 #if USE_SSR == 1
-    ssr::BinauralRenderer renderer;
+    std::unique_ptr<ssr::BinauralRenderer> renderer;
 #endif
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginAudioProcessor)
