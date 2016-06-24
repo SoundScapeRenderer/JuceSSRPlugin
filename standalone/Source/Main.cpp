@@ -10,7 +10,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-#define JucePlugin_MaxNumInputChannels 0
+#define JucePlugin_MaxNumInputChannels 2
 #define JucePlugin_MaxNumOutputChannels 2
 #include "../../juce/modules/juce_audio_plugin_client/Standalone/juce_StandaloneFilterWindow.h"
 

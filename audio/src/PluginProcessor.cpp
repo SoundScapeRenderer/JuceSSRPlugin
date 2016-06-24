@@ -146,7 +146,7 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
 #if USE_SSR == 1
     // mimoprocessor_file_io.h
     renderer->audio_callback(getBlockSize()
-        , buffer.getArrayOfWritePointers()
+        , buffer.getArrayOfWritePointers() // NOTE: write ~ read pointer (selbe adresse), read aber const
         , buffer.getArrayOfWritePointers() + getNumInputChannels());
 #endif
 }
