@@ -46,7 +46,7 @@
 #include "xmlparser.h"  // TODO: move this somewhere else
 #include <Windows.h>
 
-#define SSR_DATA_DIR "../.."
+#define SSR_DATA_DIR "../../../ssr data"
 
 using posixpathtools::make_path_relative_to_current_dir;
 using apf::str::S2A;
@@ -181,6 +181,7 @@ ssr::conf_struct ssr::configuration(int& argc, char* argv[])
 
   conf.loop = false; // temporary solution!
 
+#if 0
   // load system-wide config file (Mac)
   load_config_file("/Library/SoundScapeRenderer/ssr.conf",conf);
   // load system-wide config file (Linux et al)
@@ -193,6 +194,7 @@ ssr::conf_struct ssr::configuration(int& argc, char* argv[])
   filename = getenv("HOME");
   filename += "/.ssr/ssr.conf";
   load_config_file(filename.c_str(),conf);
+#endif
 
   const std::string usage_string =
 "Usage: " + std::string(argv[0]) + " [OPTIONS] <scene-file>\n";

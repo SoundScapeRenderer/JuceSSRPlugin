@@ -2,6 +2,7 @@
 
 SynthParams::SynthParams()
     : positionIndex(0)
+    , masterVol("master vol", "masterVol", "masterVol", "", 0.0f, 1.0f, 0.7f)
 {    
     positionInfo[0].resetToDefault();
     positionInfo[1].resetToDefault();

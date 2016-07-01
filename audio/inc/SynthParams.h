@@ -10,6 +10,8 @@ public:
     SynthParams();
     ~SynthParams();
 
+    Param masterVol;
+
     std::array<AudioPlayHead::CurrentPositionInfo, 2> positionInfo;
 
     std::atomic<int> positionIndex;

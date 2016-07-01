@@ -13,16 +13,13 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-#define USE_SSR 1
-
-#if USE_SSR == 1
-    #include "ssr code/controller.h"
-    #include "ssr code/binauralrenderer.h"
-#endif
-
 #include "SynthParams.h"
 #include <array>
 #include <math.h>
+
+
+#include "ssr code/controller.h"
+#include "ssr code/binauralrenderer.h"
 
 //==============================================================================
 /**
@@ -74,9 +71,7 @@ private:
     //==============================================================================
     void updateHostInfo();
 
-#if USE_SSR == 1
     std::unique_ptr<ssr::BinauralRenderer> renderer;
-#endif
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginAudioProcessor)
 };

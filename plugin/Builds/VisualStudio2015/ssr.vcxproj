@@ -83,7 +83,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <AdditionalLibraryDirectories>../../../lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
-      <AdditionalDependencies>libfftw-3.3_d.lib;libfftwf-3.3_d.lib;libsndfileStatic.lib;libxml2Static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfftw-3.3_d.lib;libfftwf-3.3_d.lib;libsndfileStatic_d.lib;libxml2Static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/FORCE:multiple %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Bscmake>
@@ -128,7 +128,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalLibraryDirectories>../../../lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
-      <AdditionalDependencies>libfftw-3.3_d.lib;libfftwf-3.3_d.lib;libsndfileStatic.lib;libxml2Static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfftw-3.3_d.lib;libfftwf-3.3_d.lib;libsndfileStatic_d.lib;libxml2Static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/FORCE:multiple %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Bscmake>

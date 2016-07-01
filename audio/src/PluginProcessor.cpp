@@ -14,6 +14,8 @@
 // UI header, should be hidden behind a factory
 #include <PluginEditor.h>
 
+#include "ssr code/configuration.h"
+
 //==============================================================================
 PluginAudioProcessor::PluginAudioProcessor()
 {
@@ -113,14 +115,24 @@ void PluginAudioProcessor::changeProgramName (int index, const String& newName)
     ignoreUnused(index,newName);
 }
 
+namespace {
+    char* ssr_argv[] = { "ssr_juce", "--binaural", "--no-ip-server", "--no-gui", "--no-tracker", "--verbose" };
+    int ssr_argc = sizeof(ssr_argv)/sizeof(ssr_argv[0]);
+}
+
 //==============================================================================
 void PluginAudioProcessor::prepareToPlay (double sRate, int samplesPerBlock)
 {
-    ignoreUnused(sRate, samplesPerBlock);
-    apf::parameter_map params;
-    params.set<int>("sample_rate", static_cast<int>(sRate));
-    params.set<int>("block_size", samplesPerBlock);
-    renderer.reset(new ssr::BinauralRenderer(params));
+    auto conf = ssr::configuration(ssr_argc, ssr_argv);
+    
+    conf.renderer_params.set<int>("sample_rate", static_cast<int>(sRate));
+    conf.renderer_params.set<int>("block_size", samplesPerBlock);
+    conf.renderer_params.set<int>("in_channels", getNumInputChannels());
+    conf.renderer_params.set<int>("out_channels", getNumOutputChannels());
+
+    renderer.reset(new ssr::BinauralRenderer(conf.renderer_params));
+
+    renderer->load_reproduction_setup();
 }
 
 void PluginAudioProcessor::releaseResources()
@@ -143,12 +155,20 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-#if USE_SSR == 1
     // mimoprocessor_file_io.h
+    renderer->activate();
+
     renderer->audio_callback(getBlockSize()
         , buffer.getArrayOfWritePointers() // NOTE: write ~ read pointer (selbe adresse), read aber const
         , buffer.getArrayOfWritePointers() + getNumInputChannels());
-#endif
+
+    renderer->deactivate();
+
+    // master volume
+    for (int c = 0; c < buffer.getNumChannels(); ++c)
+    {
+        FloatVectorOperations::multiply(buffer.getWritePointer(c, 0), SynthParams::masterVol.get(), buffer.getNumSamples());
+    }
 }
 
 void PluginAudioProcessor::updateHostInfo()

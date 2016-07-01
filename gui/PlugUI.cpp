@@ -35,13 +35,14 @@ PlugUI::PlugUI (SynthParams &p)
     //[/Constructor_pre]
 
     addAndMakeVisible (slider = new Slider ("new slider"));
-    slider->setRange (0, 10, 0);
+    slider->setRange (0, 1, 0.1);
     slider->setSliderStyle (Slider::RotaryVerticalDrag);
-    slider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    slider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
     slider->addListener (this);
 
 
     //[UserPreSize]
+    slider->setValue(0.7);
     //[/UserPreSize]
 
     setSize (400, 400);
@@ -95,6 +96,7 @@ void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
     if (sliderThatWasMoved == slider)
     {
         //[UserSliderCode_slider] -- add your slider handling code here..
+        params.masterVol.set(static_cast<float>(sliderThatWasMoved->getValue()));
         //[/UserSliderCode_slider]
     }
 
@@ -128,8 +130,8 @@ BEGIN_JUCER_METADATA
                  initialWidth="400" initialHeight="400">
   <BACKGROUND backgroundColour="ffffffff"/>
   <SLIDER name="new slider" id="69ace909b58289b9" memberName="slider" virtualName=""
-          explicitFocusOrder="0" pos="168 160 64 64" min="0" max="10" int="0"
-          style="RotaryVerticalDrag" textBoxPos="NoTextBox" textBoxEditable="1"
+          explicitFocusOrder="0" pos="168 160 64 64" min="0" max="1" int="0.10000000000000001"
+          style="RotaryVerticalDrag" textBoxPos="TextBoxBelow" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
 </JUCER_COMPONENT>
 

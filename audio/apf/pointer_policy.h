@@ -38,9 +38,6 @@
 #define APF_MIMOPROCESSOR_INTERFACE_POLICY apf::pointer_policy<APF_MIMOPROCESSOR_SAMPLE_TYPE*>
 #endif
 
-// force plugin to run by using test values for sampleRate and blockSize
-#define USE_TEST_PARAMS 0
-
 namespace apf
 {
 
@@ -72,13 +69,8 @@ class pointer_policy<T*>
 
   protected:
     explicit pointer_policy(const parameter_map& params = parameter_map())
-#if USE_TEST_PARAMS == 0
       : _sample_rate(params.get<int>("sample_rate"))
       , _block_size(params.get<int>("block_size"))
-#else
-      : _sample_rate(44100)
-      , _block_size(200)
-#endif
       , _next_input_id(0)
       , _next_output_id(0)
       , _in(0)
@@ -121,9 +113,8 @@ template<typename T>
 void
 pointer_policy<T*>::audio_callback(int n, T* const* in, T* const* out)
 {
-#if USE_TEST_PARAMS == 0
   assert(n == this->block_size());
-#endif
+
   (void)n;  // avoid "unused parameter" warning
 
   _in = in;
