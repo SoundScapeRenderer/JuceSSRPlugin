@@ -129,7 +129,7 @@ void PluginAudioProcessor::prepareToPlay (double sRate, int samplesPerBlock)
     conf.renderer_params.set<int>("block_size", samplesPerBlock);
     conf.renderer_params.set<int>("in_channels", getNumInputChannels());
     conf.renderer_params.set<int>("out_channels", getNumOutputChannels());
-
+    
     renderer.reset(new ssr::BinauralRenderer(conf.renderer_params));
 
     renderer->load_reproduction_setup();
