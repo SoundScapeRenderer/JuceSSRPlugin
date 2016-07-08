@@ -270,6 +270,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\..\..\api;$(ProjectDir)\..\..\kernel;$(ProjectDir)\..\..\dft;$(ProjectDir)\..\..\dft\simd;$(ProjectDir)\..\..\dft\scalar;$(ProjectDir)\..\..\rdft;$(ProjectDir)\..\..\rdft\simd;$(ProjectDir)\..\..\rdft\scalar;$(ProjectDir)\..\..\reodft;$(ProjectDir)\..\..\simd-support;$(ProjectDir)\..\..\threads</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <OpenMPSupport>true</OpenMPSupport>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

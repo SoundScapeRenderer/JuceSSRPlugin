@@ -497,6 +497,7 @@
       <OpenMPSupport>true</OpenMPSupport>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\api\;$(ProjectDir)..\..\dft\;$(ProjectDir)..\..\rdft\;$(ProjectDir)..\..\kernel\;$(ProjectDir)..\libfftw-3.3\;$(ProjectDir)..\..\libbench2\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -542,6 +543,7 @@
       <OpenMPSupport>true</OpenMPSupport>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\api\;$(ProjectDir)..\..\dft\;$(ProjectDir)..\..\rdft\;$(ProjectDir)..\..\kernel\;$(ProjectDir)..\..\libbench2\;$(ProjectDir)..\libfftw-3.3\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
