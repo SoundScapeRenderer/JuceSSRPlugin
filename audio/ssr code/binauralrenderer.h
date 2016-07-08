@@ -127,7 +127,7 @@ inline BinauralRenderer::_load_hrtfs(const std::string& filename, size_t size)
   }
 
   _angles = no_of_channels / 2;
-
+  
   // TODO: handle size > hrir_file.frames()
 
   if (size == 0) size = hrir_file.frames();
