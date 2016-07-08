@@ -124,15 +124,17 @@ namespace {
 void PluginAudioProcessor::prepareToPlay (double sRate, int samplesPerBlock)
 {
     auto conf = ssr::configuration(ssr_argc, ssr_argv);
-    
     conf.renderer_params.set<int>("sample_rate", static_cast<int>(sRate));
     conf.renderer_params.set<int>("block_size", samplesPerBlock);
     conf.renderer_params.set<int>("in_channels", getNumInputChannels());
     conf.renderer_params.set<int>("out_channels", getNumOutputChannels());
     
     renderer.reset(new ssr::BinauralRenderer(conf.renderer_params));
-
     renderer->load_reproduction_setup();
+
+    apf::parameter_map sourceParam;
+    sourceParam.set("connect_to", "1");
+    renderer->add_source(sourceParam);
 }
 
 void PluginAudioProcessor::releaseResources()
@@ -155,13 +157,14 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
+    // TODO: sinus input erstellen
+
+
     // mimoprocessor_file_io.h
     renderer->activate();
-
     renderer->audio_callback(getBlockSize()
         , buffer.getArrayOfWritePointers() // NOTE: write ~ read pointer (selbe adresse), read aber const
-        , buffer.getArrayOfWritePointers() + getNumInputChannels());
-
+        , buffer.getArrayOfWritePointers());
     renderer->deactivate();
 
     // master volume

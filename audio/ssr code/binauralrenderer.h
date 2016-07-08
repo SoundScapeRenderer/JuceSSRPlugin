@@ -219,7 +219,7 @@ inline void BinauralRenderer::load_reproduction_setup()
   {
     throw std::logic_error("Error loading HRIR file: " + std::string(e.what()));
   }
-
+#if 0
   auto params = Output::Params();
 
   const std::string prefix = this->params.get("system_output_prefix", "");
@@ -236,6 +236,33 @@ inline void BinauralRenderer::load_reproduction_setup()
     params.set("connect_to", prefix + "2");
   }
   this->add(params);
+#else
+  Input::Params ip;
+  std::string in_port_prefix = this->params.get("in_port_prefix", "");
+  int in_ch = this->params.get<int>("in_channels");
+  for (int i = 1; i <= in_ch; ++i)
+  {
+      ip.set("id", i);
+      if (in_port_prefix != "")
+      {
+          ip.set("connect_to", in_port_prefix + apf::str::A2S(i));
+      }
+      this->add(ip);  // ignore return value
+  }
+
+  Output::Params op;
+  std::string out_port_prefix = this->params.get("out_port_prefix", "");
+  auto out_ch = this->params.get<int>("out_channels");
+  for (int i = 1; i <= out_ch; ++i)
+  {
+      op.set("id", i);
+      if (out_port_prefix != "")
+      {
+          op.set("connect_to", out_port_prefix + apf::str::A2S(i));
+      }
+      this->add(op);  // ignore return value
+  }
+#endif
 }
 
 class BinauralRenderer::Source : public apf::conv::Input, public _base::Source
