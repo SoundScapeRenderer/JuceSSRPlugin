@@ -11,6 +11,8 @@ public:
     ~SynthParams();
 
     Param masterVol;
+    Param xPos;
+    Param yPos;
 
     std::array<AudioPlayHead::CurrentPositionInfo, 2> positionInfo;
 

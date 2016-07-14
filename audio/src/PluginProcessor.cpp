@@ -133,8 +133,8 @@ void PluginAudioProcessor::prepareToPlay (double sRate, int samplesPerBlock)
     renderer->load_reproduction_setup();
 
     apf::parameter_map sourceParam;
-    sourceParam.set("connect_to", "1");
-    renderer->add_source(sourceParam);
+    //sourceParam.set("connect_to", "1");
+    renderer->add_source(sourceParam); // NOTE: add_source kein output
 }
 
 void PluginAudioProcessor::releaseResources()
@@ -157,15 +157,26 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // TODO: sinus input erstellen
+    //// test sinus input erstellen
+    //float val = 0.f;
+    //for (int s = 0; s < buffer.getNumSamples(); ++s) {
+    //    val = sinf((2.f * float_Pi / static_cast<float>(getSampleRate())) * 440.f * static_cast<float>(s) + static_cast<float>(offset));
+    //    buffer.setSample(0, s, val);
+    //    buffer.setSample(1, s, val);
+    //}
+    //offset += buffer.getNumSamples();
 
+    // testwise set position
+    ssr::RendererBase<ssr::BinauralRenderer>::Source * source = renderer->get_source(1);
+    Position pos(SynthParams::xPos.get(), SynthParams::yPos.get());
+    source->position = pos;
 
     // mimoprocessor_file_io.h
-    renderer->activate();
+    //renderer->activate();
     renderer->audio_callback(getBlockSize()
         , buffer.getArrayOfWritePointers() // NOTE: write ~ read pointer (selbe adresse), read aber const
         , buffer.getArrayOfWritePointers());
-    renderer->deactivate();
+    //renderer->deactivate();
 
     // master volume
     for (int c = 0; c < buffer.getNumChannels(); ++c)

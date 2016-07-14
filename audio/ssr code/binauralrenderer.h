@@ -219,7 +219,7 @@ inline void BinauralRenderer::load_reproduction_setup()
   {
     throw std::logic_error("Error loading HRIR file: " + std::string(e.what()));
   }
-#if 0
+#if 1
   auto params = Output::Params();
 
   const std::string prefix = this->params.get("system_output_prefix", "");

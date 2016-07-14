@@ -40,9 +40,23 @@ PlugUI::PlugUI (SynthParams &p)
     slider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
     slider->addListener (this);
 
+    addAndMakeVisible (xPos = new Slider ("x pos"));
+    xPos->setRange (-1, 1, 0.1);
+    xPos->setSliderStyle (Slider::LinearHorizontal);
+    xPos->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
+    xPos->addListener (this);
+
+    addAndMakeVisible (yPos = new Slider ("y pos"));
+    yPos->setRange (-1, 1, 0.1);
+    yPos->setSliderStyle (Slider::LinearVertical);
+    yPos->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
+    yPos->addListener (this);
+
 
     //[UserPreSize]
     slider->setValue(0.7);
+    xPos->setValue(0.0);
+    yPos->setValue(0.0);
     //[/UserPreSize]
 
     setSize (400, 400);
@@ -60,6 +74,8 @@ PlugUI::~PlugUI()
     //[/Destructor_pre]
 
     slider = nullptr;
+    xPos = nullptr;
+    yPos = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -83,7 +99,9 @@ void PlugUI::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    slider->setBounds (168, 160, 64, 64);
+    slider->setBounds (8, 8, 80, 80);
+    xPos->setBounds (110, 270, 200, 60);
+    yPos->setBounds (180, 50, 60, 200);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -91,13 +109,26 @@ void PlugUI::resized()
 void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
 {
     //[UsersliderValueChanged_Pre]
+    float val = static_cast<float>(sliderThatWasMoved->getValue());
     //[/UsersliderValueChanged_Pre]
 
     if (sliderThatWasMoved == slider)
     {
         //[UserSliderCode_slider] -- add your slider handling code here..
-        params.masterVol.set(static_cast<float>(sliderThatWasMoved->getValue()));
+        params.masterVol.set(val);
         //[/UserSliderCode_slider]
+    }
+    else if (sliderThatWasMoved == xPos)
+    {
+        //[UserSliderCode_xPos] -- add your slider handling code here..
+        params.xPos.set(val);
+        //[/UserSliderCode_xPos]
+    }
+    else if (sliderThatWasMoved == yPos)
+    {
+        //[UserSliderCode_yPos] -- add your slider handling code here..
+        params.yPos.set(val);
+        //[/UserSliderCode_yPos]
     }
 
     //[UsersliderValueChanged_Post]
@@ -130,8 +161,16 @@ BEGIN_JUCER_METADATA
                  initialWidth="400" initialHeight="400">
   <BACKGROUND backgroundColour="ffffffff"/>
   <SLIDER name="new slider" id="69ace909b58289b9" memberName="slider" virtualName=""
-          explicitFocusOrder="0" pos="168 160 64 64" min="0" max="1" int="0.10000000000000001"
+          explicitFocusOrder="0" pos="8 8 80 80" min="0" max="1" int="0.10000000000000001"
           style="RotaryVerticalDrag" textBoxPos="TextBoxBelow" textBoxEditable="1"
+          textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+  <SLIDER name="x pos" id="9a28c05ae381351" memberName="xPos" virtualName=""
+          explicitFocusOrder="0" pos="110 270 200 60" min="-1" max="1"
+          int="0.10000000000000001" style="LinearHorizontal" textBoxPos="TextBoxBelow"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+  <SLIDER name="y pos" id="4f21307348cde0da" memberName="yPos" virtualName=""
+          explicitFocusOrder="0" pos="180 50 60 200" min="-1" max="1" int="0.10000000000000001"
+          style="LinearVertical" textBoxPos="TextBoxBelow" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
 </JUCER_COMPONENT>
 
