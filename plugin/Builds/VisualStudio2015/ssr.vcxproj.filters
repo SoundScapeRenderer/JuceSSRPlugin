@@ -3299,6 +3299,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\ssr data\default_hrirs.wav">
+      <Filter>ssr\ssr data</Filter>
+    </None>
     <None Include="..\..\..\ssr data\asdf.xsd">
       <Filter>ssr\ssr data</Filter>
     </None>

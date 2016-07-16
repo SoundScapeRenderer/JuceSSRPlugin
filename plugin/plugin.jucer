@@ -12,6 +12,8 @@
               companyName="QU Lab, TU Berlin" companyWebsite="http://www.qu.tu-berlin.de">
   <MAINGROUP id="KEM0W7" name="ssr">
     <GROUP id="{2F948DE4-F9C4-14BA-D49A-B21CB547997D}" name="ssr data">
+      <FILE id="mnRrKO" name="default_hrirs.wav" compile="0" resource="1"
+            file="../ssr data/default_hrirs.wav"/>
       <FILE id="Pes73y" name="asdf.xsd" compile="0" resource="0" file="../ssr data/asdf.xsd"/>
       <GROUP id="{1D6918C2-9EAC-9450-3611-A8E70C2A2363}" name="images">
         <FILE id="DXj8gn" name="listener.png" compile="0" resource="1" file="../ssr data/images/listener.png"/>

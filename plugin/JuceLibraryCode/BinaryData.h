@@ -9,6 +9,9 @@
 
 namespace BinaryData
 {
+    extern const char*   default_hrirs_wav;
+    const int            default_hrirs_wavSize = 737324;
+
     extern const char*   listener_png;
     const int            listener_pngSize = 8084;
 
@@ -61,7 +64,7 @@ namespace BinaryData
     extern const char* namedResourceList[];
 
     // Number of elements in the namedResourceList array.
-    const int namedResourceListSize = 16;
+    const int namedResourceListSize = 17;
 
     // If you provide the name of one of the binary resource variables above, this function will
     // return the corresponding data and its size (or a null pointer if the name isn't found).

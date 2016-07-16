@@ -41,13 +41,13 @@ PlugUI::PlugUI (SynthParams &p)
     slider->addListener (this);
 
     addAndMakeVisible (xPos = new Slider ("x pos"));
-    xPos->setRange (-1, 1, 0.1);
+    xPos->setRange (-2, 2, 0);
     xPos->setSliderStyle (Slider::LinearHorizontal);
     xPos->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
     xPos->addListener (this);
 
     addAndMakeVisible (yPos = new Slider ("y pos"));
-    yPos->setRange (-1, 1, 0.1);
+    yPos->setRange (-2, 2, 0);
     yPos->setSliderStyle (Slider::LinearVertical);
     yPos->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
     yPos->addListener (this);
@@ -165,11 +165,11 @@ BEGIN_JUCER_METADATA
           style="RotaryVerticalDrag" textBoxPos="TextBoxBelow" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <SLIDER name="x pos" id="9a28c05ae381351" memberName="xPos" virtualName=""
-          explicitFocusOrder="0" pos="110 270 200 60" min="-1" max="1"
-          int="0.10000000000000001" style="LinearHorizontal" textBoxPos="TextBoxBelow"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+          explicitFocusOrder="0" pos="110 270 200 60" min="-2" max="2"
+          int="0" style="LinearHorizontal" textBoxPos="TextBoxBelow" textBoxEditable="1"
+          textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <SLIDER name="y pos" id="4f21307348cde0da" memberName="yPos" virtualName=""
-          explicitFocusOrder="0" pos="180 50 60 200" min="-1" max="1" int="0.10000000000000001"
+          explicitFocusOrder="0" pos="180 50 60 200" min="-2" max="2" int="0"
           style="LinearVertical" textBoxPos="TextBoxBelow" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
 </JUCER_COMPONENT>

@@ -22,11 +22,20 @@ PluginAudioProcessor::PluginAudioProcessor()
     positionInfo[0].resetToDefault();
     positionInfo[1].resetToDefault();
 
-    /// \todo write default_hrir binary into temporary file
+    // write default_hrir binary into temporary file
+    tempFile = new TemporaryFile(".wav");
+    out = tempFile->getFile().createOutputStream();
+    out->write(BinaryData::default_hrirs_wav, BinaryData::default_hrirs_wavSize);
+    out = nullptr;
+
+    // save path of randomly named tempFile
+    hrirFilePath = tempFile->getFile().getFullPathName();
 }
 
 PluginAudioProcessor::~PluginAudioProcessor()
 {
+    tempFile->deleteTemporaryFile();
+    tempFile = nullptr;
     source = nullptr;
 }
 
@@ -132,9 +141,9 @@ void PluginAudioProcessor::prepareToPlay (double sRate, int samplesPerBlock)
     conf.renderer_params.set<int>("in_channels", getNumInputChannels());
     conf.renderer_params.set<int>("out_channels", getNumOutputChannels());
 
-    /// \todo set hrir_file source to temporary file
-    //conf.renderer_params.set("hrir_size", 0); // "0" means use all that are there
-    //conf.renderer_params.set("hrir_file", SSR_DATA_DIR"/default_hrirs.wav");
+    // set hrir_file source to temporary file
+    conf.renderer_params.set("hrir_size", 0); // "0" means use all that are there
+    conf.renderer_params.set("hrir_file", hrirFilePath);
 
     renderer.reset(new ssr::BinauralRenderer(conf.renderer_params));
     renderer->load_reproduction_setup();

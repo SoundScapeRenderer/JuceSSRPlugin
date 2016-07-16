@@ -1861,6 +1861,7 @@
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h"/>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\ssr data\default_hrirs.wav"/>
     <None Include="..\..\..\ssr data\asdf.xsd"/>
     <None Include="..\..\..\ssr data\images\listener.png"/>
     <None Include="..\..\..\ssr data\images\listener_background.png"/>

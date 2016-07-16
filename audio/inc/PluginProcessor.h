@@ -73,6 +73,10 @@ private:
 
     std::unique_ptr<ssr::BinauralRenderer> renderer;
     ssr::RendererBase<ssr::BinauralRenderer>::Source *source;
+
+    String hrirFilePath;
+    ScopedPointer<TemporaryFile> tempFile;
+    ScopedPointer<FileOutputStream> out;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginAudioProcessor)
 };

@@ -5,6 +5,8 @@
               companyWebsite="http://www.qu.tu-berlin.de">
   <MAINGROUP id="EgmEsS" name="ssr">
     <GROUP id="{15FC078A-D7EC-ED70-E8F2-79886D332AC0}" name="ssr data">
+      <FILE id="D3H0pE" name="default_hrirs.wav" compile="0" resource="1"
+            file="../ssr data/default_hrirs.wav"/>
       <FILE id="HMQEHd" name="asdf.xsd" compile="0" resource="0" file="../ssr data/asdf.xsd"/>
       <GROUP id="{7CB670DC-7C8A-6FA7-50D8-E99BD8985625}" name="images">
         <FILE id="vloSI6" name="listener.png" compile="0" resource="1" file="../ssr data/images/listener.png"/>
