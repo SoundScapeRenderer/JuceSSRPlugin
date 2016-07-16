@@ -58,6 +58,14 @@ class SharedData
       _fifo.push(new SetCommand(&_data, rhs));
     }
 
+    /** 
+    * Real-time alternative to pushing rhs into fifo queue. 
+    * This sets _data directly instead.
+    **/
+    void setRT(const X& rhs) {
+        _data = rhs;
+    }
+
   private:
     CommandQueue& _fifo;
     X _data;

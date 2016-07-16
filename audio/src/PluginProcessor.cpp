@@ -21,10 +21,13 @@ PluginAudioProcessor::PluginAudioProcessor()
 {
     positionInfo[0].resetToDefault();
     positionInfo[1].resetToDefault();
+
+    /// \todo write default_hrir binary into temporary file
 }
 
 PluginAudioProcessor::~PluginAudioProcessor()
 {
+    source = nullptr;
 }
 
 //==============================================================================
@@ -128,13 +131,17 @@ void PluginAudioProcessor::prepareToPlay (double sRate, int samplesPerBlock)
     conf.renderer_params.set<int>("block_size", samplesPerBlock);
     conf.renderer_params.set<int>("in_channels", getNumInputChannels());
     conf.renderer_params.set<int>("out_channels", getNumOutputChannels());
-    
+
+    /// \todo set hrir_file source to temporary file
+    //conf.renderer_params.set("hrir_size", 0); // "0" means use all that are there
+    //conf.renderer_params.set("hrir_file", SSR_DATA_DIR"/default_hrirs.wav");
+
     renderer.reset(new ssr::BinauralRenderer(conf.renderer_params));
     renderer->load_reproduction_setup();
 
+    // add our only input source
     apf::parameter_map sourceParam;
-    //sourceParam.set("connect_to", "1");
-    renderer->add_source(sourceParam); // NOTE: add_source kein output
+    renderer->add_source(sourceParam);
 }
 
 void PluginAudioProcessor::releaseResources()
@@ -157,24 +164,15 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    //// test sinus input erstellen
-    //float val = 0.f;
-    //for (int s = 0; s < buffer.getNumSamples(); ++s) {
-    //    val = sinf((2.f * float_Pi / static_cast<float>(getSampleRate())) * 440.f * static_cast<float>(s) + static_cast<float>(offset));
-    //    buffer.setSample(0, s, val);
-    //    buffer.setSample(1, s, val);
-    //}
-    //offset += buffer.getNumSamples();
-
-    // testwise set position
-    ssr::RendererBase<ssr::BinauralRenderer>::Source * source = renderer->get_source(1);
+    // set source position
+    source = renderer->get_source(1);
     Position pos(SynthParams::xPos.get(), SynthParams::yPos.get());
-    source->position = pos;
+    source->position.setRT(pos);
 
-    // mimoprocessor_file_io.h
+    // see mimoprocessor_file_io.h
     //renderer->activate();
     renderer->audio_callback(getBlockSize()
-        , buffer.getArrayOfWritePointers() // NOTE: write ~ read pointer (selbe adresse), read aber const
+        , buffer.getArrayOfWritePointers() // NOTE: write ~ read pointer (same address) but read is const
         , buffer.getArrayOfWritePointers());
     //renderer->deactivate();
 

@@ -72,6 +72,7 @@ private:
     void updateHostInfo();
 
     std::unique_ptr<ssr::BinauralRenderer> renderer;
+    ssr::RendererBase<ssr::BinauralRenderer>::Source *source;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginAudioProcessor)
 };
