@@ -4,7 +4,7 @@
               bundleIdentifier="de.tu-berlin.qu.ssrplugin" includeBinaryInAppConfig="1"
               buildVST="1" buildVST3="0" buildAU="1" buildRTAS="0" buildAAX="0"
               pluginName="ssr" pluginDesc="ssr" pluginManufacturer="qu.tu-berlin.de"
-              pluginManufacturerCode="Bitq" pluginCode="MiSp" pluginChannelConfigs="{1, 2}"
+              pluginManufacturerCode="Bitq" pluginCode="MiSp" pluginChannelConfigs="{2, 2}"
               pluginIsSynth="0" pluginWantsMidiIn="0" pluginProducesMidiOut="0"
               pluginSilenceInIsSilenceOut="0" pluginEditorRequiresKeys="0"
               pluginAUExportPrefix="ssrAU" pluginRTASCategory="" aaxIdentifier="de.tu-berlin.qu.ssr"
