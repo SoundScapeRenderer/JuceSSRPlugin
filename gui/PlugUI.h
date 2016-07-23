@@ -38,7 +38,8 @@
 */
 class PlugUI  : public PanelBase,
                 public TextEditorListener,
-                public SliderListener
+                public SliderListener,
+                public ButtonListener
 {
 public:
     //==============================================================================
@@ -67,6 +68,7 @@ public:
     void paint (Graphics& g);
     void resized();
     void sliderValueChanged (Slider* sliderThatWasMoved);
+    void buttonClicked (Button* buttonThatWasClicked);
 
 
 
@@ -74,13 +76,22 @@ private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     SynthParams &params;
 
+    Image listenerImg, listenerBackgroundImg, listenerShadowImg;
+
     void timerCallback() override;
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<Slider> slider;
+    ScopedPointer<Slider> gainSlider;
     ScopedPointer<Slider> xPos;
     ScopedPointer<Slider> yPos;
+    ScopedPointer<Slider> orientationSlider;
+    ScopedPointer<Label> label;
+    ScopedPointer<Label> label2;
+    ScopedPointer<ToggleButton> muteToggle;
+    ScopedPointer<ToggleButton> planeSrcToggle;
+    ScopedPointer<Slider> inputChannelSlider;
+    ScopedPointer<Label> label3;
 
 
     //==============================================================================

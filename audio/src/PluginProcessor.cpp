@@ -24,9 +24,8 @@ PluginAudioProcessor::PluginAudioProcessor()
 
     // write default_hrir binary into temporary file
     tempFile = new TemporaryFile(".wav");
-    out = tempFile->getFile().createOutputStream();
+    ScopedPointer<FileOutputStream> out = tempFile->getFile().createOutputStream();
     out->write(BinaryData::default_hrirs_wav, BinaryData::default_hrirs_wavSize);
-    out = nullptr;
 
     // save path of randomly named tempFile
     hrirFilePath = tempFile->getFile().getFullPathName();
@@ -148,6 +147,7 @@ void PluginAudioProcessor::prepareToPlay (double sRate, int samplesPerBlock)
     renderer.reset(new ssr::BinauralRenderer(conf.renderer_params));
     renderer->load_reproduction_setup();
 
+    /// \ todo add source for each input channel?
     // add our only input source
     apf::parameter_map sourceParam;
     renderer->add_source(sourceParam);
@@ -173,23 +173,37 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // set source position
+    // set ssr parameters of only source
     source = renderer->get_source(1);
-    Position pos(SynthParams::xPos.get(), SynthParams::yPos.get());
-    source->position.setRT(pos);
 
-    // see mimoprocessor_file_io.h
+    source->gain.setRT(SynthParams::gain.get());
+    source->mute.setRT(SynthParams::isSrcMuted.getStep() == eOnOffState::eOn);
+    
+    // binaural renderer only differentiates between plane source type and not plane source type
+    if (SynthParams::isPlaneSrc.getStep() == eOnOffState::eOn)
+    {
+        source->model.setRT(Source::model_t::plane);
+        Orientation ori(SynthParams::orientation.get());
+        source->orientation.setRT(ori);
+    }
+    else
+    {
+        source->model.setRT(Source::model_t::unknown);
+        Position pos(SynthParams::xPos.get(), SynthParams::yPos.get());
+        source->position.setRT(pos);
+    }
+
+    /// \ todo how to handle mono input from host correctly?
+    // choose between left or right channel for stereo input
+    int channelIndex = SynthParams::inputChannel.get();
+
+    // call internal ssr process function of binaural renderer
+    // NOTE: write ~ read pointer (same address) but read is const
     //renderer->activate();
     renderer->audio_callback(getBlockSize()
-        , buffer.getArrayOfWritePointers() // NOTE: write ~ read pointer (same address) but read is const
+        , buffer.getArrayOfWritePointers() + channelIndex
         , buffer.getArrayOfWritePointers());
     //renderer->deactivate();
-
-    // master volume
-    for (int c = 0; c < buffer.getNumChannels(); ++c)
-    {
-        FloatVectorOperations::multiply(buffer.getWritePointer(c, 0), SynthParams::masterVol.get(), buffer.getNumSamples());
-    }
 }
 
 void PluginAudioProcessor::updateHostInfo()

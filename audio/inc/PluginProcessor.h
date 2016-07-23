@@ -76,7 +76,6 @@ private:
 
     String hrirFilePath;
     ScopedPointer<TemporaryFile> tempFile;
-    ScopedPointer<FileOutputStream> out;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginAudioProcessor)
 };
