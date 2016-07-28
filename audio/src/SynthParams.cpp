@@ -6,6 +6,14 @@ namespace {
     };
 }
 
+const Colour SynthParams::sourceColourBrown(163, 95, 35);
+const Colour SynthParams::sourceColourBlue(43, 174, 247);
+const Colour SynthParams::sourceColourGreen(75, 135, 35);
+const Colour SynthParams::sourceColourViolet(97, 31, 160);
+const Colour SynthParams::sourceColourRed(173, 54, 35);
+const Colour SynthParams::sceneBackgroundColour(237, 237, 230);
+const Colour SynthParams::sourceLevelColour(58, 239, 58);
+
 SynthParams::SynthParams()
     : positionIndex(0)
     , xPos("x pos", "xPos", "xPos", "m", -2.0f, 2.0f, 0.0f)

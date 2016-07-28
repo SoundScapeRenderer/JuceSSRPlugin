@@ -32,6 +32,15 @@ public:
     int getGUIIndex();
     int getAudioIndex();
 
+    // original ssr colour codes
+    static const Colour sourceColourBrown;
+    static const Colour sourceColourBlue;
+    static const Colour sourceColourGreen;
+    static const Colour sourceColourViolet;
+    static const Colour sourceColourRed;
+    static const Colour sceneBackgroundColour;
+    static const Colour sourceLevelColour;
+
 protected:
 private:
 };

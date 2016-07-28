@@ -234,11 +234,15 @@
       <GROUP id="{97002C86-853A-E142-A502-E0F82A3882D2}" name="panels">
         <FILE id="i81AfE" name="PanelBase.h" compile="0" resource="0" file="../gui/panels/PanelBase.h"/>
       </GROUP>
+      <FILE id="Ld6QRe" name="CustomLookAndFeel.h" compile="0" resource="0"
+            file="../gui/CustomLookAndFeel.h"/>
       <FILE id="eGCmM0" name="PluginEditor.cpp" compile="1" resource="0"
             file="../gui/PluginEditor.cpp"/>
       <FILE id="EWfpfp" name="PluginEditor.h" compile="0" resource="0" file="../gui/PluginEditor.h"/>
       <FILE id="uQCqo9" name="PlugUI.cpp" compile="1" resource="0" file="../gui/PlugUI.cpp"/>
       <FILE id="SuUk13" name="PlugUI.h" compile="0" resource="0" file="../gui/PlugUI.h"/>
+      <FILE id="CwrTa6" name="SourceComponent.h" compile="0" resource="0"
+            file="../gui/SourceComponent.h"/>
     </GROUP>
     <GROUP id="{2F300B23-92D5-3B2C-E37F-EAD1E0B25A60}" name="Source">
       <FILE id="Sj0bU7" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>

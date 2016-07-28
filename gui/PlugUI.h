@@ -24,6 +24,8 @@
 #include "JuceHeader.h"
 #include "SynthParams.h"
 #include "panels/PanelBase.h"
+#include "SourceComponent.h"
+#include "CustomLookAndFeel.h"
 //[/Headers]
 
 
@@ -37,7 +39,6 @@
                                                                     //[/Comments]
 */
 class PlugUI  : public PanelBase,
-                public TextEditorListener,
                 public SliderListener,
                 public ButtonListener
 {
@@ -63,6 +64,7 @@ public:
         virtual void closeButtonPressed() { this->setVisible(false); }
     };
 
+    void childBoundsChanged(Component *child);
     //[/UserMethods]
 
     void paint (Graphics& g);
@@ -75,23 +77,25 @@ public:
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     SynthParams &params;
+    ScopedPointer<CustomLookAndFeel> lnf;
 
     Image listenerImg, listenerBackgroundImg, listenerShadowImg;
+    Image ssrLogo;
 
     void timerCallback() override;
     //[/UserVariables]
 
     //==============================================================================
+    ScopedPointer<ImageComponent> listenerBackground;
+    ScopedPointer<ImageComponent> listener;
     ScopedPointer<Slider> gainSlider;
-    ScopedPointer<Slider> xPos;
-    ScopedPointer<Slider> yPos;
     ScopedPointer<Slider> orientationSlider;
-    ScopedPointer<Label> label;
     ScopedPointer<Label> label2;
     ScopedPointer<ToggleButton> muteToggle;
     ScopedPointer<ToggleButton> planeSrcToggle;
     ScopedPointer<Slider> inputChannelSlider;
     ScopedPointer<Label> label3;
+    ScopedPointer<SourceComponent> source;
 
 
     //==============================================================================
