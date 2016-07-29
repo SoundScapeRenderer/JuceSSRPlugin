@@ -16,13 +16,15 @@ const Colour SynthParams::sourceLevelColour(58, 239, 58);
 
 SynthParams::SynthParams()
     : positionIndex(0)
-    , xPos("x pos", "xPos", "xPos", "m", -2.0f, 2.0f, 0.0f)
-    , yPos("y pos", "yPos", "yPos", "m", -2.0f, 2.0f, 0.0f)
+    , xPos("x pos", "xPos", "xPos", "m", -20.0f, 20.0f, 0.0f)
+    , yPos("y pos", "yPos", "yPos", "m", -20.0f, 20.0f, 2.0f)
     , orientation("orientation", "orientation", "orientation", "", 0.0f, 360.0f, 90.0f)
     , gain("gain", "gain", "gain", "", 0.0f, 1.0f, 0.8f)
     , isSrcMuted("isSrcMuted", "isSrcMuted", "isSrcMuted", eOnOffState::eOff, OnOffStateNames)
     , isPlaneSrc("isPlaneSrc", "isPlaneSrc", "isPlaneSrc", eOnOffState::eOff, OnOffStateNames)
     , inputChannel("input channel", "inputChannel", "inputChannel", "", 0.0f, 1.0f, 0.0f)
+    , levelLeft("level left", "levelLeft", "levelLeft", "", -1.0f, 1.0f, 0.0f)
+    , levelRight("level right", "levelright", "levelRight", "", -1.0f, 1.0f, 0.0f)
 {
     positionInfo[0].resetToDefault();
     positionInfo[1].resetToDefault();

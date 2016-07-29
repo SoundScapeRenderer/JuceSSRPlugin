@@ -11,7 +11,7 @@
 #ifndef CUSTOMLOOKANDFEEL_H_INCLUDED
 #define CUSTOMLOOKANDFEEL_H_INCLUDED
 
-#include "../standalone/JuceLibraryCode/JuceHeader.h"
+#include "JuceHeader.h"
 
 class CustomLookAndFeel : public LookAndFeel_V2
 {
@@ -40,8 +40,8 @@ public:
         Colour outlineColour(s.findColour(Slider::textBoxOutlineColourId));
         float outlineThickness = boxHeight * 0.2f;
 
-        g.setColour(bgColour);
-        g.fillRect(posX, posY, sliderPos, boxHeight);
+        g.setColour(isMouseOver? bgColour.brighter(0.2f) : bgColour);
+        g.fillRect(posX, posY, sliderPos, boxWidth);
 
         g.setColour(outlineColour);
         g.drawRect(posX, posY, boxWidth, boxHeight, outlineThickness);
@@ -63,6 +63,7 @@ void CustomLookAndFeel::drawLinearSliderThumb(Graphics &g, int x, int y, int wid
 
     Colour thumbColour(s.findColour(Slider::textBoxOutlineColourId));
 
+    /// \todo draw triangle thumb see ssr gui
     // draw thumb at current position
     if (style == Slider::LinearBar)
     {

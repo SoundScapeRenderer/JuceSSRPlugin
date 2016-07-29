@@ -178,7 +178,12 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
 
     source->gain.setRT(SynthParams::gain.get());
     source->mute.setRT(SynthParams::isSrcMuted.getStep() == eOnOffState::eOn);
-    
+
+    /// \todo set listener params
+    //renderer->state.reference_position
+    //renderer->state.reference_orientation;
+    //renderer->state.amplitude_reference_distance // in m
+
     // binaural renderer only differentiates between plane source type and not plane source type
     if (SynthParams::isPlaneSrc.getStep() == eOnOffState::eOn)
     {
@@ -188,7 +193,7 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     }
     else
     {
-        source->model.setRT(Source::model_t::unknown);
+        source->model.setRT(Source::model_t::point);
         Position pos(SynthParams::xPos.get(), SynthParams::yPos.get());
         source->position.setRT(pos);
     }
@@ -204,6 +209,9 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
         , buffer.getArrayOfWritePointers() + channelIndex
         , buffer.getArrayOfWritePointers());
     //renderer->deactivate();
+
+    SynthParams::levelLeft.set(buffer.getRMSLevel(0, 0, buffer.getNumSamples()));
+    SynthParams::levelRight.set(buffer.getRMSLevel(1, 0, buffer.getNumSamples()));
 }
 
 void PluginAudioProcessor::updateHostInfo()

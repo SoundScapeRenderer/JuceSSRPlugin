@@ -96,6 +96,8 @@ private:
     ScopedPointer<Slider> inputChannelSlider;
     ScopedPointer<Label> label3;
     ScopedPointer<SourceComponent> source;
+    ScopedPointer<Slider> levelMeterLeft;
+    ScopedPointer<Slider> levelMeterRight;
 
 
     //==============================================================================

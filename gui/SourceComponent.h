@@ -11,7 +11,7 @@
 #ifndef SOURCECOMPONENT_H_INCLUDED
 #define SOURCECOMPONENT_H_INCLUDED
 
-#include "../standalone/JuceLibraryCode/JuceHeader.h"
+#include "JuceHeader.h"
 #include "SynthParams.h"
 
 //==============================================================================
@@ -44,6 +44,7 @@ public:
         repaint();
     }
 
+    /// \todo gui zoom in plugUI rescales node distance and position calculation
     void setScale(float scale)
     {
         posZoomScale = scale;
@@ -116,31 +117,11 @@ private:
     {
         float w = getWidth();
         float h = getHeight();
-
-#if USE_RESCALE 1
-#if RESCALE_VIA_SETBOUNDS 0
-        w *= sizeScale;
-        h *= sizeScale;
-#endif
-#endif
         float paddingL = (getWidth() - w) * 0.5f;
         float paddingT = (getHeight() - h) * 0.5f;
 
-#if 0
-        int i = 0;
-        do
-        {
-            g.setColour((i % 2 == 0) ? c : Colours::white);
-            g.fillEllipse(paddingL, paddingT, w, h);
-
-            w *= (i % 2 == 0) ? ringRatio1 : ringRatio2;
-            h *= (i % 2 == 0) ? ringRatio1 : ringRatio2;
-            paddingL = (getWidth() - w) * 0.5f;
-            paddingT = (getHeight() - h) * 0.5f;
-
-            i++;
-        } while (i < 3);
-#else
+        /// \todo draw shadow
+        // draw actual node
         g.setColour(c);
         g.fillEllipse(paddingL, paddingT, w, h);
 
@@ -157,7 +138,6 @@ private:
         paddingT = (getHeight() - h) * 0.5f;
         g.setColour(c);
         g.fillEllipse(paddingL, paddingT, w, h);
-#endif
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SourceComponent)

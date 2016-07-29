@@ -25,6 +25,8 @@ public:
     ParamStepped<eOnOffState> isPlaneSrc;
 
     Param inputChannel;
+    Param levelLeft;
+    Param levelRight;
 
     std::array<AudioPlayHead::CurrentPositionInfo, 2> positionInfo;
     std::atomic<int> positionIndex;

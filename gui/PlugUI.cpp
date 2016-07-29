@@ -24,6 +24,7 @@
 
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
+#define LEVELMETER 0
 //[/MiscUserDefs]
 
 //==============================================================================
@@ -31,7 +32,7 @@ PlugUI::PlugUI (SynthParams &p)
     : PanelBase(p), params(p)
 {
     //[Constructor_pre] You can add your own custom stuff here..
-    startTimerHz (30);
+    startTimerHz (60);
     //[/Constructor_pre]
 
     addAndMakeVisible (listenerBackground = new ImageComponent());
@@ -86,6 +87,22 @@ PlugUI::PlugUI (SynthParams &p)
     addAndMakeVisible (source = new SourceComponent (params, SynthParams::sourceColourBlue));
     source->setName ("source");
 
+    addAndMakeVisible (levelMeterLeft = new Slider ("level left"));
+    levelMeterLeft->setRange (-0.2, 1, 0);
+    levelMeterLeft->setSliderStyle (Slider::LinearVertical);
+    levelMeterLeft->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    levelMeterLeft->setColour (Slider::thumbColourId, Colour (0xff60ff60));
+    levelMeterLeft->addListener (this);
+    levelMeterLeft->setSkewFactor (0.7);
+
+    addAndMakeVisible (levelMeterRight = new Slider ("level right"));
+    levelMeterRight->setRange (-0.2, 1, 0);
+    levelMeterRight->setSliderStyle (Slider::LinearVertical);
+    levelMeterRight->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    levelMeterRight->setColour (Slider::thumbColourId, Colour (0xff60ff60));
+    levelMeterRight->addListener (this);
+    levelMeterRight->setSkewFactor (0.7);
+
 
     //[UserPreSize]
     this->setWantsKeyboardFocus(true);
@@ -99,9 +116,18 @@ PlugUI::PlugUI (SynthParams &p)
     gainSlider->setValue(-6.0);
     gainSlider->setColour(Slider::thumbColourId, SynthParams::sourceLevelColour);
     gainSlider->setColour(Slider::textBoxOutlineColourId, SynthParams::sourceColourBlue);
+    gainSlider->setAlwaysOnTop(true);
 
     source->setAlwaysOnTop(true);
     source->registerGainSlider(gainSlider);
+
+#if LEVELMETER 1
+    levelMeterLeft->setSliderStyle(Slider::LinearBarVertical);
+    levelMeterRight->setSliderStyle(Slider::LinearBarVertical);
+#else
+    levelMeterLeft->setVisible(false);
+    levelMeterRight->setVisible(false);
+#endif
     //[/UserPreSize]
 
     setSize (900, 600);
@@ -124,9 +150,7 @@ PlugUI::PlugUI (SynthParams &p)
         listenerBackground->getX() + listenerBackground->getWidth() / 2, listenerBackground->getY() + listenerBackground->getHeight() / 2));
     listenerBackground->setWantsKeyboardFocus(true);
 
-    source->grabKeyboardFocus();
-
-    // set whole design from very parent GUI component
+    // set new design for some components
     lnf = new CustomLookAndFeel();
     LookAndFeel::setDefaultLookAndFeel(lnf);
     //[/Constructor]
@@ -148,6 +172,8 @@ PlugUI::~PlugUI()
     inputChannelSlider = nullptr;
     label3 = nullptr;
     source = nullptr;
+    levelMeterLeft = nullptr;
+    levelMeterRight = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -172,16 +198,18 @@ void PlugUI::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    listenerBackground->setBounds (386, 235, 128, 128);
+    listenerBackground->setBounds (391, 242, 128, 128);
     listener->setBounds (400, 250, 100, 100);
-    gainSlider->setBounds (425, 200, 50, 12);
+    gainSlider->setBounds (416, 192, 75, 16);
     orientationSlider->setBounds (24, 88, 80, 80);
     label2->setBounds (24, 56, 80, 24);
     muteToggle->setBounds (24, 200, 80, 24);
     planeSrcToggle->setBounds (24, 24, 80, 24);
     inputChannelSlider->setBounds (32, 264, 64, 24);
     label3->setBounds (16, 232, 96, 24);
-    source->setBounds (420, 135, 60, 60);
+    source->setBounds (408, 96, 90, 90);
+    levelMeterLeft->setBounds (824, 150, 24, 300);
+    levelMeterRight->setBounds (856, 150, 24, 300);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -209,6 +237,16 @@ void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
         //[UserSliderCode_inputChannelSlider] -- add your slider handling code here..
         params.inputChannel.set(val);
         //[/UserSliderCode_inputChannelSlider]
+    }
+    else if (sliderThatWasMoved == levelMeterLeft)
+    {
+        //[UserSliderCode_levelMeterLeft] -- add your slider handling code here..
+        //[/UserSliderCode_levelMeterLeft]
+    }
+    else if (sliderThatWasMoved == levelMeterRight)
+    {
+        //[UserSliderCode_levelMeterRight] -- add your slider handling code here..
+        //[/UserSliderCode_levelMeterRight]
     }
 
     //[UsersliderValueChanged_Post]
@@ -256,7 +294,47 @@ void PlugUI::childBoundsChanged(Component *child)
 
 void PlugUI::timerCallback()
 {
+#if LEVELMETER 1
+    // get current gui and audio level
+    double guiLevelLeft = levelMeterLeft->getValue();
+    double guiLevelRight = levelMeterRight->getValue();
+    float audioLevelLeft = params.levelLeft.get();
+    float audioLevelRight = params.levelRight.get();
+    double dropSpeed = 0.00001;
 
+    // refresh level meter values
+    if (audioLevelLeft > guiLevelLeft)
+    {
+            levelMeterLeft->setValue(audioLevelLeft);
+    }
+    else
+    {
+        if (guiLevelLeft - dropSpeed> 0.0)
+        {
+            levelMeterLeft->setValue(jmin(guiLevelLeft - dropSpeed, -1.0), dontSendNotification);
+        }
+        else
+        {
+            levelMeterLeft->setValue(0.0, dontSendNotification);
+        }
+    }
+
+    if (audioLevelRight > guiLevelRight)
+    {
+        levelMeterRight->setValue(audioLevelRight, dontSendNotification);
+    }
+    else
+    {
+        if (guiLevelRight - dropSpeed > 0.0)
+        {
+            levelMeterRight->setValue(jmin(guiLevelRight - dropSpeed, -1.0), dontSendNotification);
+        }
+        else
+        {
+            levelMeterRight->setValue(0.0);
+        }
+    }
+#endif
 }
 //[/MiscUserCode]
 
@@ -277,13 +355,13 @@ BEGIN_JUCER_METADATA
                  initialWidth="900" initialHeight="600">
   <BACKGROUND backgroundColour="ffedede6"/>
   <GENERICCOMPONENT name="listener background" id="28146762f36cc5a3" memberName="listenerBackground"
-                    virtualName="ImageComponent" explicitFocusOrder="0" pos="386 235 128 128"
+                    virtualName="ImageComponent" explicitFocusOrder="0" pos="391 242 128 128"
                     class="Component" params=""/>
   <GENERICCOMPONENT name="listener" id="7502391df768a172" memberName="listener" virtualName="ImageComponent"
                     explicitFocusOrder="0" pos="400 250 100 100" class="Component"
                     params=""/>
   <SLIDER name="gain slider" id="69ace909b58289b9" memberName="gainSlider"
-          virtualName="" explicitFocusOrder="0" pos="425 200 50 12" min="-96"
+          virtualName="" explicitFocusOrder="0" pos="416 192 75 16" min="-96"
           max="12" int="0" style="LinearBar" textBoxPos="NoTextBox" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="3"/>
   <SLIDER name="orientation slider" id="d65ca37ac19fdb1e" memberName="orientationSlider"
@@ -311,8 +389,17 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15" bold="0" italic="0" justification="36"/>
   <GENERICCOMPONENT name="source" id="7b4082301ad63f28" memberName="source" virtualName="SourceComponent"
-                    explicitFocusOrder="0" pos="420 135 60 60" class="Component"
-                    params="params, SynthParams::sourceColourBlue"/>
+                    explicitFocusOrder="0" pos="408 96 90 90" class="Component" params="params, SynthParams::sourceColourBlue"/>
+  <SLIDER name="level left" id="13e0962dc81dca1" memberName="levelMeterLeft"
+          virtualName="" explicitFocusOrder="0" pos="824 150 24 300" thumbcol="ff60ff60"
+          min="-0.20000000000000001" max="1" int="0" style="LinearVertical"
+          textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="80"
+          textBoxHeight="20" skewFactor="0.69999999999999996"/>
+  <SLIDER name="level right" id="a744d1a2c21ea6d8" memberName="levelMeterRight"
+          virtualName="" explicitFocusOrder="0" pos="856 150 24 300" thumbcol="ff60ff60"
+          min="-0.20000000000000001" max="1" int="0" style="LinearVertical"
+          textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="80"
+          textBoxHeight="20" skewFactor="0.69999999999999996"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
