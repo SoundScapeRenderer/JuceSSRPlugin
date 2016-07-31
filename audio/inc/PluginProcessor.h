@@ -14,7 +14,6 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 
 #include "SynthParams.h"
-#include <array>
 #include <math.h>
 
 
@@ -69,10 +68,7 @@ public:
 
 private:
     //==============================================================================
-    void updateHostInfo();
-
     std::unique_ptr<ssr::BinauralRenderer> renderer;
-    ssr::RendererBase<ssr::BinauralRenderer>::Source *source;
 
     String hrirFilePath;
     ScopedPointer<TemporaryFile> tempFile;

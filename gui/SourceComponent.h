@@ -57,7 +57,7 @@ public:
         drawSourceNode(g, nodeColour, ringRatio1, ringRatio2);
 
         /// \todo draw angle arrows
-        if (params.isPlaneSrc.getStep() == eOnOffState::eOn)
+        if (params.isSourceTypePlane.getStep() == eSourceType::ePlane)
         {
 
         }
@@ -84,8 +84,8 @@ public:
         float x = ((getX() + getWidth() * 0.5f) - (parentWidth * 0.5f)) / (parentWidth * posZoomScale);
         float y = ((getY() + getHeight() * 0.5f) - (parentHeight * 0.5f)) / (parentHeight * posZoomScale);
 
-        params.xPos.set(x);
-        params.yPos.set(y);
+        params.sourceX.setUI(x);
+        params.sourceY.setUI(y);
     }
 
     //==============================================================================

@@ -19,9 +19,6 @@
 //==============================================================================
 PluginAudioProcessor::PluginAudioProcessor()
 {
-    positionInfo[0].resetToDefault();
-    positionInfo[1].resetToDefault();
-
     // write default_hrir binary into temporary file
     tempFile = new TemporaryFile(".wav");
     ScopedPointer<FileOutputStream> out = tempFile->getFile().createOutputStream();
@@ -29,13 +26,24 @@ PluginAudioProcessor::PluginAudioProcessor()
 
     // save path of randomly named tempFile
     hrirFilePath = tempFile->getFile().getFullPathName();
+
+    // add automation params for host
+    addParameter(new HostParam<Param>(sourceX));
+    addParameter(new HostParam<Param>(sourceY));
+    addParameter(new HostParam<Param>(sourceOrientation));
+    addParameter(new HostParam<Param>(sourceGain));
+    addParameter(new HostParam<ParamStepped<eOnOffState>>(sourceMute));
+    addParameter(new HostParam<ParamStepped<eSourceType>>(isSourceTypePlane));
+
+    addParameter(new HostParam<Param>(referenceX));
+    addParameter(new HostParam<Param>(referenceY));
+    addParameter(new HostParam<Param>(referenceOrientation));
 }
 
 PluginAudioProcessor::~PluginAudioProcessor()
 {
     tempFile->deleteTemporaryFile();
     tempFile = nullptr;
-    source = nullptr;
 }
 
 //==============================================================================
@@ -147,8 +155,8 @@ void PluginAudioProcessor::prepareToPlay (double sRate, int samplesPerBlock)
     renderer.reset(new ssr::BinauralRenderer(conf.renderer_params));
     renderer->load_reproduction_setup();
 
-    /// \ todo add source for each input channel?
-    // add our only input source
+    /// \todo add source for each input channel?
+    // add input source
     apf::parameter_map sourceParam;
     renderer->add_source(sourceParam);
 }
@@ -162,7 +170,6 @@ void PluginAudioProcessor::releaseResources()
 void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
     ignoreUnused(midiMessages);
-    updateHostInfo();
 
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
@@ -173,58 +180,41 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // set ssr parameters of only source
-    source = renderer->get_source(1);
-
-    source->gain.setRT(SynthParams::gain.get());
-    source->mute.setRT(SynthParams::isSrcMuted.getStep() == eOnOffState::eOn);
-
-    /// \todo set listener params
-    //renderer->state.reference_position
-    //renderer->state.reference_orientation;
-    //renderer->state.amplitude_reference_distance // in m
-
-    // binaural renderer only differentiates between plane source type and not plane source type
-    if (SynthParams::isPlaneSrc.getStep() == eOnOffState::eOn)
+    // set ssr source params
+    ssr::RendererBase<ssr::BinauralRenderer>::Source *source = renderer->get_source(1);
+    source->gain.setRT(sourceGain.get());
+    source->mute.setRT(sourceMute.getStep() == eOnOffState::eOn);
+    if (isSourceTypePlane.getStep() == eSourceType::ePlane)
     {
         source->model.setRT(Source::model_t::plane);
-        Orientation ori(SynthParams::orientation.get());
-        source->orientation.setRT(ori);
+        source->orientation.setRT(Orientation(sourceOrientation.get()));
     }
     else
     {
         source->model.setRT(Source::model_t::point);
-        Position pos(SynthParams::xPos.get(), SynthParams::yPos.get());
-        source->position.setRT(pos);
+        source->position.setRT(Position(sourceX.get(), sourceY.get()));
     }
 
-    /// \ todo how to handle mono input from host correctly?
+    // set ssr listener params
+    renderer->state.reference_position.setRT(Position(referenceX.get(), referenceY.get()));
+    renderer->state.reference_orientation.setRT(Orientation(referenceOrientation.get()));
+    renderer->state.amplitude_reference_distance.setRT(amplitudeReferenceDistance.get());
+
+    /// \todo how to handle mono input from host correctly?
     // choose between left or right channel for stereo input
-    int channelIndex = SynthParams::inputChannel.get();
+    int channelIndex = inputChannel.get();
 
-    // call internal ssr process function of binaural renderer
-    // NOTE: write ~ read pointer (same address) but read is const
-    //renderer->activate();
+    // get source input level
+    sourceLevel.set(buffer.getRMSLevel(channelIndex, 0, buffer.getNumSamples()));
+
+    // call internal ssr process function of renderer
     renderer->audio_callback(getBlockSize()
-        , buffer.getArrayOfWritePointers() + channelIndex
+        , buffer.getArrayOfWritePointers() + channelIndex // NOTE: write ~ read pointer (same address) but read is const
         , buffer.getArrayOfWritePointers());
-    //renderer->deactivate();
 
-    SynthParams::levelLeft.set(buffer.getRMSLevel(0, 0, buffer.getNumSamples()));
-    SynthParams::levelRight.set(buffer.getRMSLevel(1, 0, buffer.getNumSamples()));
-}
-
-void PluginAudioProcessor::updateHostInfo()
-{
-    // currentPositionInfo used for getting the bpm.
-    if (AudioPlayHead* pHead = getPlayHead())
-    {
-        if (pHead->getCurrentPosition (positionInfo[getAudioIndex()])) {
-            positionIndex.exchange(getGUIIndex());
-            return;
-        }
-    }
-    positionInfo[getAudioIndex()].resetToDefault();
+    // get ssr output level
+    outputLevelLeft.set(buffer.getRMSLevel(0, 0, buffer.getNumSamples()));
+    outputLevelRight.set(buffer.getRMSLevel(1, 0, buffer.getNumSamples()));
 }
 
 //==============================================================================

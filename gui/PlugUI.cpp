@@ -223,13 +223,13 @@ void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
     if (sliderThatWasMoved == gainSlider)
     {
         //[UserSliderCode_gainSlider] -- add your slider handling code here..
-        params.gain.set(Param::fromDb(val));
+        params.sourceGain.setUI(Param::fromDb(val));
         //[/UserSliderCode_gainSlider]
     }
     else if (sliderThatWasMoved == orientationSlider)
     {
         //[UserSliderCode_orientationSlider] -- add your slider handling code here..
-        params.orientation.set(val);
+        params.sourceOrientation.setUI(val);
         //[/UserSliderCode_orientationSlider]
     }
     else if (sliderThatWasMoved == inputChannelSlider)
@@ -257,21 +257,18 @@ void PlugUI::buttonClicked (Button* buttonThatWasClicked)
 {
     //[UserbuttonClicked_Pre]
     bool isOn = buttonThatWasClicked->getToggleState();
-    eOnOffState state;
-
-    isOn ? state = eOnOffState::eOn : state = eOnOffState::eOff;
     //[/UserbuttonClicked_Pre]
 
     if (buttonThatWasClicked == muteToggle)
     {
         //[UserButtonCode_muteToggle] -- add your button handler code here..
-        params.isSrcMuted.setStep(state);
+        params.sourceMute.setStep(isOn ? eOnOffState::eOn : eOnOffState::eOff);
         //[/UserButtonCode_muteToggle]
     }
     else if (buttonThatWasClicked == planeSrcToggle)
     {
         //[UserButtonCode_planeSrcToggle] -- add your button handler code here..
-        params.isPlaneSrc.setStep(state);
+        params.isSourceTypePlane.setStep(isOn ? eSourceType::ePlane : eSourceType::ePoint);
         //[/UserButtonCode_planeSrcToggle]
     }
 

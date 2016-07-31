@@ -2,12 +2,16 @@
 
 #include "JuceHeader.h"
 #include "Param.h"
-#include <vector>
-#include <array>
 
 enum class eOnOffState : int {
     eOff = 0,
     eOn = 1,
+    nSteps = 2
+};
+
+enum class eSourceType : int {
+    ePoint = 0,
+    ePlane = 1,
     nSteps = 2
 };
 
@@ -16,23 +20,25 @@ public:
     SynthParams();
     ~SynthParams();
 
-    // ssr params
-    Param xPos;
-    Param yPos;
-    Param orientation;
-    Param gain;
-    ParamStepped<eOnOffState> isSrcMuted;
-    ParamStepped<eOnOffState> isPlaneSrc;
+    // source params
+    Param sourceX;
+    Param sourceY;
+    Param sourceOrientation;
+    Param sourceGain;
+    Param sourceLevel;
+    ParamStepped<eOnOffState> sourceMute;
+    ParamStepped<eSourceType> isSourceTypePlane;
+    /// \todo positionlock for source and reference?
+
+    // reference listener params
+    Param referenceX;
+    Param referenceY;
+    Param referenceOrientation;
+    Param amplitudeReferenceDistance;
 
     Param inputChannel;
-    Param levelLeft;
-    Param levelRight;
-
-    std::array<AudioPlayHead::CurrentPositionInfo, 2> positionInfo;
-    std::atomic<int> positionIndex;
-
-    int getGUIIndex();
-    int getAudioIndex();
+    Param outputLevelLeft;
+    Param outputLevelRight;
 
     // original ssr colour codes
     static const Colour sourceColourBrown;
@@ -43,6 +49,5 @@ public:
     static const Colour sceneBackgroundColour;
     static const Colour sourceLevelColour;
 
-protected:
 private:
 };
