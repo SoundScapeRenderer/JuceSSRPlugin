@@ -25,6 +25,7 @@
 #include "SynthParams.h"
 #include "panels/PanelBase.h"
 #include "CustomLookAndFeel.h"
+#include "GainLevelSlider.h"
 #include "ListenerComponent.h"
 #include "SourceComponent.h"
 //[/Headers]
@@ -40,8 +41,7 @@
                                                                     //[/Comments]
 */
 class PlugUI  : public PanelBase,
-                public SliderListener,
-                public ButtonListener
+                public SliderListener
 {
 public:
     //==============================================================================
@@ -51,10 +51,10 @@ public:
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
 
-    /*
-    * Derived small window class only to implement closeButtonPressed for now.
-      In this, we only need to set the window invisible if the close button was pressed.
-    */
+    /**
+        Derived small window class only to implement closeButtonPressed for now.
+        In this, we only need to set the window invisible if the close button was pressed.
+     */
     class InfoWindow : public DocumentWindow
     {
     public:
@@ -71,7 +71,6 @@ public:
     void paint (Graphics& g);
     void resized();
     void sliderValueChanged (Slider* sliderThatWasMoved);
-    void buttonClicked (Button* buttonThatWasClicked);
 
 
 
@@ -86,13 +85,9 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<Slider> gainSlider;
+    ScopedPointer<GainLevelSlider> gainSlider;
     ScopedPointer<Slider> orientationSlider;
     ScopedPointer<Label> label2;
-    ScopedPointer<ToggleButton> muteToggle;
-    ScopedPointer<ToggleButton> planeSrcToggle;
-    ScopedPointer<Slider> inputChannelSlider;
-    ScopedPointer<Label> label3;
     ScopedPointer<SourceComponent> source;
     ScopedPointer<Slider> levelMeterLeft;
     ScopedPointer<Slider> levelMeterRight;

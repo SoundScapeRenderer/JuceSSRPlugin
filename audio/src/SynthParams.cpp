@@ -26,10 +26,10 @@ SynthParams::SynthParams()
     : sourceX("source x", "sourceX", "sourceX", "m", -50.0f, 50.0f, 0.0f)
     , sourceY("source y", "sourceY", "sourceY", "m", -50.0f, 50.0f, 2.0f)
     , sourceOrientation("source orientation", "sourceOrientation", "sourceOrientation", "deg", 0.0f, 360.0f, 90.0f)
-    , sourceGain("source gain", "sourceGain", "sourceGain", "", 0.0f, 5.0f, 0.8f)
+    , sourceGain("source gain", "sourceGain", "sourceGain", "db", -96.0f, 12.0f, -6.0f)
     , sourceLevel("level left", "levelLeft", "levelLeft", "", -1.0f, 1.0f, 0.0f)
     , sourceMute("source muted", "sourceMute", "sourceMute", eOnOffState::eOff, OnOffStateNames)
-    , isSourceTypePlane("is source type plane", "isSourceTypePlane", "isSourceTypePlane", eSourceType::ePoint, SourceTypeNames)
+    , sourceType("source type", "sourceType", "sourceType", eSourceType::ePoint, SourceTypeNames)
 
     , referenceX("reference x", "referenceX", "referenceX", "m", -50.0f, 50.0f, 0.0f)
     , referenceY("reference y", "referenceY", "referenceY", "m", -50.0f, 50.0f, 0.0f)
@@ -42,10 +42,8 @@ SynthParams::SynthParams()
 
     , zoomFactor("zoom factor", "zoomFactor", "zoomFactor", "", 0.3f, 1.5f, 1.0f)
 {
-
 }
 
 SynthParams::~SynthParams() 
 {
-
 }

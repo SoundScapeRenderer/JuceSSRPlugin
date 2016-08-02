@@ -36,7 +36,7 @@ PlugUI::PlugUI (SynthParams &p)
     startTimerHz (60);
     //[/Constructor_pre]
 
-    addAndMakeVisible (gainSlider = new Slider ("gain slider"));
+    addAndMakeVisible (gainSlider = new GainLevelSlider ("gain slider"));
     gainSlider->setRange (-96, 12, 0);
     gainSlider->setSliderStyle (Slider::LinearBar);
     gainSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
@@ -56,28 +56,6 @@ PlugUI::PlugUI (SynthParams &p)
     label2->setEditable (false, false, false);
     label2->setColour (TextEditor::textColourId, Colours::black);
     label2->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
-    addAndMakeVisible (muteToggle = new ToggleButton ("mute toggle"));
-    muteToggle->setButtonText (TRANS("Mute"));
-    muteToggle->addListener (this);
-
-    addAndMakeVisible (planeSrcToggle = new ToggleButton ("plane src toggle"));
-    planeSrcToggle->setButtonText (TRANS("Plane Src"));
-    planeSrcToggle->addListener (this);
-
-    addAndMakeVisible (inputChannelSlider = new Slider ("input channel slider"));
-    inputChannelSlider->setRange (0, 1, 1);
-    inputChannelSlider->setSliderStyle (Slider::LinearHorizontal);
-    inputChannelSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
-    inputChannelSlider->addListener (this);
-
-    addAndMakeVisible (label3 = new Label ("new label",
-                                           TRANS("Input Channel")));
-    label3->setFont (Font (15.00f, Font::plain));
-    label3->setJustificationType (Justification::centred);
-    label3->setEditable (false, false, false);
-    label3->setColour (TextEditor::textColourId, Colours::black);
-    label3->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (source = new SourceComponent (params));
     source->setName ("source");
@@ -113,16 +91,7 @@ PlugUI::PlugUI (SynthParams &p)
     //[UserPreSize]
     // default settings for child components
     orientationSlider->setValue(90.0);
-    muteToggle->setToggleState(false, dontSendNotification);
-    planeSrcToggle->setToggleState(false, dontSendNotification);
-    inputChannelSlider->setValue(0.0);
-
     gainSlider->setValue(-6.0);
-    gainSlider->setColour(Slider::thumbColourId, SynthParams::sourceLevelColour);
-    gainSlider->setColour(Slider::textBoxOutlineColourId, SynthParams::sourceColourBlue);
-    gainSlider->setAlwaysOnTop(true);
-
-    source->setAlwaysOnTop(true);
 
 #if LEVELMETER 1
     levelMeterLeft->setSliderStyle(Slider::LinearBarVertical);
@@ -155,10 +124,6 @@ PlugUI::~PlugUI()
     gainSlider = nullptr;
     orientationSlider = nullptr;
     label2 = nullptr;
-    muteToggle = nullptr;
-    planeSrcToggle = nullptr;
-    inputChannelSlider = nullptr;
-    label3 = nullptr;
     source = nullptr;
     levelMeterLeft = nullptr;
     levelMeterRight = nullptr;
@@ -179,7 +144,7 @@ void PlugUI::paint (Graphics& g)
     g.fillAll (Colour (0xffedede6));
 
     //[UserPaint] Add your own custom painting code here..
-    g.drawImageWithin(ssrLogo, 0 + 15, getHeight() - ssrLogo.getHeight() / 2 - 15, ssrLogo.getWidth() / 2, ssrLogo.getHeight() / 2, RectanglePlacement::centred);
+    g.drawImageWithin(ssrLogo, 0 + 15, getHeight() - ssrLogo.getHeight() / 3 - 15, ssrLogo.getWidth() / 3, ssrLogo.getHeight() / 3, RectanglePlacement::centred);
     //[/UserPaint]
 }
 
@@ -188,18 +153,14 @@ void PlugUI::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    gainSlider->setBounds (413, 191, 75, 16);
-    orientationSlider->setBounds (24, 88, 80, 80);
-    label2->setBounds (24, 56, 80, 24);
-    muteToggle->setBounds (24, 200, 80, 24);
-    planeSrcToggle->setBounds (24, 24, 80, 24);
-    inputChannelSlider->setBounds (32, 264, 64, 24);
-    label3->setBounds (16, 232, 96, 24);
+    gainSlider->setBounds (413, 191, 75, 28);
+    orientationSlider->setBounds (16, 48, 80, 80);
+    label2->setBounds (16, 16, 80, 24);
     source->setBounds (405, 95, 90, 90);
     levelMeterLeft->setBounds (824, 150, 24, 300);
     levelMeterRight->setBounds (856, 150, 24, 300);
     listener->setBounds (400, 250, 100, 100);
-    debugText->setBounds (692, 8, 200, 584);
+    debugText->setBounds (648, 8, 250, 584);
     //[UserResized] Add your own custom resize handling here..
     // draw components at their position
     juce::Point<int> pixSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
@@ -219,7 +180,7 @@ void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
     if (sliderThatWasMoved == gainSlider)
     {
         //[UserSliderCode_gainSlider] -- add your slider handling code here..
-        params.sourceGain.setUI(Param::fromDb(val));
+        params.sourceGain.setUI(val);
         //[/UserSliderCode_gainSlider]
     }
     else if (sliderThatWasMoved == orientationSlider)
@@ -227,12 +188,6 @@ void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
         //[UserSliderCode_orientationSlider] -- add your slider handling code here..
         params.sourceOrientation.setUI(val);
         //[/UserSliderCode_orientationSlider]
-    }
-    else if (sliderThatWasMoved == inputChannelSlider)
-    {
-        //[UserSliderCode_inputChannelSlider] -- add your slider handling code here..
-        params.inputChannel.setStep(val < 1.0f? eInputChannel::eLeftChannel : eInputChannel::eRightChannel);
-        //[/UserSliderCode_inputChannelSlider]
     }
     else if (sliderThatWasMoved == levelMeterLeft)
     {
@@ -249,34 +204,12 @@ void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
     //[/UsersliderValueChanged_Post]
 }
 
-void PlugUI::buttonClicked (Button* buttonThatWasClicked)
-{
-    //[UserbuttonClicked_Pre]
-    bool isOn = buttonThatWasClicked->getToggleState();
-    //[/UserbuttonClicked_Pre]
-
-    if (buttonThatWasClicked == muteToggle)
-    {
-        //[UserButtonCode_muteToggle] -- add your button handler code here..
-        params.sourceMute.setStep(isOn ? eOnOffState::eOn : eOnOffState::eOff);
-        //[/UserButtonCode_muteToggle]
-    }
-    else if (buttonThatWasClicked == planeSrcToggle)
-    {
-        //[UserButtonCode_planeSrcToggle] -- add your button handler code here..
-        params.isSourceTypePlane.setStep(isOn ? eSourceType::ePlane : eSourceType::ePoint);
-        //[/UserButtonCode_planeSrcToggle]
-    }
-
-    //[UserbuttonClicked_Post]
-    //[/UserbuttonClicked_Post]
-}
-
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 void PlugUI::childBoundsChanged(Component *child)
 {
+    // gainSlider should always follow source node
     if (child == source)
     {
         int offsetX = source->getX() + (source->getWidth() - gainSlider->getWidth()) / 2;
@@ -287,6 +220,8 @@ void PlugUI::childBoundsChanged(Component *child)
 
 void PlugUI::timerCallback()
 {
+    gainSlider->setGainLevel(params.sourceLevel.get());
+
 #if LEVELMETER 1
     // get current gui and audio level
     double guiLevelLeft = levelMeterLeft->getValue();
@@ -334,13 +269,22 @@ void PlugUI::timerCallback()
         "SourceX = " + String(params.sourceX.get()) +
         "\nSourceY = " + String(params.sourceY.get()) +
         "\nSourceOri = " + String(params.sourceOrientation.get()) +
-        "\nSourceGain = " + String(Param::toDb(params.sourceGain.get())) +
+        "\nSourceGain = " + String(params.sourceGain.get()) +
+        "\nSourceLevel = " + String(params.sourceLevel.get()) +
+        "\nSourceMute = " + String(params.sourceMute.getUIString()) +
+        "\nSourceType = " + String(params.sourceType.getUIString()) +
 
         "\n\nRefX = " + String(params.referenceX.get()) +
         "\nRefY = " + String(params.referenceY.get()) +
         "\nRefOri = " + String(params.referenceOrientation.get()) +
+        "\nAmpliRefDist = " + String(params.amplitudeReferenceDistance.get()) +
 
-        "\n\nDistX = " + String(params.sourceX.get() - params.referenceX.get()) +
+        "\n\nInputChannel = " + String(params.inputChannel.getUIString()) +
+        "\nOutputLevelLeft = " + String(params.outputLevelLeft.get()) +
+        "\nOutputLevelRight = " + String(params.outputLevelRight.get()) +
+
+        "\n\nZoomfactor = " + String(params.zoomFactor.get()) +
+        "\nDistX = " + String(params.sourceX.get() - params.referenceX.get()) +
         "\nDistY = " + String(params.sourceY.get() - params.referenceY.get())
         , dontSendNotification);
 #endif
@@ -364,31 +308,16 @@ BEGIN_JUCER_METADATA
                  initialWidth="900" initialHeight="600">
   <BACKGROUND backgroundColour="ffedede6"/>
   <SLIDER name="gain slider" id="69ace909b58289b9" memberName="gainSlider"
-          virtualName="Slider" explicitFocusOrder="0" pos="413 191 75 16"
+          virtualName="GainLevelSlider" explicitFocusOrder="0" pos="413 191 75 28"
           min="-96" max="12" int="0" style="LinearBar" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="3"/>
   <SLIDER name="orientation slider" id="d65ca37ac19fdb1e" memberName="orientationSlider"
-          virtualName="" explicitFocusOrder="0" pos="24 88 80 80" min="0"
+          virtualName="" explicitFocusOrder="0" pos="16 48 80 80" min="0"
           max="360" int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="new label" id="fa1442bff5dd15a0" memberName="label2" virtualName=""
-         explicitFocusOrder="0" pos="24 56 80 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="16 16 80 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Orientation" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="15" bold="0" italic="0" justification="36"/>
-  <TOGGLEBUTTON name="mute toggle" id="25e29b2a85486a90" memberName="muteToggle"
-                virtualName="" explicitFocusOrder="0" pos="24 200 80 24" buttonText="Mute"
-                connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
-  <TOGGLEBUTTON name="plane src toggle" id="91e73a52b50b9eeb" memberName="planeSrcToggle"
-                virtualName="" explicitFocusOrder="0" pos="24 24 80 24" buttonText="Plane Src"
-                connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
-  <SLIDER name="input channel slider" id="56250486a01f94b3" memberName="inputChannelSlider"
-          virtualName="" explicitFocusOrder="0" pos="32 264 64 24" min="0"
-          max="1" int="1" style="LinearHorizontal" textBoxPos="NoTextBox"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <LABEL name="new label" id="8b1a44246391bae1" memberName="label3" virtualName=""
-         explicitFocusOrder="0" pos="16 232 96 24" edTextCol="ff000000"
-         edBkgCol="0" labelText="Input Channel" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15" bold="0" italic="0" justification="36"/>
   <GENERICCOMPONENT name="source" id="7b4082301ad63f28" memberName="source" virtualName="SourceComponent"
@@ -407,7 +336,7 @@ BEGIN_JUCER_METADATA
                     explicitFocusOrder="0" pos="400 250 100 100" class="Component"
                     params="params"/>
   <LABEL name="debug" id="3b44d9ef5ee9c1a" memberName="debugText" virtualName=""
-         explicitFocusOrder="0" pos="692 8 200 584" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="648 8 250 584" edTextCol="ff000000"
          edBkgCol="0" labelText="Debug:" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="9"/>

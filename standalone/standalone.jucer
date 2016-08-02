@@ -236,6 +236,8 @@
       </GROUP>
       <FILE id="Ld6QRe" name="CustomLookAndFeel.h" compile="0" resource="0"
             file="../gui/CustomLookAndFeel.h"/>
+      <FILE id="WynvZ2" name="GainLevelSlider.h" compile="0" resource="0"
+            file="../gui/GainLevelSlider.h"/>
       <FILE id="JKj2RB" name="ListenerComponent.h" compile="0" resource="0"
             file="../gui/ListenerComponent.h"/>
       <FILE id="eGCmM0" name="PluginEditor.cpp" compile="1" resource="0"

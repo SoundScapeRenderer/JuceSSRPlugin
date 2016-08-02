@@ -26,45 +26,69 @@ public:
     SynthParams();
     ~SynthParams();
 
-    // source params
+    // source parameter
     Param sourceX;
     Param sourceY;
     Param sourceOrientation;
     Param sourceGain;
     Param sourceLevel;
     ParamStepped<eOnOffState> sourceMute;
-    ParamStepped<eSourceType> isSourceTypePlane;
+    ParamStepped<eSourceType> sourceType;
     /// \todo positionlock for source and reference?
 
-    // reference listener params
+    // reference listener parameter
     Param referenceX;
     Param referenceY;
     Param referenceOrientation;
     Param amplitudeReferenceDistance;
 
+    // routing and output level parameter
     ParamStepped<eInputChannel> inputChannel;
     Param outputLevelLeft;
     Param outputLevelRight;
 
+    // GUI scaling parameter
     Param zoomFactor;
     const int pixelPerMeter = 100;
 
-    juce::Point<int> pos2pix(float meterMiddleX, float meterMiddleY, int sceneWidth, int sceneHeight)
+    /**
+        Converts a meter position into a pixel coordinate of a scene with given width and height.
+        Reference point is the center of that scene, where 1m is equivalent to 100px.
+        Scaling can be used by setting the zoomFactor variable of SynthParams.
+    
+        @param meterCenterX centerX position in meter of an object in the scene GUI
+        @param meterCenterY centerY position in meter of an object in the scene GUI
+        @param sceneWidth width of the scene GUI in pixel
+        @param sceneHeight height of the scene GUI in pixel
+        @return coordinate point in pixel with inverse y
+     */
+    juce::Point<int> pos2pix(float meterCenterX, float meterCenterY, int sceneWidth, int sceneHeight)
     {
-        int x = static_cast<int>(meterMiddleX * pixelPerMeter * zoomFactor.get() + sceneWidth / 2);
-        int y = static_cast<int>(-meterMiddleY * pixelPerMeter * zoomFactor.get() + sceneHeight / 2);
+        int x = static_cast<int>(meterCenterX * pixelPerMeter * zoomFactor.get() + sceneWidth / 2);
+        int y = static_cast<int>(-meterCenterY * pixelPerMeter * zoomFactor.get() + sceneHeight / 2);
 
         return juce::Point<int>(x, y);
     }
 
-    juce::Point<float> pix2pos(int pixMiddleX, int pixMiddleY, int sceneWidth, int sceneHeight)
+    /**
+        Converts a pixel coordinate of a scene with given width and height into a meter position.
+        Reference point is the center of that scene, where 1m is equivalent to 100px.
+        Scaling can be used by setting the zoomFactor variable of SynthParams.
+
+        @param pixCenterX centerX pixel of an object in the scene GUI
+        @param pixCenterY centerY pixel of an object in the scene GUI
+        @param sceneWidth width of the scene GUI in pixel
+        @param sceneHeight height of the scene GUI in pixel
+        @return position point in meter with inverse y
+    */
+    juce::Point<float> pix2pos(int pixCenterX, int pixCenterY, int sceneWidth, int sceneHeight)
     {
-        float x = (pixMiddleX - sceneWidth / 2) / (pixelPerMeter * zoomFactor.get());
-        float y = (pixMiddleY - sceneHeight / 2) / (pixelPerMeter * zoomFactor.get());
+        float x = (pixCenterX - sceneWidth / 2) / (pixelPerMeter * zoomFactor.get());
+        float y = (pixCenterY - sceneHeight / 2) / (pixelPerMeter * zoomFactor.get());
         return juce::Point<float>(x, -y);
     }
 
-    // original ssr colour codes
+    // original SSR colour codes
     static const Colour sourceColourBrown;
     static const Colour sourceColourBlue;
     static const Colour sourceColourGreen;

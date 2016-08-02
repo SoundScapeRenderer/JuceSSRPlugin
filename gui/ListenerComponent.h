@@ -23,8 +23,6 @@ public:
     ListenerComponent(SynthParams &p)
         : params(p)
     {
-        setBroughtToFrontOnMouseClick(true);
-
         listenerImg = ImageCache::getFromMemory(BinaryData::listener_png, BinaryData::listener_pngSize);
         listenerBackgroundImg = ImageCache::getFromMemory(BinaryData::listener_background_png, BinaryData::listener_background_pngSize);
         listenerShadowImg = ImageCache::getFromMemory(BinaryData::listener_shadow_png, BinaryData::listener_shadow_pngSize);

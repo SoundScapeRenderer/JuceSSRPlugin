@@ -33,7 +33,7 @@ PluginAudioProcessor::PluginAudioProcessor()
     addParameter(new HostParam<Param>(sourceOrientation));
     addParameter(new HostParam<Param>(sourceGain));
     addParameter(new HostParam<ParamStepped<eOnOffState>>(sourceMute));
-    addParameter(new HostParam<ParamStepped<eSourceType>>(isSourceTypePlane));
+    addParameter(new HostParam<ParamStepped<eSourceType>>(sourceType));
 
     addParameter(new HostParam<Param>(referenceX));
     addParameter(new HostParam<Param>(referenceY));
@@ -182,9 +182,9 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
 
     // set ssr source params
     ssr::RendererBase<ssr::BinauralRenderer>::Source *source = renderer->get_source(1);
-    source->gain.setRT(sourceGain.get());
+    source->gain.setRT(Param::fromDb(sourceGain.get()));
     source->mute.setRT(sourceMute.getStep() == eOnOffState::eOn);
-    if (isSourceTypePlane.getStep() == eSourceType::ePlane)
+    if (sourceType.getStep() == eSourceType::ePlane)
     {
         source->model.setRT(Source::model_t::plane);
         source->orientation.setRT(Orientation(sourceOrientation.get()));

@@ -1399,6 +1399,7 @@
     <ClInclude Include="..\..\..\audio\inc\SynthParams.h"/>
     <ClInclude Include="..\..\..\gui\panels\PanelBase.h"/>
     <ClInclude Include="..\..\..\gui\CustomLookAndFeel.h"/>
+    <ClInclude Include="..\..\..\gui\GainLevelSlider.h"/>
     <ClInclude Include="..\..\..\gui\ListenerComponent.h"/>
     <ClInclude Include="..\..\..\gui\PluginEditor.h"/>
     <ClInclude Include="..\..\..\gui\PlugUI.h"/>
