@@ -24,8 +24,9 @@
 #include "JuceHeader.h"
 #include "SynthParams.h"
 #include "panels/PanelBase.h"
-#include "SourceComponent.h"
 #include "CustomLookAndFeel.h"
+#include "ListenerComponent.h"
+#include "SourceComponent.h"
 //[/Headers]
 
 
@@ -79,15 +80,12 @@ private:
     SynthParams &params;
     ScopedPointer<CustomLookAndFeel> lnf;
 
-    Image listenerImg, listenerBackgroundImg, listenerShadowImg;
     Image ssrLogo;
 
     void timerCallback() override;
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<ImageComponent> listenerBackground;
-    ScopedPointer<ImageComponent> listener;
     ScopedPointer<Slider> gainSlider;
     ScopedPointer<Slider> orientationSlider;
     ScopedPointer<Label> label2;
@@ -98,6 +96,8 @@ private:
     ScopedPointer<SourceComponent> source;
     ScopedPointer<Slider> levelMeterLeft;
     ScopedPointer<Slider> levelMeterRight;
+    ScopedPointer<ListenerComponent> listener;
+    ScopedPointer<Label> debugText;
 
 
     //==============================================================================

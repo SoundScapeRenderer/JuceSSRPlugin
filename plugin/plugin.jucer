@@ -243,6 +243,8 @@
       </GROUP>
       <FILE id="w1HIHk" name="CustomLookAndFeel.h" compile="0" resource="0"
             file="../gui/CustomLookAndFeel.h"/>
+      <FILE id="PmJPgR" name="ListenerComponent.h" compile="0" resource="0"
+            file="../gui/ListenerComponent.h"/>
       <FILE id="GIgiQD" name="PluginEditor.cpp" compile="1" resource="0"
             file="../gui/PluginEditor.cpp"/>
       <FILE id="JZtIFP" name="PluginEditor.h" compile="0" resource="0" file="../gui/PluginEditor.h"/>

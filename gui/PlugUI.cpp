@@ -25,6 +25,7 @@
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 #define LEVELMETER 0
+#define DEBUG_PARAMS 0
 //[/MiscUserDefs]
 
 //==============================================================================
@@ -34,12 +35,6 @@ PlugUI::PlugUI (SynthParams &p)
     //[Constructor_pre] You can add your own custom stuff here..
     startTimerHz (60);
     //[/Constructor_pre]
-
-    addAndMakeVisible (listenerBackground = new ImageComponent());
-    listenerBackground->setName ("listener background");
-
-    addAndMakeVisible (listener = new ImageComponent());
-    listener->setName ("listener");
 
     addAndMakeVisible (gainSlider = new Slider ("gain slider"));
     gainSlider->setRange (-96, 12, 0);
@@ -84,7 +79,7 @@ PlugUI::PlugUI (SynthParams &p)
     label3->setColour (TextEditor::textColourId, Colours::black);
     label3->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (source = new SourceComponent (params, SynthParams::sourceColourBlue));
+    addAndMakeVisible (source = new SourceComponent (params));
     source->setName ("source");
 
     addAndMakeVisible (levelMeterLeft = new Slider ("level left"));
@@ -103,14 +98,23 @@ PlugUI::PlugUI (SynthParams &p)
     levelMeterRight->addListener (this);
     levelMeterRight->setSkewFactor (0.7);
 
+    addAndMakeVisible (listener = new ListenerComponent (params));
+    listener->setName ("listener");
+
+    addAndMakeVisible (debugText = new Label ("debug",
+                                              TRANS("Debug:")));
+    debugText->setFont (Font (15.00f, Font::plain));
+    debugText->setJustificationType (Justification::topLeft);
+    debugText->setEditable (false, false, false);
+    debugText->setColour (TextEditor::textColourId, Colours::black);
+    debugText->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
 
     //[UserPreSize]
-    this->setWantsKeyboardFocus(true);
-
     // default settings for child components
     orientationSlider->setValue(90.0);
-    muteToggle->setToggleState(false, false);
-    planeSrcToggle->setToggleState(false, false);
+    muteToggle->setToggleState(false, dontSendNotification);
+    planeSrcToggle->setToggleState(false, dontSendNotification);
     inputChannelSlider->setValue(0.0);
 
     gainSlider->setValue(-6.0);
@@ -119,7 +123,6 @@ PlugUI::PlugUI (SynthParams &p)
     gainSlider->setAlwaysOnTop(true);
 
     source->setAlwaysOnTop(true);
-    source->registerGainSlider(gainSlider);
 
 #if LEVELMETER 1
     levelMeterLeft->setSliderStyle(Slider::LinearBarVertical);
@@ -135,20 +138,7 @@ PlugUI::PlugUI (SynthParams &p)
 
     //[Constructor] You can add your own custom stuff here..
     // load images
-    listenerImg = ImageCache::getFromMemory(BinaryData::listener_png, BinaryData::listener_pngSize);
-    listenerBackgroundImg = ImageCache::getFromMemory(BinaryData::listener_background_png, BinaryData::listener_background_pngSize);
-    listenerShadowImg = ImageCache::getFromMemory(BinaryData::listener_shadow_png, BinaryData::listener_shadow_pngSize);
     ssrLogo = ImageCache::getFromMemory(BinaryData::ssr_logo_large_png, BinaryData::ssr_logo_large_pngSize);
-
-    listener->setImage(listenerImg);
-    listener->setTransform(AffineTransform::rotation(degreesToRadians(-90.0f),
-        listener->getX() + listener->getWidth() / 2, listener->getY() + listener->getHeight() / 2));
-    listener->setWantsKeyboardFocus(true);
-
-    listenerBackground->setImage(listenerShadowImg);
-    listenerBackground->setTransform(AffineTransform::rotation(degreesToRadians(-90.0f),
-        listenerBackground->getX() + listenerBackground->getWidth() / 2, listenerBackground->getY() + listenerBackground->getHeight() / 2));
-    listenerBackground->setWantsKeyboardFocus(true);
 
     // set new design for some components
     lnf = new CustomLookAndFeel();
@@ -162,8 +152,6 @@ PlugUI::~PlugUI()
     lnf = nullptr;
     //[/Destructor_pre]
 
-    listenerBackground = nullptr;
-    listener = nullptr;
     gainSlider = nullptr;
     orientationSlider = nullptr;
     label2 = nullptr;
@@ -174,6 +162,8 @@ PlugUI::~PlugUI()
     source = nullptr;
     levelMeterLeft = nullptr;
     levelMeterRight = nullptr;
+    listener = nullptr;
+    debugText = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -198,19 +188,25 @@ void PlugUI::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    listenerBackground->setBounds (391, 242, 128, 128);
-    listener->setBounds (400, 250, 100, 100);
-    gainSlider->setBounds (416, 192, 75, 16);
+    gainSlider->setBounds (413, 191, 75, 16);
     orientationSlider->setBounds (24, 88, 80, 80);
     label2->setBounds (24, 56, 80, 24);
     muteToggle->setBounds (24, 200, 80, 24);
     planeSrcToggle->setBounds (24, 24, 80, 24);
     inputChannelSlider->setBounds (32, 264, 64, 24);
     label3->setBounds (16, 232, 96, 24);
-    source->setBounds (408, 96, 90, 90);
+    source->setBounds (405, 95, 90, 90);
     levelMeterLeft->setBounds (824, 150, 24, 300);
     levelMeterRight->setBounds (856, 150, 24, 300);
+    listener->setBounds (400, 250, 100, 100);
+    debugText->setBounds (692, 8, 200, 584);
     //[UserResized] Add your own custom resize handling here..
+    // draw components at their position
+    juce::Point<int> pixSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
+    source->setBounds(pixSource.x - source->getWidth() / 2, pixSource.y - source->getHeight() / 2, source->getWidth(), source->getHeight());
+
+    juce::Point<int> pixRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), getWidth(), getHeight());
+    listener->setBounds(pixRef.x - listener->getWidth() / 2, pixRef.y - listener->getHeight() / 2, listener->getWidth(), listener->getHeight());
     //[/UserResized]
 }
 
@@ -235,7 +231,7 @@ void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
     else if (sliderThatWasMoved == inputChannelSlider)
     {
         //[UserSliderCode_inputChannelSlider] -- add your slider handling code here..
-        params.inputChannel.set(val);
+        params.inputChannel.setStep(val < 1.0f? eInputChannel::eLeftChannel : eInputChannel::eRightChannel);
         //[/UserSliderCode_inputChannelSlider]
     }
     else if (sliderThatWasMoved == levelMeterLeft)
@@ -332,6 +328,22 @@ void PlugUI::timerCallback()
         }
     }
 #endif
+
+#if DEBUG_PARAMS 1
+    debugText->setText(
+        "SourceX = " + String(params.sourceX.get()) +
+        "\nSourceY = " + String(params.sourceY.get()) +
+        "\nSourceOri = " + String(params.sourceOrientation.get()) +
+        "\nSourceGain = " + String(Param::toDb(params.sourceGain.get())) +
+
+        "\n\nRefX = " + String(params.referenceX.get()) +
+        "\nRefY = " + String(params.referenceY.get()) +
+        "\nRefOri = " + String(params.referenceOrientation.get()) +
+
+        "\n\nDistX = " + String(params.sourceX.get() - params.referenceX.get()) +
+        "\nDistY = " + String(params.sourceY.get() - params.referenceY.get())
+        , dontSendNotification);
+#endif
 }
 //[/MiscUserCode]
 
@@ -351,16 +363,10 @@ BEGIN_JUCER_METADATA
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="1"
                  initialWidth="900" initialHeight="600">
   <BACKGROUND backgroundColour="ffedede6"/>
-  <GENERICCOMPONENT name="listener background" id="28146762f36cc5a3" memberName="listenerBackground"
-                    virtualName="ImageComponent" explicitFocusOrder="0" pos="391 242 128 128"
-                    class="Component" params=""/>
-  <GENERICCOMPONENT name="listener" id="7502391df768a172" memberName="listener" virtualName="ImageComponent"
-                    explicitFocusOrder="0" pos="400 250 100 100" class="Component"
-                    params=""/>
   <SLIDER name="gain slider" id="69ace909b58289b9" memberName="gainSlider"
-          virtualName="" explicitFocusOrder="0" pos="416 192 75 16" min="-96"
-          max="12" int="0" style="LinearBar" textBoxPos="NoTextBox" textBoxEditable="1"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="3"/>
+          virtualName="Slider" explicitFocusOrder="0" pos="413 191 75 16"
+          min="-96" max="12" int="0" style="LinearBar" textBoxPos="NoTextBox"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="3"/>
   <SLIDER name="orientation slider" id="d65ca37ac19fdb1e" memberName="orientationSlider"
           virtualName="" explicitFocusOrder="0" pos="24 88 80 80" min="0"
           max="360" int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
@@ -386,7 +392,7 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15" bold="0" italic="0" justification="36"/>
   <GENERICCOMPONENT name="source" id="7b4082301ad63f28" memberName="source" virtualName="SourceComponent"
-                    explicitFocusOrder="0" pos="408 96 90 90" class="Component" params="params, SynthParams::sourceColourBlue"/>
+                    explicitFocusOrder="0" pos="405 95 90 90" class="Component" params="params"/>
   <SLIDER name="level left" id="13e0962dc81dca1" memberName="levelMeterLeft"
           virtualName="" explicitFocusOrder="0" pos="824 150 24 300" thumbcol="ff60ff60"
           min="-0.20000000000000001" max="1" int="0" style="LinearVertical"
@@ -397,6 +403,14 @@ BEGIN_JUCER_METADATA
           min="-0.20000000000000001" max="1" int="0" style="LinearVertical"
           textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="80"
           textBoxHeight="20" skewFactor="0.69999999999999996"/>
+  <GENERICCOMPONENT name="listener" id="a34b6db6e6ed2361" memberName="listener" virtualName="ListenerComponent"
+                    explicitFocusOrder="0" pos="400 250 100 100" class="Component"
+                    params="params"/>
+  <LABEL name="debug" id="3b44d9ef5ee9c1a" memberName="debugText" virtualName=""
+         explicitFocusOrder="0" pos="692 8 200 584" edTextCol="ff000000"
+         edBkgCol="0" labelText="Debug:" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="9"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

@@ -202,7 +202,7 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
 
     /// \todo how to handle mono input from host correctly?
     // choose between left or right channel for stereo input
-    int channelIndex = inputChannel.get();
+    int channelIndex = static_cast<int>(inputChannel.getStep());
 
     // get source input level
     sourceLevel.set(buffer.getRMSLevel(channelIndex, 0, buffer.getNumSamples()));

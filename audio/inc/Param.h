@@ -42,12 +42,24 @@ public:
     float get() const { return val_.load(); }
 
     virtual void setUI(float f, bool notifyHost = true) {
+#if 0
         if (f >= min_ && f <= max_) {
             set(f);
         } else {
             jassertfalse;
             //set(default_);
         }
+#else
+        if (f < min_) {
+            set(min_);
+        }
+        else if (f > max_) {
+            set(max_);
+        }
+        else {
+            set(f);
+        }
+#endif
         if(notifyHost) listener.call(&Listener::paramUIChanged);
     }
     virtual float getUI() const { return get(); }
