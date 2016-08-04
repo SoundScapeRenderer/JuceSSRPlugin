@@ -30,10 +30,8 @@ PluginAudioProcessor::PluginAudioProcessor()
     // add automation params for host
     addParameter(new HostParam<Param>(sourceX));
     addParameter(new HostParam<Param>(sourceY));
-    addParameter(new HostParam<Param>(sourceOrientation));
     addParameter(new HostParam<Param>(sourceGain));
     addParameter(new HostParam<ParamStepped<eOnOffState>>(sourceMute));
-    addParameter(new HostParam<ParamStepped<eSourceType>>(sourceType));
 
     addParameter(new HostParam<Param>(referenceX));
     addParameter(new HostParam<Param>(referenceY));
@@ -180,32 +178,47 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // set ssr source params
+    // set listener parameter
+    Position listenerPos = Position(referenceX.get(), referenceY.get());
+    renderer->state.reference_position.setRT(listenerPos);
+    renderer->state.reference_orientation.setRT(Orientation(referenceOrientation.get()));
+    renderer->state.amplitude_reference_distance.setRT(amplitudeReferenceDistance.get());
+
+    // set source parameter
+    Position sourcePos = Position(sourceX.get(), sourceY.get());
     ssr::RendererBase<ssr::BinauralRenderer>::Source *source = renderer->get_source(1);
-    source->gain.setRT(Param::fromDb(sourceGain.get()));
     source->mute.setRT(sourceMute.getStep() == eOnOffState::eOn);
+    source->gain.setRT(Param::fromDb(sourceGain.get()));
+    source->orientation.setRT((listenerPos - sourcePos).orientation()); // quserinterface.cpp
+    source->position.setRT(sourcePos);
     if (sourceType.getStep() == eSourceType::ePlane)
     {
         source->model.setRT(Source::model_t::plane);
-        source->orientation.setRT(Orientation(sourceOrientation.get()));
     }
     else
     {
         source->model.setRT(Source::model_t::point);
-        source->position.setRT(Position(sourceX.get(), sourceY.get()));
     }
 
-    // set ssr listener params
-    renderer->state.reference_position.setRT(Position(referenceX.get(), referenceY.get()));
-    renderer->state.reference_orientation.setRT(Orientation(referenceOrientation.get()));
-    renderer->state.amplitude_reference_distance.setRT(amplitudeReferenceDistance.get());
+    // calculate angle from which the source is seen
+    // and confine angle to interval ]-180, 180], see qsourceproperties.cpp
+    float ang = radiansToDegrees(angle(source->position, renderer->state.reference_orientation));
+    ang = std::fmod(ang, 360.0f);
+    if (ang > 180.0f) ang -= 360.0f;
+    else if (ang <= -180.0f) ang += 360.0f;
+    sourceOrientation.set(ang);
 
     /// \todo how to handle mono input from host correctly?
     // choose between left or right channel for stereo input
     int channelIndex = static_cast<int>(inputChannel.getStep());
 
     // get source input level
-    sourceLevel.set(buffer.getRMSLevel(channelIndex, 0, buffer.getNumSamples()));
+    float inputLevel = 0.0f;
+    if (!source->mute)
+    {
+        inputLevel = buffer.getRMSLevel(channelIndex, 0, buffer.getNumSamples());
+    }
+    sourceLevel.set(inputLevel);
 
     // call internal ssr process function of renderer
     renderer->audio_callback(getBlockSize()

@@ -62,43 +62,7 @@ public:
             // create right-click popup menu and item handling
             if (e.mods == ModifierKeys::rightButtonModifier)
             {
-                PopupMenu mainMenu, muteSourceMenu, sourceTypeMenu, inputChannelMenu;
-
-                muteSourceMenu.addItem(1, "mute source OFF", true, params.sourceMute.getStep() == eOnOffState::eOff ? true : false);
-                muteSourceMenu.addItem(2, "mute source ON", true, params.sourceMute.getStep() == eOnOffState::eOn ? true : false);
-                sourceTypeMenu.addItem(3, "source type POINT", true, params.sourceType.getStep() == eSourceType::ePoint ? true : false);
-                sourceTypeMenu.addItem(4, "source type PLANE", true, params.sourceType.getStep() == eSourceType::ePlane ? true : false);
-                inputChannelMenu.addItem(5, "input channel LEFT", true, params.inputChannel.getStep() == eInputChannel::eLeftChannel ? true : false);
-                inputChannelMenu.addItem(6, "input channel RIGHT", true, params.inputChannel.getStep() == eInputChannel::eRightChannel ? true : false);
-
-                mainMenu.addSubMenu("mute source", muteSourceMenu);
-                mainMenu.addSubMenu("source type", sourceTypeMenu);
-                mainMenu.addSubMenu("input channel", inputChannelMenu);
-
-                const int selectedItem = mainMenu.show();
-                switch (selectedItem)
-                {
-                case 1:
-                    params.sourceMute.setStep(eOnOffState::eOff);
-                    break;
-                case 2:
-                    params.sourceMute.setStep(eOnOffState::eOn);
-                    break;
-                case 3:
-                    params.sourceType.setStep(eSourceType::ePoint);
-                    break;
-                case 4:
-                    params.sourceType.setStep(eSourceType::ePlane);
-                    break;
-                case 5:
-                    params.inputChannel.setStep(eInputChannel::eLeftChannel);
-                    break;
-                case 6:
-                    params.inputChannel.setStep(eInputChannel::eRightChannel);
-                    break;
-                default:
-                    break;
-                }
+                createRightClickMenu();
             }
         }
     }
@@ -154,6 +118,47 @@ private:
         paddingT = (getHeight() - h) * 0.5f;
         g.setColour(nodeColour);
         g.fillEllipse(paddingL, paddingT, w, h);
+    }
+
+    void createRightClickMenu()
+    {
+        PopupMenu mainMenu, muteSourceMenu, sourceTypeMenu, inputChannelMenu;
+
+        muteSourceMenu.addItem(1, "mute source OFF", true, params.sourceMute.getStep() == eOnOffState::eOff ? true : false);
+        muteSourceMenu.addItem(2, "mute source ON", true, params.sourceMute.getStep() == eOnOffState::eOn ? true : false);
+        sourceTypeMenu.addItem(3, "source type POINT", true, params.sourceType.getStep() == eSourceType::ePoint ? true : false);
+        sourceTypeMenu.addItem(4, "source type PLANE", true, params.sourceType.getStep() == eSourceType::ePlane ? true : false);
+        inputChannelMenu.addItem(5, "input channel LEFT", true, params.inputChannel.getStep() == eInputChannel::eLeftChannel ? true : false);
+        inputChannelMenu.addItem(6, "input channel RIGHT", true, params.inputChannel.getStep() == eInputChannel::eRightChannel ? true : false);
+
+        mainMenu.addSubMenu("mute source", muteSourceMenu);
+        mainMenu.addSubMenu("source type", sourceTypeMenu);
+        mainMenu.addSubMenu("input channel", inputChannelMenu);
+
+        const int selectedItem = mainMenu.show();
+        switch (selectedItem)
+        {
+        case 1:
+            params.sourceMute.setStep(eOnOffState::eOff);
+            break;
+        case 2:
+            params.sourceMute.setStep(eOnOffState::eOn);
+            break;
+        case 3:
+            params.sourceType.setStep(eSourceType::ePoint);
+            break;
+        case 4:
+            params.sourceType.setStep(eSourceType::ePlane);
+            break;
+        case 5:
+            params.inputChannel.setStep(eInputChannel::eLeftChannel);
+            break;
+        case 6:
+            params.inputChannel.setStep(eInputChannel::eRightChannel);
+            break;
+        default:
+            break;
+        }
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SourceComponent)

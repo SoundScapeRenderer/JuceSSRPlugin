@@ -86,8 +86,6 @@ private:
 
     //==============================================================================
     ScopedPointer<GainLevelSlider> gainSlider;
-    ScopedPointer<Slider> orientationSlider;
-    ScopedPointer<Label> label2;
     ScopedPointer<SourceComponent> source;
     ScopedPointer<Slider> levelMeterLeft;
     ScopedPointer<Slider> levelMeterRight;

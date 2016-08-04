@@ -19,65 +19,24 @@ public:
     //==============================================================================
     CustomLookAndFeel(): LookAndFeel_V2()
     {
+        //customFont = Typeface::createSystemTypefaceFor(BinaryData::world_of_water_ttf, BinaryData::world_of_water_ttfSize);
     }
     virtual ~CustomLookAndFeel()
     {
     }
     //==============================================================================
 
-    void CustomLookAndFeel::drawLinearSlider(Graphics &g, int x, int y, int width, int height, float sliderPos, float minSliderPos, float maxSliderPos, const Slider::SliderStyle style, Slider &s)
-{
-    // use bar slider to draw vol and pan instead
-    if (style == Slider::LinearBar)
+    Typeface::Ptr getTypefaceForFont(const Font & font)
     {
-        const bool isMouseOver = s.isMouseOverOrDragging() && s.isEnabled();
-        const float posX = static_cast<float>(x);
-        const float posY = static_cast<float>(y);
-        float boxWidth = static_cast<float>(width);
-        const float boxHeight = static_cast<float>(height);
-
-        Colour bgColour(s.findColour(Slider::thumbColourId));
-        Colour outlineColour(s.findColour(Slider::textBoxOutlineColourId));
-        float outlineThickness = boxHeight * 0.2f;
-
-        g.setColour(isMouseOver? bgColour.brighter(0.2f) : bgColour);
-        g.fillRect(posX, posY, sliderPos, boxWidth);
-
-        g.setColour(outlineColour);
-        g.drawRect(posX, posY, boxWidth, boxHeight, outlineThickness);
-        
-        drawLinearSliderThumb(g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, s);
+        //return customFont;
+        Font f("Calibri", 14, Font::FontStyleFlags::plain);
+        return LookAndFeel_V2::getTypefaceForFont(f);
     }
-    else
-    {
-        // draw linear slider
-        LookAndFeel_V2::drawLinearSlider(g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, s);
-    }
-}
-
-void CustomLookAndFeel::drawLinearSliderThumb(Graphics &g, int x, int y, int width, int height, float sliderPos, float minSliderPos, float maxSliderPos, const Slider::SliderStyle style, Slider &s)
-{
-    const float sliderRadius = (float)(jmin(10, width / 2, height / 2) - 2);
-    const float outlineThickness = s.isEnabled() ? 0.8f : 0.3f;
-    float centreX, centreY;
-
-    Colour thumbColour(s.findColour(Slider::textBoxOutlineColourId));
-
-    /// \todo draw triangle thumb see ssr gui
-    // draw thumb at current position
-    if (style == Slider::LinearBar)
-    {
-
-    }
-    else
-    {
-        LookAndFeel_V2::drawLinearSliderThumb(g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, style, s);
-    }
-}
 
     //==============================================================================
     
 private:
+	Typeface::Ptr customFont;
 
 };
 

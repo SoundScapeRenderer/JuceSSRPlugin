@@ -43,20 +43,6 @@ PlugUI::PlugUI (SynthParams &p)
     gainSlider->addListener (this);
     gainSlider->setSkewFactor (3);
 
-    addAndMakeVisible (orientationSlider = new Slider ("orientation slider"));
-    orientationSlider->setRange (0, 360, 0);
-    orientationSlider->setSliderStyle (Slider::RotaryVerticalDrag);
-    orientationSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
-    orientationSlider->addListener (this);
-
-    addAndMakeVisible (label2 = new Label ("new label",
-                                           TRANS("Orientation")));
-    label2->setFont (Font (15.00f, Font::plain));
-    label2->setJustificationType (Justification::centred);
-    label2->setEditable (false, false, false);
-    label2->setColour (TextEditor::textColourId, Colours::black);
-    label2->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
     addAndMakeVisible (source = new SourceComponent (params));
     source->setName ("source");
 
@@ -80,7 +66,7 @@ PlugUI::PlugUI (SynthParams &p)
     listener->setName ("listener");
 
     addAndMakeVisible (debugText = new Label ("debug",
-                                              TRANS("Debug:")));
+                                              String::empty));
     debugText->setFont (Font (15.00f, Font::plain));
     debugText->setJustificationType (Justification::topLeft);
     debugText->setEditable (false, false, false);
@@ -89,10 +75,6 @@ PlugUI::PlugUI (SynthParams &p)
 
 
     //[UserPreSize]
-    // default settings for child components
-    orientationSlider->setValue(90.0);
-    gainSlider->setValue(-6.0);
-
 #if LEVELMETER 1
     levelMeterLeft->setSliderStyle(Slider::LinearBarVertical);
     levelMeterRight->setSliderStyle(Slider::LinearBarVertical);
@@ -122,8 +104,6 @@ PlugUI::~PlugUI()
     //[/Destructor_pre]
 
     gainSlider = nullptr;
-    orientationSlider = nullptr;
-    label2 = nullptr;
     source = nullptr;
     levelMeterLeft = nullptr;
     levelMeterRight = nullptr;
@@ -154,8 +134,6 @@ void PlugUI::resized()
     //[/UserPreResize]
 
     gainSlider->setBounds (413, 191, 75, 28);
-    orientationSlider->setBounds (16, 48, 80, 80);
-    label2->setBounds (16, 16, 80, 24);
     source->setBounds (405, 95, 90, 90);
     levelMeterLeft->setBounds (824, 150, 24, 300);
     levelMeterRight->setBounds (856, 150, 24, 300);
@@ -168,6 +146,8 @@ void PlugUI::resized()
 
     juce::Point<int> pixRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), getWidth(), getHeight());
     listener->setBounds(pixRef.x - listener->getWidth() / 2, pixRef.y - listener->getHeight() / 2, listener->getWidth(), listener->getHeight());
+
+    gainSlider->setValue(params.sourceGain.get());
     //[/UserResized]
 }
 
@@ -182,12 +162,6 @@ void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
         //[UserSliderCode_gainSlider] -- add your slider handling code here..
         params.sourceGain.setUI(val);
         //[/UserSliderCode_gainSlider]
-    }
-    else if (sliderThatWasMoved == orientationSlider)
-    {
-        //[UserSliderCode_orientationSlider] -- add your slider handling code here..
-        params.sourceOrientation.setUI(val);
-        //[/UserSliderCode_orientationSlider]
     }
     else if (sliderThatWasMoved == levelMeterLeft)
     {
@@ -209,12 +183,18 @@ void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 void PlugUI::childBoundsChanged(Component *child)
 {
-    // gainSlider should always follow source node
     if (child == source)
     {
+        // gainSlider should always follow source node
         int offsetX = source->getX() + (source->getWidth() - gainSlider->getWidth()) / 2;
         int offsetY = source->getY() + source->getHeight() + 5;
         gainSlider->setBounds(offsetX, offsetY, gainSlider->getWidth(), gainSlider->getHeight());
+
+        /// \todo if source is plane then draw wavefronts towards listener
+        if (params.sourceType.getStep() == eSourceType::ePlane)
+        {
+
+        }
     }
 }
 
@@ -311,15 +291,6 @@ BEGIN_JUCER_METADATA
           virtualName="GainLevelSlider" explicitFocusOrder="0" pos="413 191 75 28"
           min="-96" max="12" int="0" style="LinearBar" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="3"/>
-  <SLIDER name="orientation slider" id="d65ca37ac19fdb1e" memberName="orientationSlider"
-          virtualName="" explicitFocusOrder="0" pos="16 48 80 80" min="0"
-          max="360" int="0" style="RotaryVerticalDrag" textBoxPos="TextBoxBelow"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <LABEL name="new label" id="fa1442bff5dd15a0" memberName="label2" virtualName=""
-         explicitFocusOrder="0" pos="16 16 80 24" edTextCol="ff000000"
-         edBkgCol="0" labelText="Orientation" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="15" bold="0" italic="0" justification="36"/>
   <GENERICCOMPONENT name="source" id="7b4082301ad63f28" memberName="source" virtualName="SourceComponent"
                     explicitFocusOrder="0" pos="405 95 90 90" class="Component" params="params"/>
   <SLIDER name="level left" id="13e0962dc81dca1" memberName="levelMeterLeft"
@@ -337,7 +308,7 @@ BEGIN_JUCER_METADATA
                     params="params"/>
   <LABEL name="debug" id="3b44d9ef5ee9c1a" memberName="debugText" virtualName=""
          explicitFocusOrder="0" pos="648 8 250 584" edTextCol="ff000000"
-         edBkgCol="0" labelText="Debug:" editableSingleClick="0" editableDoubleClick="0"
+         edBkgCol="0" labelText="" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="9"/>
 </JUCER_COMPONENT>
