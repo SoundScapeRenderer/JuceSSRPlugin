@@ -34,7 +34,7 @@ public:
     Param sourceLevel;
     ParamStepped<eOnOffState> sourceMute;
     ParamStepped<eSourceType> sourceType;
-    /// \todo positionlock for source and reference?
+    ParamStepped<eOnOffState> sourcePositionLock;
 
     // reference listener parameter
     Param referenceX;
@@ -86,6 +86,11 @@ public:
         float x = (pixCenterX - sceneWidth / 2) / (pixelPerMeter * zoomFactor.get());
         float y = (pixCenterY - sceneHeight / 2) / (pixelPerMeter * zoomFactor.get());
         return juce::Point<float>(x, -y);
+    }
+
+    float roundNearest(float val)
+    {
+        return roundf(val * 100) / 100;
     }
 
     // original SSR colour codes

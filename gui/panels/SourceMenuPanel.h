@@ -17,16 +17,14 @@
   ==============================================================================
 */
 
-#ifndef __JUCE_HEADER_17F31DC76882C8CC__
-#define __JUCE_HEADER_17F31DC76882C8CC__
+#ifndef __JUCE_HEADER_3862032697A0F124__
+#define __JUCE_HEADER_3862032697A0F124__
 
 //[Headers]     -- You can add your own extra header files here --
 #include "JuceHeader.h"
+
+#include "PanelBase.h"
 #include "SynthParams.h"
-#include "panels/PanelBase.h"
-#include "CustomLookAndFeel.h"
-#include "GainLevelSlider.h"
-#include "ListenerComponent.h"
 #include "SourceComponent.h"
 //[/Headers]
 
@@ -40,64 +38,58 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class PlugUI  : public PanelBase,
-                public SliderListener
+class SourceMenuPanel  : public PanelBase,
+                         public ComboBoxListener,
+                         public ButtonListener
 {
 public:
     //==============================================================================
-    PlugUI (SynthParams &p);
-    ~PlugUI();
+    SourceMenuPanel (SynthParams &p, SourceComponent *s);
+    ~SourceMenuPanel();
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-
-    /**
-        Derived small window class only to implement closeButtonPressed for now.
-        In this, we only need to set the window invisible if the close button was pressed.
-     */
-    class InfoWindow : public DocumentWindow
-    {
-    public:
-        InfoWindow(const String &name, Colour c, int requiredButtons, bool addToDesktop = true) : DocumentWindow(name, c, requiredButtons, addToDesktop) {}
-
-        ~InfoWindow() {}
-
-        virtual void closeButtonPressed() { this->setVisible(false); }
-    };
-
-    void childBoundsChanged(Component *child);
     //[/UserMethods]
 
     void paint (Graphics& g);
     void resized();
-    void sliderValueChanged (Slider* sliderThatWasMoved);
+    void comboBoxChanged (ComboBox* comboBoxThatHasChanged);
+    void buttonClicked (Button* buttonThatWasClicked);
 
 
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     SynthParams &params;
-    ScopedPointer<CustomLookAndFeel> lnf;
+    SourceComponent *source;
 
     void timerCallback() override;
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<Label> debugText;
-    ScopedPointer<Slider> levelMeterRight;
-    ScopedPointer<Slider> levelMeterLeft;
-    ScopedPointer<ListenerComponent> listener;
-    ScopedPointer<GainLevelSlider> gainSlider;
-    ScopedPointer<DocumentWindow> sourceMenu;
-    ScopedPointer<SourceComponent> source;
-    ScopedPointer<Drawable> drawable1;
+    ScopedPointer<Label> positionLabel;
+    ScopedPointer<Label> distanceLabel;
+    ScopedPointer<Label> azimuthLabel;
+    ScopedPointer<Label> fixLabel;
+    ScopedPointer<Label> volLabel;
+    ScopedPointer<Label> muteLabel;
+    ScopedPointer<Label> modelLabel;
+    ScopedPointer<Label> inputLabel;
+    ScopedPointer<ComboBox> inputBox;
+    ScopedPointer<ComboBox> modelBox;
+    ScopedPointer<ToggleButton> muteToggle;
+    ScopedPointer<ToggleButton> fixToggle;
+    ScopedPointer<Label> volLabel2;
+    ScopedPointer<Label> azimuthLabel2;
+    ScopedPointer<Label> distanceLabel2;
+    ScopedPointer<Label> positionLabel2;
 
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlugUI)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SourceMenuPanel)
 };
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
 
-#endif   // __JUCE_HEADER_17F31DC76882C8CC__
+#endif   // __JUCE_HEADER_3862032697A0F124__

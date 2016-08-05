@@ -5,6 +5,9 @@
     <Filter Include="ssr">
       <UniqueIdentifier>{30A17044-55BF-1C12-5C9B-FE7977755C2C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ssr\assets">
+      <UniqueIdentifier>{0E7014E9-519A-834F-1480-0E07030A4E00}</UniqueIdentifier>
+    </Filter>
     <Filter Include="ssr\ssr data">
       <UniqueIdentifier>{797B765E-8522-EEEC-BB2A-EC9D54A923A0}</UniqueIdentifier>
     </Filter>
@@ -435,6 +438,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\audio\src\SynthParams.cpp">
       <Filter>ssr\audio\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\gui\panels\SourceMenuPanel.cpp">
+      <Filter>ssr\gui\panels</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\gui\PluginEditor.cpp">
       <Filter>ssr\gui</Filter>
@@ -1893,6 +1899,9 @@
     <ClInclude Include="..\..\..\audio\inc\SynthParams.h">
       <Filter>ssr\audio\inc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\gui\panels\SourceMenuPanel.h">
+      <Filter>ssr\gui\panels</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\gui\panels\PanelBase.h">
       <Filter>ssr\gui\panels</Filter>
     </ClInclude>
@@ -3293,6 +3302,12 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\assets\lock icon.png">
+      <Filter>ssr\assets</Filter>
+    </None>
+    <None Include="..\..\..\assets\mute icon.png">
+      <Filter>ssr\assets</Filter>
+    </None>
     <None Include="..\..\..\ssr data\default_hrirs.wav">
       <Filter>ssr\ssr data</Filter>
     </None>

@@ -18,14 +18,13 @@
 */
 
 //[Headers] You can add your own extra header files here...
+#include "panels/SourceMenuPanel.h"
 //[/Headers]
 
 #include "PlugUI.h"
 
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
-#define LEVELMETER 0
-#define DEBUG_PARAMS 0
 //[/MiscUserDefs]
 
 //==============================================================================
@@ -36,35 +35,6 @@ PlugUI::PlugUI (SynthParams &p)
     startTimerHz (60);
     //[/Constructor_pre]
 
-    addAndMakeVisible (gainSlider = new GainLevelSlider ("gain slider"));
-    gainSlider->setRange (-96, 12, 0);
-    gainSlider->setSliderStyle (Slider::LinearBar);
-    gainSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
-    gainSlider->addListener (this);
-    gainSlider->setSkewFactor (3);
-
-    addAndMakeVisible (source = new SourceComponent (params));
-    source->setName ("source");
-
-    addAndMakeVisible (levelMeterLeft = new Slider ("level left"));
-    levelMeterLeft->setRange (-0.2, 1, 0);
-    levelMeterLeft->setSliderStyle (Slider::LinearVertical);
-    levelMeterLeft->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
-    levelMeterLeft->setColour (Slider::thumbColourId, Colour (0xff60ff60));
-    levelMeterLeft->addListener (this);
-    levelMeterLeft->setSkewFactor (0.7);
-
-    addAndMakeVisible (levelMeterRight = new Slider ("level right"));
-    levelMeterRight->setRange (-0.2, 1, 0);
-    levelMeterRight->setSliderStyle (Slider::LinearVertical);
-    levelMeterRight->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
-    levelMeterRight->setColour (Slider::thumbColourId, Colour (0xff60ff60));
-    levelMeterRight->addListener (this);
-    levelMeterRight->setSkewFactor (0.7);
-
-    addAndMakeVisible (listener = new ListenerComponent (params));
-    listener->setName ("listener");
-
     addAndMakeVisible (debugText = new Label ("debug",
                                               String::empty));
     debugText->setFont (Font (15.00f, Font::plain));
@@ -73,25 +43,53 @@ PlugUI::PlugUI (SynthParams &p)
     debugText->setColour (TextEditor::textColourId, Colours::black);
     debugText->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
+    addAndMakeVisible (levelMeterRight = new Slider ("level right"));
+    levelMeterRight->setRange (0, 1, 0);
+    levelMeterRight->setSliderStyle (Slider::LinearVertical);
+    levelMeterRight->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    levelMeterRight->setColour (Slider::thumbColourId, Colour (0xff60ff60));
+    levelMeterRight->addListener (this);
+
+    addAndMakeVisible (levelMeterLeft = new Slider ("level left"));
+    levelMeterLeft->setRange (0, 1, 0);
+    levelMeterLeft->setSliderStyle (Slider::LinearVertical);
+    levelMeterLeft->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    levelMeterLeft->setColour (Slider::thumbColourId, Colour (0xff60ff60));
+    levelMeterLeft->addListener (this);
+
+    addAndMakeVisible (listener = new ListenerComponent (params));
+    listener->setName ("listener");
+
+    addAndMakeVisible (gainSlider = new GainLevelSlider ("gain slider"));
+    gainSlider->setRange (-96, 12, 0);
+    gainSlider->setSliderStyle (Slider::LinearBar);
+    gainSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    gainSlider->addListener (this);
+    gainSlider->setSkewFactor (3);
+
+    addAndMakeVisible (sourceMenu = new DocumentWindow ("source menu", Colours::white, DocumentWindow::closeButton));
+    sourceMenu->setName ("source menu");
+
+    addAndMakeVisible (source = new SourceComponent (params));
+    source->setName ("source");
+
+    drawable1 = Drawable::createFromImageData (BinaryData::ssr_logo_png, BinaryData::ssr_logo_pngSize);
 
     //[UserPreSize]
-#if LEVELMETER 1
+    sourceMenu->setTitleBarHeight(0);
+    sourceMenu->setContentOwned(new SourceMenuPanel(params, source), true);
+    sourceMenu->setVisible(false);
+
+    source->registerMenu(sourceMenu);
+
     levelMeterLeft->setSliderStyle(Slider::LinearBarVertical);
     levelMeterRight->setSliderStyle(Slider::LinearBarVertical);
-#else
-    levelMeterLeft->setVisible(false);
-    levelMeterRight->setVisible(false);
-#endif
     //[/UserPreSize]
 
     setSize (900, 600);
 
 
     //[Constructor] You can add your own custom stuff here..
-    // load images
-    ssrLogo = ImageCache::getFromMemory(BinaryData::ssr_logo_large_png, BinaryData::ssr_logo_large_pngSize);
-
-    // set new design for some components
     lnf = new CustomLookAndFeel();
     LookAndFeel::setDefaultLookAndFeel(lnf);
     //[/Constructor]
@@ -103,12 +101,14 @@ PlugUI::~PlugUI()
     lnf = nullptr;
     //[/Destructor_pre]
 
-    gainSlider = nullptr;
-    source = nullptr;
-    levelMeterLeft = nullptr;
-    levelMeterRight = nullptr;
-    listener = nullptr;
     debugText = nullptr;
+    levelMeterRight = nullptr;
+    levelMeterLeft = nullptr;
+    listener = nullptr;
+    gainSlider = nullptr;
+    sourceMenu = nullptr;
+    source = nullptr;
+    drawable1 = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -123,8 +123,13 @@ void PlugUI::paint (Graphics& g)
 
     g.fillAll (Colour (0xffedede6));
 
+    g.setColour (Colours::black);
+    jassert (drawable1 != 0);
+    if (drawable1 != 0)
+        drawable1->drawWithin (g, Rectangle<float> (13, 530, 64, 64),
+                               RectanglePlacement::centred, 1.000f);
+
     //[UserPaint] Add your own custom painting code here..
-    g.drawImageWithin(ssrLogo, 0 + 15, getHeight() - ssrLogo.getHeight() / 3 - 15, ssrLogo.getWidth() / 3, ssrLogo.getHeight() / 3, RectanglePlacement::centred);
     //[/UserPaint]
 }
 
@@ -133,12 +138,13 @@ void PlugUI::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    gainSlider->setBounds (413, 191, 75, 28);
-    source->setBounds (405, 95, 90, 90);
-    levelMeterLeft->setBounds (824, 150, 24, 300);
-    levelMeterRight->setBounds (856, 150, 24, 300);
-    listener->setBounds (400, 250, 100, 100);
     debugText->setBounds (648, 8, 250, 584);
+    levelMeterRight->setBounds (856, 150, 24, 300);
+    levelMeterLeft->setBounds (824, 150, 24, 300);
+    listener->setBounds (400, 250, 100, 100);
+    gainSlider->setBounds (413, 191, 75, 28);
+    sourceMenu->setBounds (505, 95, 200, 225);
+    source->setBounds (405, 95, 90, 90);
     //[UserResized] Add your own custom resize handling here..
     // draw components at their position
     juce::Point<int> pixSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
@@ -157,21 +163,21 @@ void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
     float val = static_cast<float>(sliderThatWasMoved->getValue());
     //[/UsersliderValueChanged_Pre]
 
-    if (sliderThatWasMoved == gainSlider)
+    if (sliderThatWasMoved == levelMeterRight)
     {
-        //[UserSliderCode_gainSlider] -- add your slider handling code here..
-        params.sourceGain.setUI(val);
-        //[/UserSliderCode_gainSlider]
+        //[UserSliderCode_levelMeterRight] -- add your slider handling code here..
+        //[/UserSliderCode_levelMeterRight]
     }
     else if (sliderThatWasMoved == levelMeterLeft)
     {
         //[UserSliderCode_levelMeterLeft] -- add your slider handling code here..
         //[/UserSliderCode_levelMeterLeft]
     }
-    else if (sliderThatWasMoved == levelMeterRight)
+    else if (sliderThatWasMoved == gainSlider)
     {
-        //[UserSliderCode_levelMeterRight] -- add your slider handling code here..
-        //[/UserSliderCode_levelMeterRight]
+        //[UserSliderCode_gainSlider] -- add your slider handling code here..
+        params.sourceGain.setUI(val);
+        //[/UserSliderCode_gainSlider]
     }
 
     //[UsersliderValueChanged_Post]
@@ -183,12 +189,18 @@ void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 void PlugUI::childBoundsChanged(Component *child)
 {
+    int offsetX;
+    int offsetY;
     if (child == source)
     {
         // gainSlider should always follow source node
-        int offsetX = source->getX() + (source->getWidth() - gainSlider->getWidth()) / 2;
-        int offsetY = source->getY() + source->getHeight() + 5;
+        offsetX = source->getX() + (source->getWidth() - gainSlider->getWidth()) / 2;
+        offsetY = source->getY() + source->getHeight() + 5;
         gainSlider->setBounds(offsetX, offsetY, gainSlider->getWidth(), gainSlider->getHeight());
+
+        offsetX = source->getX() + source->getWidth() + 10;
+        offsetY = source->getY() + source->getHeight() / 2;
+        sourceMenu->setBounds(offsetX, offsetY, sourceMenu->getWidth(), sourceMenu->getHeight());
 
         /// \todo if source is plane then draw wavefronts towards listener
         if (params.sourceType.getStep() == eSourceType::ePlane)
@@ -196,55 +208,22 @@ void PlugUI::childBoundsChanged(Component *child)
 
         }
     }
+    else if (child = sourceMenu)
+    {
+        offsetX = source->getX() + source->getWidth() + 10;
+        offsetY = source->getY() + source->getHeight() / 2;
+        sourceMenu->setBounds(offsetX, offsetY, sourceMenu->getWidth(), sourceMenu->getHeight());
+    }
 }
 
 void PlugUI::timerCallback()
 {
     gainSlider->setGainLevel(params.sourceLevel.get());
 
-#if LEVELMETER 1
-    // get current gui and audio level
-    double guiLevelLeft = levelMeterLeft->getValue();
-    double guiLevelRight = levelMeterRight->getValue();
-    float audioLevelLeft = params.levelLeft.get();
-    float audioLevelRight = params.levelRight.get();
-    double dropSpeed = 0.00001;
+    levelMeterLeft->setValue(params.outputLevelLeft.get(), dontSendNotification);
+    levelMeterRight->setValue(params.outputLevelRight.get(), dontSendNotification);
 
-    // refresh level meter values
-    if (audioLevelLeft > guiLevelLeft)
-    {
-            levelMeterLeft->setValue(audioLevelLeft);
-    }
-    else
-    {
-        if (guiLevelLeft - dropSpeed> 0.0)
-        {
-            levelMeterLeft->setValue(jmin(guiLevelLeft - dropSpeed, -1.0), dontSendNotification);
-        }
-        else
-        {
-            levelMeterLeft->setValue(0.0, dontSendNotification);
-        }
-    }
-
-    if (audioLevelRight > guiLevelRight)
-    {
-        levelMeterRight->setValue(audioLevelRight, dontSendNotification);
-    }
-    else
-    {
-        if (guiLevelRight - dropSpeed > 0.0)
-        {
-            levelMeterRight->setValue(jmin(guiLevelRight - dropSpeed, -1.0), dontSendNotification);
-        }
-        else
-        {
-            levelMeterRight->setValue(0.0);
-        }
-    }
-#endif
-
-#if DEBUG_PARAMS 1
+#if 0
     debugText->setText(
         "SourceX = " + String(params.sourceX.get()) +
         "\nSourceY = " + String(params.sourceY.get()) +
@@ -286,31 +265,35 @@ BEGIN_JUCER_METADATA
                  variableInitialisers="PanelBase(p), params(p)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="1"
                  initialWidth="900" initialHeight="600">
-  <BACKGROUND backgroundColour="ffedede6"/>
-  <SLIDER name="gain slider" id="69ace909b58289b9" memberName="gainSlider"
-          virtualName="GainLevelSlider" explicitFocusOrder="0" pos="413 191 75 28"
-          min="-96" max="12" int="0" style="LinearBar" textBoxPos="NoTextBox"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="3"/>
-  <GENERICCOMPONENT name="source" id="7b4082301ad63f28" memberName="source" virtualName="SourceComponent"
-                    explicitFocusOrder="0" pos="405 95 90 90" class="Component" params="params"/>
-  <SLIDER name="level left" id="13e0962dc81dca1" memberName="levelMeterLeft"
-          virtualName="" explicitFocusOrder="0" pos="824 150 24 300" thumbcol="ff60ff60"
-          min="-0.20000000000000001" max="1" int="0" style="LinearVertical"
-          textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="0.69999999999999996"/>
-  <SLIDER name="level right" id="a744d1a2c21ea6d8" memberName="levelMeterRight"
-          virtualName="" explicitFocusOrder="0" pos="856 150 24 300" thumbcol="ff60ff60"
-          min="-0.20000000000000001" max="1" int="0" style="LinearVertical"
-          textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="0.69999999999999996"/>
-  <GENERICCOMPONENT name="listener" id="a34b6db6e6ed2361" memberName="listener" virtualName="ListenerComponent"
-                    explicitFocusOrder="0" pos="400 250 100 100" class="Component"
-                    params="params"/>
+  <BACKGROUND backgroundColour="ffedede6">
+    <IMAGE pos="13 530 64 64" resource="BinaryData::ssr_logo_png" opacity="1"
+           mode="1"/>
+  </BACKGROUND>
   <LABEL name="debug" id="3b44d9ef5ee9c1a" memberName="debugText" virtualName=""
          explicitFocusOrder="0" pos="648 8 250 584" edTextCol="ff000000"
          edBkgCol="0" labelText="" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="9"/>
+  <SLIDER name="level right" id="a744d1a2c21ea6d8" memberName="levelMeterRight"
+          virtualName="" explicitFocusOrder="0" pos="856 150 24 300" thumbcol="ff60ff60"
+          min="0" max="1" int="0" style="LinearVertical" textBoxPos="NoTextBox"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+  <SLIDER name="level left" id="13e0962dc81dca1" memberName="levelMeterLeft"
+          virtualName="" explicitFocusOrder="0" pos="824 150 24 300" thumbcol="ff60ff60"
+          min="0" max="1" int="0" style="LinearVertical" textBoxPos="NoTextBox"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+  <GENERICCOMPONENT name="listener" id="a34b6db6e6ed2361" memberName="listener" virtualName="ListenerComponent"
+                    explicitFocusOrder="0" pos="400 250 100 100" class="Component"
+                    params="params"/>
+  <SLIDER name="gain slider" id="69ace909b58289b9" memberName="gainSlider"
+          virtualName="GainLevelSlider" explicitFocusOrder="0" pos="413 191 75 28"
+          min="-96" max="12" int="0" style="LinearBar" textBoxPos="NoTextBox"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="3"/>
+  <GENERICCOMPONENT name="source menu" id="83eb0626dd657a1f" memberName="sourceMenu"
+                    virtualName="" explicitFocusOrder="0" pos="505 95 200 225" class="DocumentWindow"
+                    params="&quot;source menu&quot;, Colours::white, DocumentWindow::closeButton"/>
+  <GENERICCOMPONENT name="source" id="7b4082301ad63f28" memberName="source" virtualName="SourceComponent"
+                    explicitFocusOrder="0" pos="405 95 90 90" class="Component" params="params"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

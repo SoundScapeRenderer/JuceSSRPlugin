@@ -30,6 +30,7 @@ SynthParams::SynthParams()
     , sourceLevel("sourceLevel", "sourceLevel", "sourceLevel", "", -1.0f, 1.0f, 0.0f)
     , sourceMute("source muted", "sourceMute", "sourceMute", eOnOffState::eOff, OnOffStateNames)
     , sourceType("source type", "sourceType", "sourceType", eSourceType::ePoint, SourceTypeNames)
+    , sourcePositionLock("source position lock", "sourcePositionLock", "sourcePositionLock", eOnOffState::eOff, OnOffStateNames)
 
     , referenceX("reference x", "referenceX", "referenceX", "m", -50.0f, 50.0f, 0.0f)
     , referenceY("reference y", "referenceY", "referenceY", "m", -50.0f, 50.0f, 0.0f)

@@ -24,10 +24,19 @@ public:
         : params(p)
     {
         setAlwaysOnTop(true);
+
+        lockImg = ImageCache::getFromMemory(BinaryData::lock_icon_png, BinaryData::lock_icon_pngSize);
+        muteImg = ImageCache::getFromMemory(BinaryData::mute_icon_png, BinaryData::mute_icon_pngSize);
     }
 
     ~SourceComponent()
     {
+        menu = nullptr;
+    }
+
+    void registerMenu(DocumentWindow *sourceMenu)
+    {
+        menu = sourceMenu;
     }
 
     //==============================================================================
@@ -36,10 +45,16 @@ public:
     {
         drawSourceNode(g);
 
-        /// \todo draw angle arrows
-        if (params.sourceType.getStep() == eSourceType::ePlane)
+        // draw source lock indicator
+        if (params.sourcePositionLock.getStep() == eOnOffState::eOn)
         {
+            g.drawImageWithin(lockImg, 5, getHeight() - 24 - 5, 24, 24, RectanglePlacement::centred);
+        }
 
+        // draw source mute indicator
+        if (params.sourceMute.getStep() == eOnOffState::eOn)
+        {
+            g.drawImageWithin(muteImg, getWidth() - 24 - 5, getHeight() - 24 - 5, 24, 24, RectanglePlacement::centred);
         }
     }
 
@@ -53,7 +68,7 @@ public:
 
     void mouseDown (const MouseEvent& e)
     {
-        if (e.mods == ModifierKeys::leftButtonModifier)
+        if (e.mods == ModifierKeys::leftButtonModifier && params.sourcePositionLock.getStep() == eOnOffState::eOff)
         {
             dragger.startDraggingComponent(this, e);
         }
@@ -62,14 +77,14 @@ public:
             // create right-click popup menu and item handling
             if (e.mods == ModifierKeys::rightButtonModifier)
             {
-                createRightClickMenu();
+                menu->setVisible(!menu->isVisible());
             }
         }
     }
     
     void mouseDrag (const MouseEvent& e)
     {
-        if (e.mods == ModifierKeys::leftButtonModifier)
+        if (e.mods == ModifierKeys::leftButtonModifier && params.sourcePositionLock.getStep() == eOnOffState::eOff)
         {
             dragger.dragComponent(this, e, nullptr);
 
@@ -86,9 +101,11 @@ public:
 
 private:
     SynthParams &params;
+    DocumentWindow *menu;
     ComponentDragger dragger;
-    const Colour nodeColour = SynthParams::sourceColourBlue;
+    Image lockImg, muteImg;
 
+    const Colour nodeColour = SynthParams::sourceColourBlue;
     const float ringRatio1 = 0.925f, ringRatio2 = 0.875f;
 
     //==============================================================================
@@ -118,47 +135,6 @@ private:
         paddingT = (getHeight() - h) * 0.5f;
         g.setColour(nodeColour);
         g.fillEllipse(paddingL, paddingT, w, h);
-    }
-
-    void createRightClickMenu()
-    {
-        PopupMenu mainMenu, muteSourceMenu, sourceTypeMenu, inputChannelMenu;
-
-        muteSourceMenu.addItem(1, "mute source OFF", true, params.sourceMute.getStep() == eOnOffState::eOff ? true : false);
-        muteSourceMenu.addItem(2, "mute source ON", true, params.sourceMute.getStep() == eOnOffState::eOn ? true : false);
-        sourceTypeMenu.addItem(3, "source type POINT", true, params.sourceType.getStep() == eSourceType::ePoint ? true : false);
-        sourceTypeMenu.addItem(4, "source type PLANE", true, params.sourceType.getStep() == eSourceType::ePlane ? true : false);
-        inputChannelMenu.addItem(5, "input channel LEFT", true, params.inputChannel.getStep() == eInputChannel::eLeftChannel ? true : false);
-        inputChannelMenu.addItem(6, "input channel RIGHT", true, params.inputChannel.getStep() == eInputChannel::eRightChannel ? true : false);
-
-        mainMenu.addSubMenu("mute source", muteSourceMenu);
-        mainMenu.addSubMenu("source type", sourceTypeMenu);
-        mainMenu.addSubMenu("input channel", inputChannelMenu);
-
-        const int selectedItem = mainMenu.show();
-        switch (selectedItem)
-        {
-        case 1:
-            params.sourceMute.setStep(eOnOffState::eOff);
-            break;
-        case 2:
-            params.sourceMute.setStep(eOnOffState::eOn);
-            break;
-        case 3:
-            params.sourceType.setStep(eSourceType::ePoint);
-            break;
-        case 4:
-            params.sourceType.setStep(eSourceType::ePlane);
-            break;
-        case 5:
-            params.inputChannel.setStep(eInputChannel::eLeftChannel);
-            break;
-        case 6:
-            params.inputChannel.setStep(eInputChannel::eRightChannel);
-            break;
-        default:
-            break;
-        }
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SourceComponent)

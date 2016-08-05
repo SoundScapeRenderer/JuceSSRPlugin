@@ -189,6 +189,7 @@
     <ClCompile Include="..\..\..\audio\ssr code\xmlparser.cpp"/>
     <ClCompile Include="..\..\..\audio\src\PluginProcessor.cpp"/>
     <ClCompile Include="..\..\..\audio\src\SynthParams.cpp"/>
+    <ClCompile Include="..\..\..\gui\panels\SourceMenuPanel.cpp"/>
     <ClCompile Include="..\..\..\gui\PluginEditor.cpp"/>
     <ClCompile Include="..\..\..\gui\PlugUI.cpp"/>
     <ClCompile Include="..\..\..\juce\modules\juce_audio_basics\buffers\juce_AudioDataConverters.cpp">
@@ -1395,6 +1396,7 @@
     <ClInclude Include="..\..\..\audio\inc\Param.h"/>
     <ClInclude Include="..\..\..\audio\inc\PluginProcessor.h"/>
     <ClInclude Include="..\..\..\audio\inc\SynthParams.h"/>
+    <ClInclude Include="..\..\..\gui\panels\SourceMenuPanel.h"/>
     <ClInclude Include="..\..\..\gui\panels\PanelBase.h"/>
     <ClInclude Include="..\..\..\gui\CustomLookAndFeel.h"/>
     <ClInclude Include="..\..\..\gui\GainLevelSlider.h"/>
@@ -1863,6 +1865,8 @@
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h"/>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\assets\lock icon.png"/>
+    <None Include="..\..\..\assets\mute icon.png"/>
     <None Include="..\..\..\ssr data\default_hrirs.wav"/>
     <None Include="..\..\..\ssr data\asdf.xsd"/>
     <None Include="..\..\..\ssr data\images\listener.png"/>

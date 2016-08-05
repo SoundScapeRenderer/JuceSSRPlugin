@@ -11,6 +11,10 @@
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="3.2.0"
               companyName="QU Lab, TU Berlin" companyWebsite="http://www.qu.tu-berlin.de">
   <MAINGROUP id="KEM0W7" name="ssr">
+    <GROUP id="{17A0334F-1898-B42D-0E2B-345D5347DA02}" name="assets">
+      <FILE id="fLpRLc" name="lock icon.png" compile="0" resource="1" file="../assets/lock icon.png"/>
+      <FILE id="EnsaoS" name="mute icon.png" compile="0" resource="1" file="../assets/mute icon.png"/>
+    </GROUP>
     <GROUP id="{2F948DE4-F9C4-14BA-D49A-B21CB547997D}" name="ssr data">
       <FILE id="mnRrKO" name="default_hrirs.wav" compile="0" resource="1"
             file="../ssr data/default_hrirs.wav"/>
@@ -239,6 +243,10 @@
     </GROUP>
     <GROUP id="{2B4D1276-8E01-DACD-ED9D-1D7A77D36833}" name="gui">
       <GROUP id="{A3FBCF95-D110-4C0D-E4A4-40AFC37C3FF3}" name="panels">
+        <FILE id="oV440T" name="SourceMenuPanel.cpp" compile="1" resource="0"
+              file="../gui/panels/SourceMenuPanel.cpp"/>
+        <FILE id="IyQs7H" name="SourceMenuPanel.h" compile="0" resource="0"
+              file="../gui/panels/SourceMenuPanel.h"/>
         <FILE id="ywLTb2" name="PanelBase.h" compile="0" resource="0" file="../gui/panels/PanelBase.h"/>
       </GROUP>
       <FILE id="w1HIHk" name="CustomLookAndFeel.h" compile="0" resource="0"

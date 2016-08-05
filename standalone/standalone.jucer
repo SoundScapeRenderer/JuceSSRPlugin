@@ -4,6 +4,10 @@
               includeBinaryInAppConfig="1" jucerVersion="3.2.0" companyName="QU Lab, TU Berlin"
               companyWebsite="http://www.qu.tu-berlin.de">
   <MAINGROUP id="EgmEsS" name="ssr">
+    <GROUP id="{74BBF3D3-63F7-C0D4-94BA-D30A101BB85C}" name="assets">
+      <FILE id="BYw8E6" name="lock icon.png" compile="0" resource="1" file="../assets/lock icon.png"/>
+      <FILE id="Xy6bwW" name="mute icon.png" compile="0" resource="1" file="../assets/mute icon.png"/>
+    </GROUP>
     <GROUP id="{15FC078A-D7EC-ED70-E8F2-79886D332AC0}" name="ssr data">
       <FILE id="D3H0pE" name="default_hrirs.wav" compile="0" resource="1"
             file="../ssr data/default_hrirs.wav"/>
@@ -232,6 +236,10 @@
     </GROUP>
     <GROUP id="{F6382FEF-D578-65A9-AE2B-732BBA4674EA}" name="gui">
       <GROUP id="{97002C86-853A-E142-A502-E0F82A3882D2}" name="panels">
+        <FILE id="ekOQUU" name="SourceMenuPanel.cpp" compile="1" resource="0"
+              file="../gui/panels/SourceMenuPanel.cpp"/>
+        <FILE id="qNZPRZ" name="SourceMenuPanel.h" compile="0" resource="0"
+              file="../gui/panels/SourceMenuPanel.h"/>
         <FILE id="i81AfE" name="PanelBase.h" compile="0" resource="0" file="../gui/panels/PanelBase.h"/>
       </GROUP>
       <FILE id="Ld6QRe" name="CustomLookAndFeel.h" compile="0" resource="0"

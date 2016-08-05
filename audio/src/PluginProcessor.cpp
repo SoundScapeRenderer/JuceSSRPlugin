@@ -31,7 +31,6 @@ PluginAudioProcessor::PluginAudioProcessor()
     addParameter(new HostParam<Param>(sourceX));
     addParameter(new HostParam<Param>(sourceY));
     addParameter(new HostParam<Param>(sourceGain));
-    addParameter(new HostParam<ParamStepped<eOnOffState>>(sourceMute));
 
     addParameter(new HostParam<Param>(referenceX));
     addParameter(new HostParam<Param>(referenceY));
