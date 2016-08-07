@@ -12,6 +12,8 @@
               companyName="QU Lab, TU Berlin" companyWebsite="http://www.qu.tu-berlin.de">
   <MAINGROUP id="KEM0W7" name="ssr">
     <GROUP id="{17A0334F-1898-B42D-0E2B-345D5347DA02}" name="assets">
+      <FILE id="pduEG2" name="DejaVuSansMono.ttf" compile="0" resource="1"
+            file="../assets/DejaVuSansMono.ttf"/>
       <FILE id="fLpRLc" name="lock icon.png" compile="0" resource="1" file="../assets/lock icon.png"/>
       <FILE id="EnsaoS" name="mute icon.png" compile="0" resource="1" file="../assets/mute icon.png"/>
     </GROUP>

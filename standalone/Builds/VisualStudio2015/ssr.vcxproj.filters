@@ -3302,6 +3302,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\assets\DejaVuSansMono.ttf">
+      <Filter>ssr\assets</Filter>
+    </None>
     <None Include="..\..\..\assets\lock icon.png">
       <Filter>ssr\assets</Filter>
     </None>

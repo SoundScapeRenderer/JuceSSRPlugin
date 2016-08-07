@@ -36,65 +36,73 @@ SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceComponent *s)
 
     addAndMakeVisible (positionLabel = new Label ("position label",
                                                   TRANS("x, y")));
-    positionLabel->setFont (Font (14.00f, Font::plain));
+    positionLabel->setFont (Font (13.00f, Font::plain));
     positionLabel->setJustificationType (Justification::centredLeft);
     positionLabel->setEditable (false, false, false);
+    positionLabel->setColour (Label::textColourId, Colours::grey);
     positionLabel->setColour (TextEditor::textColourId, Colours::black);
     positionLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (distanceLabel = new Label ("distance label",
                                                   TRANS("distance")));
-    distanceLabel->setFont (Font (14.00f, Font::plain));
+    distanceLabel->setFont (Font (13.00f, Font::plain));
     distanceLabel->setJustificationType (Justification::centredLeft);
     distanceLabel->setEditable (false, false, false);
+    distanceLabel->setColour (Label::textColourId, Colours::grey);
     distanceLabel->setColour (TextEditor::textColourId, Colours::black);
     distanceLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (azimuthLabel = new Label ("azimuth label",
                                                  TRANS("azimuth")));
-    azimuthLabel->setFont (Font (14.00f, Font::plain));
+    azimuthLabel->setFont (Font (13.00f, Font::plain));
     azimuthLabel->setJustificationType (Justification::centredLeft);
     azimuthLabel->setEditable (false, false, false);
+    azimuthLabel->setColour (Label::textColourId, Colours::grey);
     azimuthLabel->setColour (TextEditor::textColourId, Colours::black);
     azimuthLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (fixLabel = new Label ("fix label",
                                              TRANS("fixed position")));
-    fixLabel->setFont (Font (14.00f, Font::plain));
+    fixLabel->setFont (Font (13.00f, Font::plain));
     fixLabel->setJustificationType (Justification::centredLeft);
     fixLabel->setEditable (false, false, false);
+    fixLabel->setColour (Label::textColourId, Colours::grey);
     fixLabel->setColour (TextEditor::textColourId, Colours::black);
     fixLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (volLabel = new Label ("vol label",
                                              TRANS("volume")));
-    volLabel->setFont (Font (14.00f, Font::plain));
+    volLabel->setFont (Font (13.00f, Font::plain));
     volLabel->setJustificationType (Justification::centredLeft);
     volLabel->setEditable (false, false, false);
+    volLabel->setColour (Label::textColourId, Colours::grey);
     volLabel->setColour (TextEditor::textColourId, Colours::black);
     volLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (muteLabel = new Label ("mute label",
                                               TRANS("muted")));
-    muteLabel->setFont (Font (14.00f, Font::plain));
+    muteLabel->setFont (Font (13.00f, Font::plain));
     muteLabel->setJustificationType (Justification::centredLeft);
     muteLabel->setEditable (false, false, false);
+    muteLabel->setColour (Label::textColourId, Colours::grey);
     muteLabel->setColour (TextEditor::textColourId, Colours::black);
     muteLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (modelLabel = new Label ("model label",
                                                TRANS("model")));
-    modelLabel->setFont (Font (14.00f, Font::plain));
+    modelLabel->setFont (Font (13.00f, Font::plain));
     modelLabel->setJustificationType (Justification::centredLeft);
     modelLabel->setEditable (false, false, false);
+    modelLabel->setColour (Label::textColourId, Colours::grey);
     modelLabel->setColour (TextEditor::textColourId, Colours::black);
     modelLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (inputLabel = new Label ("input label",
                                                TRANS("input channel")));
-    inputLabel->setFont (Font (14.00f, Font::plain));
+    inputLabel->setFont (Font (13.00f, Font::plain));
     inputLabel->setJustificationType (Justification::centredLeft);
     inputLabel->setEditable (false, false, false);
+    inputLabel->setColour (Label::textColourId, Colours::grey);
     inputLabel->setColour (TextEditor::textColourId, Colours::black);
     inputLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
@@ -126,7 +134,7 @@ SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceComponent *s)
 
     addAndMakeVisible (volLabel2 = new Label ("vol label",
                                               TRANS("volume")));
-    volLabel2->setFont (Font (14.00f, Font::plain));
+    volLabel2->setFont (Font (13.00f, Font::plain));
     volLabel2->setJustificationType (Justification::centredRight);
     volLabel2->setEditable (false, false, false);
     volLabel2->setColour (TextEditor::textColourId, Colours::black);
@@ -134,7 +142,7 @@ SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceComponent *s)
 
     addAndMakeVisible (azimuthLabel2 = new Label ("azimuth label",
                                                   TRANS("azimuth")));
-    azimuthLabel2->setFont (Font (14.00f, Font::plain));
+    azimuthLabel2->setFont (Font (13.00f, Font::plain));
     azimuthLabel2->setJustificationType (Justification::centredRight);
     azimuthLabel2->setEditable (false, false, false);
     azimuthLabel2->setColour (TextEditor::textColourId, Colours::black);
@@ -142,7 +150,7 @@ SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceComponent *s)
 
     addAndMakeVisible (distanceLabel2 = new Label ("distance label",
                                                    TRANS("distance")));
-    distanceLabel2->setFont (Font (14.00f, Font::plain));
+    distanceLabel2->setFont (Font (13.00f, Font::plain));
     distanceLabel2->setJustificationType (Justification::centredRight);
     distanceLabel2->setEditable (false, false, false);
     distanceLabel2->setColour (TextEditor::textColourId, Colours::black);
@@ -150,7 +158,7 @@ SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceComponent *s)
 
     addAndMakeVisible (positionLabel2 = new Label ("position label",
                                                    TRANS("x, y")));
-    positionLabel2->setFont (Font (14.00f, Font::plain));
+    positionLabel2->setFont (Font (13.00f, Font::plain));
     positionLabel2->setJustificationType (Justification::centredRight);
     positionLabel2->setEditable (false, false, false);
     positionLabel2->setColour (TextEditor::textColourId, Colours::black);
@@ -159,7 +167,9 @@ SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceComponent *s)
 
     //[UserPreSize]
     fixToggle->setToggleState(params.sourcePositionLock.getStep() == eOnOffState::eOn, sendNotificationAsync);
+    fixToggle->setWantsKeyboardFocus(false);
     muteToggle->setToggleState(params.sourceMute.getStep() == eOnOffState::eOn, sendNotificationAsync);
+    muteToggle->setWantsKeyboardFocus(false);
 
     modelBox->setSelectedItemIndex(static_cast<int>(params.sourceType.getStep()), sendNotificationAsync);
     inputBox->setSelectedItemIndex(static_cast<int>(params.inputChannel.getStep()), sendNotificationAsync);
@@ -217,22 +227,22 @@ void SourceMenuPanel::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    positionLabel->setBounds (8, 16, 88, 16);
-    distanceLabel->setBounds (8, 40, 88, 16);
-    azimuthLabel->setBounds (8, 64, 88, 16);
-    fixLabel->setBounds (8, 88, 88, 16);
-    volLabel->setBounds (8, 112, 88, 16);
-    muteLabel->setBounds (8, 136, 88, 16);
-    modelLabel->setBounds (8, 160, 88, 16);
-    inputLabel->setBounds (8, 184, 88, 16);
-    inputBox->setBounds (102, 184, 92, 16);
-    modelBox->setBounds (102, 160, 92, 16);
-    muteToggle->setBounds (164, 136, 16, 16);
-    fixToggle->setBounds (164, 88, 16, 16);
-    volLabel2->setBounds (100, 112, 98, 16);
-    azimuthLabel2->setBounds (100, 64, 98, 16);
-    distanceLabel2->setBounds (100, 40, 98, 16);
-    positionLabel2->setBounds (100, 16, 98, 16);
+    positionLabel->setBounds (8, 16, 80, 16);
+    distanceLabel->setBounds (8, 40, 80, 16);
+    azimuthLabel->setBounds (8, 64, 80, 16);
+    fixLabel->setBounds (8, 88, 80, 16);
+    volLabel->setBounds (8, 112, 80, 16);
+    muteLabel->setBounds (8, 136, 80, 16);
+    modelLabel->setBounds (8, 160, 80, 16);
+    inputLabel->setBounds (8, 184, 80, 16);
+    inputBox->setBounds (96, 184, 144, 16);
+    modelBox->setBounds (96, 160, 144, 16);
+    muteToggle->setBounds (200, 136, 20, 16);
+    fixToggle->setBounds (200, 88, 20, 16);
+    volLabel2->setBounds (96, 112, 144, 16);
+    azimuthLabel2->setBounds (96, 64, 144, 16);
+    distanceLabel2->setBounds (96, 40, 144, 16);
+    positionLabel2->setBounds (96, 16, 144, 16);
     //[UserResized] Add your own custom resize handling here..
     fixToggle->setToggleState(params.sourcePositionLock.getStep() == eOnOffState::eOn, sendNotificationAsync);
     muteToggle->setToggleState(params.sourceMute.getStep() == eOnOffState::eOn, sendNotificationAsync);
@@ -329,78 +339,78 @@ BEGIN_JUCER_METADATA
                  initialWidth="300" initialHeight="400">
   <BACKGROUND backgroundColour="ffffffff"/>
   <LABEL name="position label" id="4fb7b389efd80fef" memberName="positionLabel"
-         virtualName="" explicitFocusOrder="0" pos="8 16 88 16" edTextCol="ff000000"
-         edBkgCol="0" labelText="x, y" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="14"
-         bold="0" italic="0" justification="33"/>
+         virtualName="" explicitFocusOrder="0" pos="8 16 80 16" textCol="ff808080"
+         edTextCol="ff000000" edBkgCol="0" labelText="x, y" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="13" bold="0" italic="0" justification="33"/>
   <LABEL name="distance label" id="335b9a0960751dc9" memberName="distanceLabel"
-         virtualName="" explicitFocusOrder="0" pos="8 40 88 16" edTextCol="ff000000"
-         edBkgCol="0" labelText="distance" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="14"
-         bold="0" italic="0" justification="33"/>
+         virtualName="" explicitFocusOrder="0" pos="8 40 80 16" textCol="ff808080"
+         edTextCol="ff000000" edBkgCol="0" labelText="distance" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="13" bold="0" italic="0" justification="33"/>
   <LABEL name="azimuth label" id="cf62efff78460b63" memberName="azimuthLabel"
-         virtualName="" explicitFocusOrder="0" pos="8 64 88 16" edTextCol="ff000000"
-         edBkgCol="0" labelText="azimuth" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="14"
-         bold="0" italic="0" justification="33"/>
+         virtualName="" explicitFocusOrder="0" pos="8 64 80 16" textCol="ff808080"
+         edTextCol="ff000000" edBkgCol="0" labelText="azimuth" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="13" bold="0" italic="0" justification="33"/>
   <LABEL name="fix label" id="c5f578c99816c429" memberName="fixLabel"
-         virtualName="" explicitFocusOrder="0" pos="8 88 88 16" edTextCol="ff000000"
-         edBkgCol="0" labelText="fixed position" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="14" bold="0" italic="0" justification="33"/>
+         virtualName="" explicitFocusOrder="0" pos="8 88 80 16" textCol="ff808080"
+         edTextCol="ff000000" edBkgCol="0" labelText="fixed position"
+         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
+         fontname="Default font" fontsize="13" bold="0" italic="0" justification="33"/>
   <LABEL name="vol label" id="6ae36f4c98da6877" memberName="volLabel"
-         virtualName="" explicitFocusOrder="0" pos="8 112 88 16" edTextCol="ff000000"
-         edBkgCol="0" labelText="volume" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="14"
-         bold="0" italic="0" justification="33"/>
-  <LABEL name="mute label" id="7adfed4f61cec45c" memberName="muteLabel"
-         virtualName="" explicitFocusOrder="0" pos="8 136 88 16" edTextCol="ff000000"
-         edBkgCol="0" labelText="muted" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="14"
-         bold="0" italic="0" justification="33"/>
-  <LABEL name="model label" id="c129f4058f99eea0" memberName="modelLabel"
-         virtualName="" explicitFocusOrder="0" pos="8 160 88 16" edTextCol="ff000000"
-         edBkgCol="0" labelText="model" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="14"
-         bold="0" italic="0" justification="33"/>
-  <LABEL name="input label" id="1764e9ebbbf45408" memberName="inputLabel"
-         virtualName="" explicitFocusOrder="0" pos="8 184 88 16" edTextCol="ff000000"
-         edBkgCol="0" labelText="input channel" editableSingleClick="0"
+         virtualName="" explicitFocusOrder="0" pos="8 112 80 16" textCol="ff808080"
+         edTextCol="ff000000" edBkgCol="0" labelText="volume" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="14" bold="0" italic="0" justification="33"/>
+         fontsize="13" bold="0" italic="0" justification="33"/>
+  <LABEL name="mute label" id="7adfed4f61cec45c" memberName="muteLabel"
+         virtualName="" explicitFocusOrder="0" pos="8 136 80 16" textCol="ff808080"
+         edTextCol="ff000000" edBkgCol="0" labelText="muted" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="13" bold="0" italic="0" justification="33"/>
+  <LABEL name="model label" id="c129f4058f99eea0" memberName="modelLabel"
+         virtualName="" explicitFocusOrder="0" pos="8 160 80 16" textCol="ff808080"
+         edTextCol="ff000000" edBkgCol="0" labelText="model" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="13" bold="0" italic="0" justification="33"/>
+  <LABEL name="input label" id="1764e9ebbbf45408" memberName="inputLabel"
+         virtualName="" explicitFocusOrder="0" pos="8 184 80 16" textCol="ff808080"
+         edTextCol="ff000000" edBkgCol="0" labelText="input channel" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="13" bold="0" italic="0" justification="33"/>
   <COMBOBOX name="input box" id="976271ca70d23dca" memberName="inputBox"
-            virtualName="" explicitFocusOrder="0" pos="102 184 92 16" editable="0"
+            virtualName="" explicitFocusOrder="0" pos="96 184 144 16" editable="0"
             layout="33" items="left / mono&#10;right" textWhenNonSelected="input channel"
             textWhenNoItems=""/>
   <COMBOBOX name="model box" id="6589084621656a22" memberName="modelBox"
-            virtualName="" explicitFocusOrder="0" pos="102 160 92 16" editable="0"
+            virtualName="" explicitFocusOrder="0" pos="96 160 144 16" editable="0"
             layout="33" items="point souce&#10;plane wave" textWhenNonSelected="source model"
             textWhenNoItems=""/>
   <TOGGLEBUTTON name="mute toggle" id="a2a2af1b5eb5e970" memberName="muteToggle"
-                virtualName="" explicitFocusOrder="0" pos="164 136 16 16" buttonText=""
+                virtualName="" explicitFocusOrder="0" pos="200 136 20 16" buttonText=""
                 connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
   <TOGGLEBUTTON name="fix toggle" id="85e366cc1aa64435" memberName="fixToggle"
-                virtualName="" explicitFocusOrder="0" pos="164 88 16 16" buttonText=""
+                virtualName="" explicitFocusOrder="0" pos="200 88 20 16" buttonText=""
                 connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
   <LABEL name="vol label" id="49197c2d125ed02d" memberName="volLabel2"
-         virtualName="" explicitFocusOrder="0" pos="100 112 98 16" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="96 112 144 16" edTextCol="ff000000"
          edBkgCol="0" labelText="volume" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="14"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="13"
          bold="0" italic="0" justification="34"/>
   <LABEL name="azimuth label" id="f913124fca9fcf65" memberName="azimuthLabel2"
-         virtualName="" explicitFocusOrder="0" pos="100 64 98 16" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="96 64 144 16" edTextCol="ff000000"
          edBkgCol="0" labelText="azimuth" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="14"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="13"
          bold="0" italic="0" justification="34"/>
   <LABEL name="distance label" id="716e3f41281fca98" memberName="distanceLabel2"
-         virtualName="" explicitFocusOrder="0" pos="100 40 98 16" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="96 40 144 16" edTextCol="ff000000"
          edBkgCol="0" labelText="distance" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="14"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="13"
          bold="0" italic="0" justification="34"/>
   <LABEL name="position label" id="79cacb44cd301191" memberName="positionLabel2"
-         virtualName="" explicitFocusOrder="0" pos="100 16 98 16" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="96 16 144 16" edTextCol="ff000000"
          edBkgCol="0" labelText="x, y" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="14"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="13"
          bold="0" italic="0" justification="34"/>
 </JUCER_COMPONENT>
 

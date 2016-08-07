@@ -9,6 +9,9 @@
 
 namespace BinaryData
 {
+    extern const char*   DejaVuSansMono_ttf;
+    const int            DejaVuSansMono_ttfSize = 335068;
+
     extern const char*   lock_icon_png;
     const int            lock_icon_pngSize = 480;
 
@@ -70,7 +73,7 @@ namespace BinaryData
     extern const char* namedResourceList[];
 
     // Number of elements in the namedResourceList array.
-    const int namedResourceListSize = 19;
+    const int namedResourceListSize = 20;
 
     // If you provide the name of one of the binary resource variables above, this function will
     // return the corresponding data and its size (or a null pointer if the name isn't found).

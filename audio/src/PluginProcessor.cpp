@@ -184,20 +184,15 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     renderer->state.amplitude_reference_distance.setRT(amplitudeReferenceDistance.get());
 
     // set source parameter
-    Position sourcePos = Position(sourceX.get(), sourceY.get());
     ssr::RendererBase<ssr::BinauralRenderer>::Source *source = renderer->get_source(1);
+    Position sourcePos = Position(sourceX.get(), sourceY.get());
+    source->position.setRT(sourcePos);
+    source->orientation.setRT((listenerPos - sourcePos).orientation()); // quserinterface.cpp
+    Source::model_t type;
+    sourceType.getStep() == eSourceType::ePlane ? type = Source::model_t::plane : type = Source::model_t::point;
+    source->model.setRT(type);
     source->mute.setRT(sourceMute.getStep() == eOnOffState::eOn);
     source->gain.setRT(Param::fromDb(sourceGain.get()));
-    source->orientation.setRT((listenerPos - sourcePos).orientation()); // quserinterface.cpp
-    source->position.setRT(sourcePos);
-    if (sourceType.getStep() == eSourceType::ePlane)
-    {
-        source->model.setRT(Source::model_t::plane);
-    }
-    else
-    {
-        source->model.setRT(Source::model_t::point);
-    }
 
     // calculate angle from which the source is seen
     // and confine angle to interval ]-180, 180], see qsourceproperties.cpp
@@ -212,11 +207,8 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     int channelIndex = static_cast<int>(inputChannel.getStep());
 
     // get source input level
-    float inputLevel = 0.0f;
-    if (!source->mute)
-    {
-        inputLevel = buffer.getRMSLevel(channelIndex, 0, buffer.getNumSamples());
-    }
+    float inputLevel;
+    source->mute ? inputLevel = 0.0f : inputLevel = buffer.getRMSLevel(channelIndex, 0, buffer.getNumSamples());
     sourceLevel.set(inputLevel);
 
     // call internal ssr process function of renderer

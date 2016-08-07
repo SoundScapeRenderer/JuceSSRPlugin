@@ -1867,6 +1867,7 @@
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h"/>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\assets\DejaVuSansMono.ttf"/>
     <None Include="..\..\..\assets\lock icon.png"/>
     <None Include="..\..\..\assets\mute icon.png"/>
     <None Include="..\..\..\ssr data\default_hrirs.wav"/>

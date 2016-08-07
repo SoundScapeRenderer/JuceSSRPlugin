@@ -143,8 +143,8 @@ void PlugUI::resized()
     levelMeterLeft->setBounds (824, 150, 24, 300);
     listener->setBounds (400, 250, 100, 100);
     gainSlider->setBounds (413, 191, 75, 28);
-    sourceMenu->setBounds (505, 95, 200, 225);
-    source->setBounds (405, 95, 90, 90);
+    sourceMenu->setBounds (505, 95, 250, 225);
+    source->setBounds (400, 90, 100, 100);
     //[UserResized] Add your own custom resize handling here..
     // draw components at their position
     juce::Point<int> pixSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
@@ -290,10 +290,11 @@ BEGIN_JUCER_METADATA
           min="-96" max="12" int="0" style="LinearBar" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="3"/>
   <GENERICCOMPONENT name="source menu" id="83eb0626dd657a1f" memberName="sourceMenu"
-                    virtualName="" explicitFocusOrder="0" pos="505 95 200 225" class="DocumentWindow"
+                    virtualName="" explicitFocusOrder="0" pos="505 95 250 225" class="DocumentWindow"
                     params="&quot;source menu&quot;, Colours::white, DocumentWindow::closeButton"/>
   <GENERICCOMPONENT name="source" id="7b4082301ad63f28" memberName="source" virtualName="SourceComponent"
-                    explicitFocusOrder="0" pos="405 95 90 90" class="Component" params="params"/>
+                    explicitFocusOrder="0" pos="400 90 100 100" class="Component"
+                    params="params"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

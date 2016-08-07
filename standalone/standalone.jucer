@@ -5,6 +5,8 @@
               companyWebsite="http://www.qu.tu-berlin.de">
   <MAINGROUP id="EgmEsS" name="ssr">
     <GROUP id="{74BBF3D3-63F7-C0D4-94BA-D30A101BB85C}" name="assets">
+      <FILE id="ce1fuw" name="DejaVuSansMono.ttf" compile="0" resource="1"
+            file="../assets/DejaVuSansMono.ttf"/>
       <FILE id="BYw8E6" name="lock icon.png" compile="0" resource="1" file="../assets/lock icon.png"/>
       <FILE id="Xy6bwW" name="mute icon.png" compile="0" resource="1" file="../assets/mute icon.png"/>
     </GROUP>
