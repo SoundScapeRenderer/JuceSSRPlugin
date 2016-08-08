@@ -255,6 +255,8 @@
       <FILE id="EWfpfp" name="PluginEditor.h" compile="0" resource="0" file="../gui/PluginEditor.h"/>
       <FILE id="uQCqo9" name="PlugUI.cpp" compile="1" resource="0" file="../gui/PlugUI.cpp"/>
       <FILE id="SuUk13" name="PlugUI.h" compile="0" resource="0" file="../gui/PlugUI.h"/>
+      <FILE id="J8L0Qr" name="SourceBackgroundComponent.h" compile="0" resource="0"
+            file="../gui/SourceBackgroundComponent.h"/>
       <FILE id="CwrTa6" name="SourceComponent.h" compile="0" resource="0"
             file="../gui/SourceComponent.h"/>
     </GROUP>

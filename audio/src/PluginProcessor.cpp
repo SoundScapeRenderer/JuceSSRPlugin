@@ -194,6 +194,7 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     source->mute.setRT(sourceMute.getStep() == eOnOffState::eOn);
     source->gain.setRT(Param::fromDb(sourceGain.get()));
 
+    /// \todo fix gui bug of ssr azimuth
     // calculate angle from which the source is seen
     // and confine angle to interval ]-180, 180], see qsourceproperties.cpp
     float ang = radiansToDegrees(angle(source->position, renderer->state.reference_orientation));

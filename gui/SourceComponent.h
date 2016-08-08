@@ -13,6 +13,7 @@
 
 #include "JuceHeader.h"
 #include "SynthParams.h"
+#include "SourceBackgroundComponent.h"
 
 //==============================================================================
 /*
@@ -34,9 +35,14 @@ public:
         menu = nullptr;
     }
 
-    void registerMenu(DocumentWindow *sourceMenu)
+    void registerBackground(SourceBackgroundComponent *bg)
     {
-        menu = sourceMenu;
+        background = bg;
+    }
+
+    void registerMenu(DocumentWindow *m)
+    {
+        menu = m;
     }
 
     //==============================================================================
@@ -99,8 +105,16 @@ public:
 
     //==============================================================================
 
+    void refreshBackground(bool isPlaneWave)
+    {
+        background->refreshBackground(isPlaneWave);
+    }
+
+    //==============================================================================
+
 private:
     SynthParams &params;
+    SourceBackgroundComponent *background;
     DocumentWindow *menu;
     ComponentDragger dragger;
     Image lockImg, muteImg;
@@ -117,7 +131,6 @@ private:
         float paddingL = (getWidth() - w) * 0.5f;
         float paddingT = (getHeight() - h) * 0.5f;
 
-        /// \todo draw shadow
         // draw actual node
         g.setColour(nodeColour);
         g.fillEllipse(paddingL, paddingT, w, h);

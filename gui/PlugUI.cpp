@@ -67,6 +67,9 @@ PlugUI::PlugUI (SynthParams &p)
     gainSlider->addListener (this);
     gainSlider->setSkewFactor (3);
 
+    addAndMakeVisible (sourceBackground = new SourceBackgroundComponent());
+    sourceBackground->setName ("source background");
+
     addAndMakeVisible (sourceMenu = new DocumentWindow ("source menu", Colours::white, DocumentWindow::closeButton));
     sourceMenu->setName ("source menu");
 
@@ -79,8 +82,11 @@ PlugUI::PlugUI (SynthParams &p)
     sourceMenu->setTitleBarHeight(0);
     sourceMenu->setContentOwned(new SourceMenuPanel(params, source), true);
     sourceMenu->setVisible(false);
+    sourceMenu->setAlwaysOnTop(true);
 
+    /// \todo restructuring component relationsships
     source->registerMenu(sourceMenu);
+    source->registerBackground(sourceBackground);
 
     levelMeterLeft->setSliderStyle(Slider::LinearBarVertical);
     levelMeterRight->setSliderStyle(Slider::LinearBarVertical);
@@ -106,6 +112,7 @@ PlugUI::~PlugUI()
     levelMeterLeft = nullptr;
     listener = nullptr;
     gainSlider = nullptr;
+    sourceBackground = nullptr;
     sourceMenu = nullptr;
     source = nullptr;
     drawable1 = nullptr;
@@ -143,15 +150,16 @@ void PlugUI::resized()
     levelMeterLeft->setBounds (824, 150, 24, 300);
     listener->setBounds (400, 250, 100, 100);
     gainSlider->setBounds (413, 191, 75, 28);
+    sourceBackground->setBounds (350, 40, 200, 200);
     sourceMenu->setBounds (505, 95, 250, 225);
     source->setBounds (400, 90, 100, 100);
     //[UserResized] Add your own custom resize handling here..
     // draw components at their position
-    juce::Point<int> pixSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
-    source->setBounds(pixSource.x - source->getWidth() / 2, pixSource.y - source->getHeight() / 2, source->getWidth(), source->getHeight());
+    juce::Point<int> pixPosSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
+    source->setBounds(pixPosSource.x - source->getWidth() / 2, pixPosSource.y - source->getHeight() / 2, source->getWidth(), source->getHeight());
 
-    juce::Point<int> pixRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), getWidth(), getHeight());
-    listener->setBounds(pixRef.x - listener->getWidth() / 2, pixRef.y - listener->getHeight() / 2, listener->getWidth(), listener->getHeight());
+    juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), getWidth(), getHeight());
+    listener->setBounds(pixPosRef.x - listener->getWidth() / 2, pixPosRef.y - listener->getHeight() / 2, listener->getWidth(), listener->getHeight());
 
     gainSlider->setValue(params.sourceGain.get());
     //[/UserResized]
@@ -191,22 +199,29 @@ void PlugUI::childBoundsChanged(Component *child)
 {
     int offsetX;
     int offsetY;
-    if (child == source)
+    if (child == source || child == listener)
     {
-        // gainSlider should always follow source node
-        offsetX = source->getX() + (source->getWidth() - gainSlider->getWidth()) / 2;
-        offsetY = source->getY() + source->getHeight() + 5;
-        gainSlider->setBounds(offsetX, offsetY, gainSlider->getWidth(), gainSlider->getHeight());
-
-        offsetX = source->getX() + source->getWidth() + 10;
-        offsetY = source->getY() + source->getHeight() / 2;
-        sourceMenu->setBounds(offsetX, offsetY, sourceMenu->getWidth(), sourceMenu->getHeight());
-
-        /// \todo if source is plane then draw wavefronts towards listener
-        if (params.sourceType.getStep() == eSourceType::ePlane)
+        if (child = source)
         {
+            // gainSlider, sourceMenu and sourceBackground should always follow source node
+            offsetX = source->getX() + (source->getWidth() - gainSlider->getWidth()) / 2;
+            offsetY = source->getY() + source->getHeight() + 5;
+            gainSlider->setBounds(offsetX, offsetY, gainSlider->getWidth(), gainSlider->getHeight());
 
+            offsetX = source->getX() + source->getWidth() + 10;
+            offsetY = source->getY() + source->getHeight() / 2;
+            sourceMenu->setBounds(offsetX, offsetY, sourceMenu->getWidth(), sourceMenu->getHeight());
+
+            offsetX = source->getX() - sourceBackground->getWidth() / 4;
+            offsetY = source->getY() - sourceBackground->getHeight() / 4;
+            sourceBackground->setBounds(offsetX, offsetY, sourceBackground->getWidth(), sourceBackground->getHeight());
         }
+
+        // refresh source background
+        juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), getWidth(), getHeight());
+        juce::Point<int> pixPosSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
+        float angle = pixPosRef.getAngleToPoint(pixPosSource);
+        sourceBackground->refreshBackground(radiansToDegrees(angle), params.sourceType.getStep() == eSourceType::ePlane);
     }
     else if (child = sourceMenu)
     {
@@ -289,6 +304,9 @@ BEGIN_JUCER_METADATA
           virtualName="GainLevelSlider" explicitFocusOrder="0" pos="413 191 75 28"
           min="-96" max="12" int="0" style="LinearBar" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="3"/>
+  <GENERICCOMPONENT name="source background" id="5a992e1246372c92" memberName="sourceBackground"
+                    virtualName="SourceBackgroundComponent" explicitFocusOrder="0"
+                    pos="350 40 200 200" class="Component" params=""/>
   <GENERICCOMPONENT name="source menu" id="83eb0626dd657a1f" memberName="sourceMenu"
                     virtualName="" explicitFocusOrder="0" pos="505 95 250 225" class="DocumentWindow"
                     params="&quot;source menu&quot;, Colours::white, DocumentWindow::closeButton"/>

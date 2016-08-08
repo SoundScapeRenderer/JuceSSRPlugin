@@ -25,7 +25,6 @@ public:
     GainLevelSlider(const juce::String &componentName)
         : Slider(componentName)
     {
-        setAlwaysOnTop(true);
     }
 
     ~GainLevelSlider()

@@ -262,6 +262,8 @@
       <FILE id="JZtIFP" name="PluginEditor.h" compile="0" resource="0" file="../gui/PluginEditor.h"/>
       <FILE id="RD6vdm" name="PlugUI.cpp" compile="1" resource="0" file="../gui/PlugUI.cpp"/>
       <FILE id="ZkIMfu" name="PlugUI.h" compile="0" resource="0" file="../gui/PlugUI.h"/>
+      <FILE id="v0GrQd" name="SourceBackgroundComponent.h" compile="0" resource="0"
+            file="../gui/SourceBackgroundComponent.h"/>
       <FILE id="APLL4y" name="SourceComponent.h" compile="0" resource="0"
             file="../gui/SourceComponent.h"/>
     </GROUP>

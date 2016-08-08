@@ -272,6 +272,7 @@ void SourceMenuPanel::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
         eSourceType type;
         selectedId == 0 ? type = eSourceType::ePoint : type = eSourceType::ePlane;
         params.sourceType.setStep(type);
+        source->refreshBackground(type == eSourceType::ePlane);
         //[/UserComboBoxCode_modelBox]
     }
 

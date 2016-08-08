@@ -1920,6 +1920,9 @@
     <ClInclude Include="..\..\..\gui\PlugUI.h">
       <Filter>ssr\gui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\gui\SourceBackgroundComponent.h">
+      <Filter>ssr\gui</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\gui\SourceComponent.h">
       <Filter>ssr\gui</Filter>
     </ClInclude>
