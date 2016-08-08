@@ -36,9 +36,12 @@ public:
 
     void paint (Graphics& g)
     {
+        float wHalf = static_cast<float>(getWidth() * 0.5f);
+        float hHalf = static_cast<float>(getHeight() * 0.5f);
         float currAngleInRadians = degreesToRadians(-params.referenceOrientation.get());
-        AffineTransform rotation = AffineTransform::rotation(currAngleInRadians, getWidth() / 2.0f, getHeight() / 2.0f);
-        g.addTransform(rotation);
+        
+        AffineTransform trans(AffineTransform::rotation(currAngleInRadians, wHalf, hHalf));
+        g.addTransform(trans);
         g.drawImageWithin(listenerImg, 0, 0, getWidth(), getHeight(), RectanglePlacement::centred);
     }
 

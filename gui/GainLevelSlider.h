@@ -64,10 +64,12 @@ public:
         g.fillPath(triangle);
     }
 
+    //==============================================================================
+
     /**
         Set current gain level and repaint this component with updated values.
      */
-    void setGainLevel(float gain)
+    void refreshGainLevel(float gain)
     {
         gainLevel = gain;
         repaint();

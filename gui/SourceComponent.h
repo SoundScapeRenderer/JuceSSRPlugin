@@ -13,6 +13,7 @@
 
 #include "JuceHeader.h"
 #include "SynthParams.h"
+#include "GainLevelSlider.h"
 #include "SourceBackgroundComponent.h"
 
 //==============================================================================
@@ -32,12 +33,17 @@ public:
 
     ~SourceComponent()
     {
-        menu = nullptr;
+    }
+
+    void registerGainLevelSlider(GainLevelSlider *s)
+    {
+        gainLevelSlider = s;
     }
 
     void registerBackground(SourceBackgroundComponent *bg)
     {
         background = bg;
+        background->setPlaneWaveColour(nodeColour);
     }
 
     void registerMenu(DocumentWindow *m)
@@ -62,12 +68,6 @@ public:
         {
             g.drawImageWithin(muteImg, getWidth() - 24 - 5, getHeight() - 24 - 5, 24, 24, RectanglePlacement::centred);
         }
-    }
-
-    void resized()
-    {
-        // This method is where you should set the bounds of any child
-        // components that your component contains..
     }
 
     //==============================================================================
@@ -105,15 +105,26 @@ public:
 
     //==============================================================================
 
+    void refreshGainLevel(float level)
+    {
+        gainLevelSlider->refreshGainLevel(level);
+    }
+
     void refreshBackground(bool isPlaneWave)
     {
         background->refreshBackground(isPlaneWave);
+    }
+
+    void refreshBackground(float angle, bool isPlaneWave)
+    {
+        background->refreshBackground(angle, isPlaneWave);
     }
 
     //==============================================================================
 
 private:
     SynthParams &params;
+    GainLevelSlider *gainLevelSlider;
     SourceBackgroundComponent *background;
     DocumentWindow *menu;
     ComponentDragger dragger;

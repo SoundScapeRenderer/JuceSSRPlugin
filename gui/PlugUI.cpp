@@ -83,11 +83,14 @@ PlugUI::PlugUI (SynthParams &p)
     sourceMenu->setContentOwned(new SourceMenuPanel(params, source), true);
     sourceMenu->setVisible(false);
     sourceMenu->setAlwaysOnTop(true);
+    sourceMenu->setDraggable(false);
 
     /// \todo restructuring component relationsships
-    source->registerMenu(sourceMenu);
+    source->registerGainLevelSlider(gainSlider);
     source->registerBackground(sourceBackground);
+    source->registerMenu(sourceMenu);
 
+    /// \todo create actual output gain level component
     levelMeterLeft->setSliderStyle(Slider::LinearBarVertical);
     levelMeterRight->setSliderStyle(Slider::LinearBarVertical);
     //[/UserPreSize]
@@ -208,32 +211,27 @@ void PlugUI::childBoundsChanged(Component *child)
             offsetY = source->getY() + source->getHeight() + 5;
             gainSlider->setBounds(offsetX, offsetY, gainSlider->getWidth(), gainSlider->getHeight());
 
-            offsetX = source->getX() + source->getWidth() + 10;
+            offsetX = source->getX() + source->getWidth() + 25;
             offsetY = source->getY() + source->getHeight() / 2;
             sourceMenu->setBounds(offsetX, offsetY, sourceMenu->getWidth(), sourceMenu->getHeight());
 
-            offsetX = source->getX() - sourceBackground->getWidth() / 4;
-            offsetY = source->getY() - sourceBackground->getHeight() / 4;
-            sourceBackground->setBounds(offsetX, offsetY, sourceBackground->getWidth(), sourceBackground->getHeight());
+            offsetX = source->getX() - source->getWidth() / 2;
+            offsetY = source->getY() - source->getHeight() / 2;
+            sourceBackground->setBounds(offsetX, offsetY, source->getWidth() * 2, source->getHeight() * 2);
+            sourceBackground->setShadowRadius(source->getWidth() * 0.5f);
         }
 
-        // refresh source background
+        // refresh plane wave of source background
         juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), getWidth(), getHeight());
         juce::Point<int> pixPosSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
         float angle = pixPosRef.getAngleToPoint(pixPosSource);
-        sourceBackground->refreshBackground(radiansToDegrees(angle), params.sourceType.getStep() == eSourceType::ePlane);
-    }
-    else if (child = sourceMenu)
-    {
-        offsetX = source->getX() + source->getWidth() + 10;
-        offsetY = source->getY() + source->getHeight() / 2;
-        sourceMenu->setBounds(offsetX, offsetY, sourceMenu->getWidth(), sourceMenu->getHeight());
+        source->refreshBackground(radiansToDegrees(angle), params.sourceType.getStep() == eSourceType::ePlane);
     }
 }
 
 void PlugUI::timerCallback()
 {
-    gainSlider->setGainLevel(params.sourceLevel.get());
+    source->refreshGainLevel(params.sourceLevel.get());
 
     levelMeterLeft->setValue(params.outputLevelLeft.get(), dontSendNotification);
     levelMeterRight->setValue(params.outputLevelRight.get(), dontSendNotification);
