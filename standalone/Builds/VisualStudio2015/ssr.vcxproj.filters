@@ -1911,9 +1911,6 @@
     <ClInclude Include="..\..\..\gui\CustomLookAndFeel.h">
       <Filter>ssr\gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\gui\GainLevelSlider.h">
-      <Filter>ssr\gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\gui\ListenerComponent.h">
       <Filter>ssr\gui</Filter>
     </ClInclude>
@@ -1930,6 +1927,9 @@
       <Filter>ssr\gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\gui\SourceComponent.h">
+      <Filter>ssr\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gui\VolLevelSlider.h">
       <Filter>ssr\gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\juce\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h">

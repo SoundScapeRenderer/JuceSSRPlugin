@@ -27,8 +27,8 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceNodeComponent *s)
-    : PanelBase(p), params(p), source(s)
+SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceComponent *s)
+    : PanelBase(p), params(p), sourceComponent(s)
 {
     //[Constructor_pre] You can add your own custom stuff here..
     startTimerHz (60);
@@ -166,13 +166,13 @@ SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceNodeComponent *s)
 
 
     //[UserPreSize]
-    fixToggle->setToggleState(params.sourcePositionLock.getStep() == eOnOffState::eOn, sendNotificationAsync);
+    fixToggle->setToggleState(params.sourcePositionLock.getStep() == eOnOffState::eOn, dontSendNotification);
     fixToggle->setWantsKeyboardFocus(false);
-    muteToggle->setToggleState(params.sourceMute.getStep() == eOnOffState::eOn, sendNotificationAsync);
+    muteToggle->setToggleState(params.sourceMute.getStep() == eOnOffState::eOn, dontSendNotification);
     muteToggle->setWantsKeyboardFocus(false);
 
-    modelBox->setSelectedItemIndex(static_cast<int>(params.sourceType.getStep()), sendNotificationAsync);
-    inputBox->setSelectedItemIndex(static_cast<int>(params.inputChannel.getStep()), sendNotificationAsync);
+    modelBox->setSelectedItemIndex(static_cast<int>(params.sourceType.getStep()), dontSendNotification);
+    inputBox->setSelectedItemIndex(static_cast<int>(params.inputChannel.getStep()), dontSendNotification);
     //[/UserPreSize]
 
     setSize (300, 400);
@@ -206,7 +206,6 @@ SourceMenuPanel::~SourceMenuPanel()
 
 
     //[Destructor]. You can add your own custom destruction code here..
-    source = nullptr;
     //[/Destructor]
 }
 
@@ -244,11 +243,11 @@ void SourceMenuPanel::resized()
     distanceLabel2->setBounds (96, 40, 144, 16);
     positionLabel2->setBounds (96, 16, 144, 16);
     //[UserResized] Add your own custom resize handling here..
-    fixToggle->setToggleState(params.sourcePositionLock.getStep() == eOnOffState::eOn, sendNotificationAsync);
-    muteToggle->setToggleState(params.sourceMute.getStep() == eOnOffState::eOn, sendNotificationAsync);
+    fixToggle->setToggleState(params.sourcePositionLock.getStep() == eOnOffState::eOn, dontSendNotification);
+    muteToggle->setToggleState(params.sourceMute.getStep() == eOnOffState::eOn, dontSendNotification);
 
-    modelBox->setSelectedItemIndex(static_cast<int>(params.sourceType.getStep()), sendNotificationAsync);
-    inputBox->setSelectedItemIndex(static_cast<int>(params.inputChannel.getStep()), sendNotificationAsync);
+    modelBox->setSelectedItemIndex(static_cast<int>(params.sourceType.getStep()), dontSendNotification);
+    inputBox->setSelectedItemIndex(static_cast<int>(params.inputChannel.getStep()), dontSendNotification);
     //[/UserResized]
 }
 
@@ -272,7 +271,7 @@ void SourceMenuPanel::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
         eSourceType type;
         selectedId == 0 ? type = eSourceType::ePoint : type = eSourceType::ePlane;
         params.sourceType.setStep(type);
-        source->refreshBackground(type == eSourceType::ePlane);
+        sourceComponent->refreshBackground(type == eSourceType::ePlane);
         //[/UserComboBoxCode_modelBox]
     }
 
@@ -292,14 +291,14 @@ void SourceMenuPanel::buttonClicked (Button* buttonThatWasClicked)
     {
         //[UserButtonCode_muteToggle] -- add your button handler code here..
         params.sourceMute.setStep(state);
-        source->repaint();
+        sourceComponent->refreshSourceNode();
         //[/UserButtonCode_muteToggle]
     }
     else if (buttonThatWasClicked == fixToggle)
     {
         //[UserButtonCode_fixToggle] -- add your button handler code here..
         params.sourcePositionLock.setStep(state);
-        source->repaint();
+        sourceComponent->refreshSourceNode();
         //[/UserButtonCode_fixToggle]
     }
 
@@ -334,10 +333,10 @@ void SourceMenuPanel::timerCallback()
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="SourceMenuPanel" componentName=""
-                 parentClasses="public PanelBase" constructorParams="SynthParams &amp;p, SourceNodeComponent *s"
-                 variableInitialisers="PanelBase(p), params(p), source(s)" snapPixels="8"
-                 snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="0"
-                 initialWidth="300" initialHeight="400">
+                 parentClasses="public PanelBase" constructorParams="SynthParams &amp;p, SourceComponent *s"
+                 variableInitialisers="PanelBase(p), params(p), sourceComponent(s)"
+                 snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
+                 fixedSize="0" initialWidth="300" initialHeight="400">
   <BACKGROUND backgroundColour="ffffffff"/>
   <LABEL name="position label" id="4fb7b389efd80fef" memberName="positionLabel"
          virtualName="" explicitFocusOrder="0" pos="8 16 80 16" textCol="ff808080"

@@ -454,6 +454,9 @@
     <ClCompile Include="..\..\..\gui\PlugUI.cpp">
       <Filter>ssr\gui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\gui\SourceComponent.cpp">
+      <Filter>ssr\gui</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\juce\modules\juce_audio_basics\buffers\juce_AudioDataConverters.cpp">
       <Filter>Juce Modules\juce_audio_basics\buffers</Filter>
     </ClCompile>
@@ -1926,9 +1929,6 @@
     <ClInclude Include="..\..\..\gui\CustomLookAndFeel.h">
       <Filter>ssr\gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\gui\GainLevelSlider.h">
-      <Filter>ssr\gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\gui\ListenerComponent.h">
       <Filter>ssr\gui</Filter>
     </ClInclude>
@@ -1942,6 +1942,12 @@
       <Filter>ssr\gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\gui\SourceComponent.h">
+      <Filter>ssr\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gui\SourceNodeComponent.h">
+      <Filter>ssr\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gui\VolLevelSlider.h">
       <Filter>ssr\gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\juce\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h">

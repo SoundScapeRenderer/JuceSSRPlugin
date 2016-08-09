@@ -18,7 +18,6 @@
 */
 
 //[Headers] You can add your own extra header files here...
-#include "panels/SourceMenuPanel.h"
 //[/Headers]
 
 #include "PlugUI.h"
@@ -57,42 +56,15 @@ PlugUI::PlugUI (SynthParams &p)
     levelMeterLeft->setColour (Slider::thumbColourId, Colour (0xff60ff60));
     levelMeterLeft->addListener (this);
 
+    addAndMakeVisible (sourceComponent = new SourceComponent (params, 90, SynthParams::sourceColourBlue));
+    sourceComponent->setName ("source component");
+
     addAndMakeVisible (listener = new ListenerComponent (params));
     listener->setName ("listener");
-
-    addAndMakeVisible (gainSlider = new GainLevelSlider ("gain slider"));
-    gainSlider->setRange (-96, 12, 0);
-    gainSlider->setSliderStyle (Slider::LinearBar);
-    gainSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
-    gainSlider->addListener (this);
-    gainSlider->setSkewFactor (3);
-
-    addAndMakeVisible (sourceBackground = new SourceBackgroundComponent());
-    sourceBackground->setName ("source background");
-
-    addAndMakeVisible (sourceMenu = new DocumentWindow ("source menu", Colours::white, DocumentWindow::closeButton));
-    sourceMenu->setName ("source menu");
-
-    addAndMakeVisible (source = new SourceNodeComponent (params));
-    source->setName ("source");
-
-    addAndMakeVisible (sourceComponent = new SourceComponent (params));
-    sourceComponent->setName ("source component");
 
     drawable1 = Drawable::createFromImageData (BinaryData::ssr_logo_png, BinaryData::ssr_logo_pngSize);
 
     //[UserPreSize]
-    sourceMenu->setTitleBarHeight(0);
-    sourceMenu->setContentOwned(new SourceMenuPanel(params, source), true);
-    sourceMenu->setVisible(false);
-    sourceMenu->setAlwaysOnTop(true);
-    sourceMenu->setDraggable(false);
-
-    /// \todo restructuring component relationsships
-    source->registerGainLevelSlider(gainSlider);
-    source->registerBackground(sourceBackground);
-    source->registerMenu(sourceMenu);
-
     /// \todo create actual output gain level component
     levelMeterLeft->setSliderStyle(Slider::LinearBarVertical);
     levelMeterRight->setSliderStyle(Slider::LinearBarVertical);
@@ -116,12 +88,8 @@ PlugUI::~PlugUI()
     debugText = nullptr;
     levelMeterRight = nullptr;
     levelMeterLeft = nullptr;
-    listener = nullptr;
-    gainSlider = nullptr;
-    sourceBackground = nullptr;
-    sourceMenu = nullptr;
-    source = nullptr;
     sourceComponent = nullptr;
+    listener = nullptr;
     drawable1 = nullptr;
 
 
@@ -155,28 +123,17 @@ void PlugUI::resized()
     debugText->setBounds (648, 8, 250, 584);
     levelMeterRight->setBounds (856, 150, 24, 300);
     levelMeterLeft->setBounds (824, 150, 24, 300);
-    listener->setBounds (400, 250, 100, 100);
-    gainSlider->setBounds (413, 191, 75, 28);
-    sourceBackground->setBounds (350, 40, 200, 200);
-    sourceMenu->setBounds (505, 95, 250, 225);
-    source->setBounds (400, 90, 100, 100);
     sourceComponent->setBounds (0, 0, 900, 600);
+    listener->setBounds (400, 250, 100, 100);
     //[UserResized] Add your own custom resize handling here..
-    // draw components at their position
-    juce::Point<int> pixPosSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
-    source->setBounds(pixPosSource.x - source->getWidth() / 2, pixPosSource.y - source->getHeight() / 2, source->getWidth(), source->getHeight());
-
     juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), getWidth(), getHeight());
     listener->setBounds(pixPosRef.x - listener->getWidth() / 2, pixPosRef.y - listener->getHeight() / 2, listener->getWidth(), listener->getHeight());
-
-    gainSlider->setValue(params.sourceGain.get());
     //[/UserResized]
 }
 
 void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
 {
     //[UsersliderValueChanged_Pre]
-    float val = static_cast<float>(sliderThatWasMoved->getValue());
     //[/UsersliderValueChanged_Pre]
 
     if (sliderThatWasMoved == levelMeterRight)
@@ -189,12 +146,6 @@ void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
         //[UserSliderCode_levelMeterLeft] -- add your slider handling code here..
         //[/UserSliderCode_levelMeterLeft]
     }
-    else if (sliderThatWasMoved == gainSlider)
-    {
-        //[UserSliderCode_gainSlider] -- add your slider handling code here..
-        params.sourceGain.setUI(val);
-        //[/UserSliderCode_gainSlider]
-    }
 
     //[UsersliderValueChanged_Post]
     //[/UsersliderValueChanged_Post]
@@ -205,39 +156,20 @@ void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 void PlugUI::childBoundsChanged(Component *child)
 {
-    int offsetX;
-    int offsetY;
-    if (child == source || child == listener)
+
+    if (child == listener)
     {
-        if (child = source)
-        {
-            // gainSlider, sourceMenu and sourceBackground should always follow source node
-            offsetX = source->getX() + (source->getWidth() - gainSlider->getWidth()) / 2;
-            offsetY = source->getY() + source->getHeight() + 5;
-            gainSlider->setBounds(offsetX, offsetY, gainSlider->getWidth(), gainSlider->getHeight());
-
-            offsetX = source->getX() + source->getWidth() + 25;
-            offsetY = source->getY() + source->getHeight() / 2;
-            sourceMenu->setBounds(offsetX, offsetY, sourceMenu->getWidth(), sourceMenu->getHeight());
-
-            offsetX = source->getX() - source->getWidth() / 2;
-            offsetY = source->getY() - source->getHeight() / 2;
-            sourceBackground->setBounds(offsetX, offsetY, source->getWidth() * 2, source->getHeight() * 2);
-            sourceBackground->setShadowRadius(source->getWidth() * 0.5f);
-        }
-
         // refresh plane wave of source background
         juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), getWidth(), getHeight());
         juce::Point<int> pixPosSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
         float angle = pixPosRef.getAngleToPoint(pixPosSource);
-        source->refreshBackground(radiansToDegrees(angle), params.sourceType.getStep() == eSourceType::ePlane);
         sourceComponent->refreshBackground(radiansToDegrees(angle), params.sourceType.getStep() == eSourceType::ePlane);
     }
 }
 
 void PlugUI::timerCallback()
 {
-    source->refreshGainLevel(params.sourceLevel.get());
+    sourceComponent->refreshGainLevel(params.sourceLevel.get());
 
     levelMeterLeft->setValue(params.outputLevelLeft.get(), dontSendNotification);
     levelMeterRight->setValue(params.outputLevelRight.get(), dontSendNotification);
@@ -299,24 +231,11 @@ BEGIN_JUCER_METADATA
           virtualName="" explicitFocusOrder="0" pos="824 150 24 300" thumbcol="ff60ff60"
           min="0" max="1" int="0" style="LinearVertical" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <GENERICCOMPONENT name="listener" id="a34b6db6e6ed2361" memberName="listener" virtualName="ListenerComponent"
-                    explicitFocusOrder="0" pos="400 250 100 100" class="Component"
-                    params="params"/>
-  <SLIDER name="gain slider" id="69ace909b58289b9" memberName="gainSlider"
-          virtualName="GainLevelSlider" explicitFocusOrder="0" pos="413 191 75 28"
-          min="-96" max="12" int="0" style="LinearBar" textBoxPos="NoTextBox"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="3"/>
-  <GENERICCOMPONENT name="source background" id="5a992e1246372c92" memberName="sourceBackground"
-                    virtualName="SourceBackgroundComponent" explicitFocusOrder="0"
-                    pos="350 40 200 200" class="Component" params=""/>
-  <GENERICCOMPONENT name="source menu" id="83eb0626dd657a1f" memberName="sourceMenu"
-                    virtualName="" explicitFocusOrder="0" pos="505 95 250 225" class="DocumentWindow"
-                    params="&quot;source menu&quot;, Colours::white, DocumentWindow::closeButton"/>
-  <GENERICCOMPONENT name="source" id="7b4082301ad63f28" memberName="source" virtualName="SourceNodeComponent"
-                    explicitFocusOrder="0" pos="400 90 100 100" class="Component"
-                    params="params"/>
   <GENERICCOMPONENT name="source component" id="3a94749bbf0b0aa6" memberName="sourceComponent"
                     virtualName="" explicitFocusOrder="0" pos="0 0 900 600" class="SourceComponent"
+                    params="params, 90, SynthParams::sourceColourBlue"/>
+  <GENERICCOMPONENT name="listener" id="a34b6db6e6ed2361" memberName="listener" virtualName="ListenerComponent"
+                    explicitFocusOrder="0" pos="400 250 100 100" class="Component"
                     params="params"/>
 </JUCER_COMPONENT>
 

@@ -19,25 +19,22 @@
 class SourceBackgroundComponent    : public Component
 {
 public:
-    SourceBackgroundComponent()
+    SourceBackgroundComponent(Colour c)
     {
         // pass all mouse click events to component behind this
         setInterceptsMouseClicks(false, false);
+        planeWaveColour = c;
     }
 
     ~SourceBackgroundComponent()
     {
     }
 
-    void setPlaneWaveColour(Colour c)
-    {
-        planeWaveColour = c;
-        repaint();
-    }
-
-    void setShadowRadius(float sourceRadius)
+    void setBackgroundProperties(float sourceRadius)
     {
         shadowRadius = sourceRadius * 1.05f;
+        offset = sourceRadius * 0.08f;
+        lineThickness = sourceRadius * 0.065f;
     }
 
     //==============================================================================
@@ -102,10 +99,10 @@ public:
     //==============================================================================
 
 private:
-    Colour planeWaveColour = Colours::black;
-    float shadowRadius = 0.0f;
-    const float offset = 4.0f;
-    const float lineThickness = 2.5f;
+    Colour planeWaveColour;
+    float shadowRadius;
+    float offset;
+    float lineThickness;
 
     bool drawPlaneWave = false;
     float angle = 0.0f;

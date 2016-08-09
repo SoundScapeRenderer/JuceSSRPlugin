@@ -25,10 +25,7 @@
 #include "SynthParams.h"
 #include "panels/PanelBase.h"
 #include "CustomLookAndFeel.h"
-#include "GainLevelSlider.h"
 #include "ListenerComponent.h"
-#include "SourceBackgroundComponent.h"
-#include "SourceNodeComponent.h"
 #include "SourceComponent.h"
 //[/Headers]
 
@@ -73,12 +70,8 @@ private:
     ScopedPointer<Label> debugText;
     ScopedPointer<Slider> levelMeterRight;
     ScopedPointer<Slider> levelMeterLeft;
-    ScopedPointer<ListenerComponent> listener;
-    ScopedPointer<GainLevelSlider> gainSlider;
-    ScopedPointer<SourceBackgroundComponent> sourceBackground;
-    ScopedPointer<DocumentWindow> sourceMenu;
-    ScopedPointer<SourceNodeComponent> source;
     ScopedPointer<SourceComponent> sourceComponent;
+    ScopedPointer<ListenerComponent> listener;
     ScopedPointer<Drawable> drawable1;
 
 

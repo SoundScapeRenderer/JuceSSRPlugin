@@ -246,8 +246,6 @@
       </GROUP>
       <FILE id="Ld6QRe" name="CustomLookAndFeel.h" compile="0" resource="0"
             file="../gui/CustomLookAndFeel.h"/>
-      <FILE id="WynvZ2" name="GainLevelSlider.h" compile="0" resource="0"
-            file="../gui/GainLevelSlider.h"/>
       <FILE id="JKj2RB" name="ListenerComponent.h" compile="0" resource="0"
             file="../gui/ListenerComponent.h"/>
       <FILE id="eGCmM0" name="PluginEditor.cpp" compile="1" resource="0"
@@ -263,6 +261,8 @@
             file="../gui/SourceComponent.cpp"/>
       <FILE id="vIi6i0" name="SourceComponent.h" compile="0" resource="0"
             file="../gui/SourceComponent.h"/>
+      <FILE id="WynvZ2" name="VolLevelSlider.h" compile="0" resource="0"
+            file="../gui/VolLevelSlider.h"/>
     </GROUP>
     <GROUP id="{2F300B23-92D5-3B2C-E37F-EAD1E0B25A60}" name="Source">
       <FILE id="Sj0bU7" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>

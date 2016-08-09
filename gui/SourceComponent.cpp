@@ -3,7 +3,7 @@
 
     SourceComponent.cpp
     Created: 9 Aug 2016 1:31:22pm
-    Author:  Smoky
+    Author:  Nutty
 
   ==============================================================================
 */
@@ -14,46 +14,39 @@
 #include "panels/SourceMenuPanel.h"
 
 //==============================================================================
-SourceComponent::SourceComponent(SynthParams &p)
+SourceComponent::SourceComponent(SynthParams &p, int sourceNodeSize, Colour c)
     : params(p)
+    , nodeSize(sourceNodeSize)
+    , nodeColour(c)
 {
-    // pass all mouse click events to component behind this
+    // default settings
+    setAlwaysOnTop(true);
     setInterceptsMouseClicks(false, true);
-        
-    addAndMakeVisible (gainSlider = new GainLevelSlider ("gain slider"));
-    gainSlider->setRange (-96, 12, 0);
-    gainSlider->setSliderStyle (Slider::LinearBar);
-    gainSlider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
-    gainSlider->addListener (this);
-    gainSlider->setSkewFactor (3);
+
+    // create child components
+    addAndMakeVisible (levelSlider = new VolLevelSlider ("gain slider"));
+    levelSlider->addListener (this);
     
-    addAndMakeVisible (sourceBackground = new SourceBackgroundComponent());
+    addAndMakeVisible (sourceBackground = new SourceBackgroundComponent(nodeColour));
     sourceBackground->setName ("source background");
 
     addAndMakeVisible(sourceMenu = new DocumentWindow("source menu", Colours::white, DocumentWindow::closeButton));
     sourceMenu->setName("source menu");
-
-    addAndMakeVisible (source = new SourceNodeComponent (params));
-    source->setName ("source");
-
-    /// \todo restructuring component relationsships
-    source->registerGainLevelSlider(gainSlider);
-    source->registerBackground(sourceBackground);
-    source->registerMenu(sourceMenu);
-
     sourceMenu->setTitleBarHeight(0);
-    sourceMenu->setContentOwned(new SourceMenuPanel(params, source), true);
     sourceMenu->setVisible(false);
-    sourceMenu->setAlwaysOnTop(true);
     sourceMenu->setDraggable(false);
+    sourceMenu->setContentOwned(new SourceMenuPanel(params, this), true);
+
+    addAndMakeVisible (sourceNode = new SourceNodeComponent (params, sourceMenu, nodeColour));
+    sourceNode->setName ("source node");
 }
 
 SourceComponent::~SourceComponent()
 {
-    gainSlider = nullptr;
+    levelSlider = nullptr;
     sourceBackground = nullptr;
     sourceMenu = nullptr;
-    source = nullptr;
+    sourceNode = nullptr;
 }
 
 //==============================================================================
@@ -65,10 +58,13 @@ void SourceComponent::paint (Graphics& g)
 
 void SourceComponent::resized()
 {
-    gainSlider->setBounds (0, 0, 75, 28);
-    sourceBackground->setBounds (0, 0, 200, 200);
-    sourceMenu->setBounds(0, 0, 250, 225);
-    source->setBounds (50, 50, 100, 100);
+    sourceMenu->setSize(250, 225);
+    sourceNode->setSize(nodeSize, nodeSize);
+
+    juce::Point<int> pixPosSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
+    sourceNode->setBounds(pixPosSource.x - nodeSize / 2, pixPosSource.y - nodeSize / 2, nodeSize, nodeSize);
+
+    levelSlider->setValue(params.sourceGain.get());
 }
 
 //==============================================================================
@@ -76,50 +72,59 @@ void SourceComponent::resized()
 
 void SourceComponent::childBoundsChanged(Component *child)
 {
-    int offsetX;
-    int offsetY;
-    if (child == source)
+    if (child == sourceNode)
     {
-        if (child = source)
-        {
-            // gainSlider, sourceBackground and  sourceMenu should always follow source node
-            offsetX = source->getX() - source->getWidth() / 2;
-            offsetY = source->getY() - source->getHeight() / 2;
-            sourceBackground->setBounds(offsetX, offsetY, source->getWidth() * 2, source->getHeight() * 2);
-            sourceBackground->setShadowRadius(source->getWidth() * 0.5f);
+        // sourceMenu, levelSlider and sourceBackground should always follow source node
+        int offsetX = sourceNode->getX() + nodeSize + 25;
+        int offsetY = sourceNode->getY() + nodeSize / 2;
+        sourceMenu->setBounds(offsetX, offsetY, sourceMenu->getWidth(), sourceMenu->getHeight());
 
-            offsetX = source->getX() + (source->getWidth() - gainSlider->getWidth()) / 2;
-            offsetY = source->getY() + source->getHeight() + 5;
-            gainSlider->setBounds(offsetX, offsetY, gainSlider->getWidth(), gainSlider->getHeight());
+        levelSlider->setSize(nodeSize * 3 / 4, nodeSize / 3);
+        offsetX = sourceNode->getX() + (nodeSize - levelSlider->getWidth()) / 2;
+        offsetY = sourceNode->getY() + static_cast<int>(nodeSize * 1.1f);
+        levelSlider->setBounds(offsetX, offsetY, levelSlider->getWidth(), levelSlider->getHeight());
 
-            offsetX = source->getX() + source->getWidth() + 25;
-            offsetY = source->getY() + source->getHeight() / 2;
-            sourceMenu->setBounds(offsetX, offsetY, sourceMenu->getWidth(), sourceMenu->getHeight());
-        }
+        offsetX = sourceNode->getX() - nodeSize / 2;
+        offsetY = sourceNode->getY() - nodeSize / 2;
+        sourceBackground->setBounds(offsetX, offsetY, nodeSize * 2, nodeSize * 2);
+        sourceBackground->setBackgroundProperties(nodeSize * 0.5f);
+
+        // refresh plane wave of source background
+        juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), getWidth(), getHeight());
+        juce::Point<int> pixPosSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
+        float angle = pixPosRef.getAngleToPoint(pixPosSource);
+        refreshBackground(radiansToDegrees(angle), params.sourceType.getStep() == eSourceType::ePlane);
     }
-
-    // refresh plane wave of source background
-    juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), getWidth(), getHeight());
-    juce::Point<int> pixPosSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
-    float angle = pixPosRef.getAngleToPoint(pixPosSource);
-    sourceBackground->refreshBackground(radiansToDegrees(angle), params.sourceType.getStep() == eSourceType::ePlane);
 }
 
 void SourceComponent::sliderValueChanged (Slider* sliderThatWasMoved)
 {
-    float val = static_cast<float>(sliderThatWasMoved->getValue());
-
-    if (sliderThatWasMoved == gainSlider)
+    if (sliderThatWasMoved == levelSlider)
     {
-        params.sourceGain.setUI(val);
+        params.sourceGain.setUI(static_cast<float>(sliderThatWasMoved->getValue()));
     }
 }
 
 //==============================================================================
 
+void SourceComponent::refreshSourceNode()
+{
+    sourceNode->repaint();
+}
+
+void SourceComponent::refreshBackground(bool isPlaneWave)
+{
+    sourceBackground->refreshBackground(isPlaneWave);
+}
+
 void SourceComponent::refreshBackground(float angle, bool isPlaneWave)
 {
     sourceBackground->refreshBackground(angle, isPlaneWave);
+}
+
+void SourceComponent::refreshGainLevel(float level)
+{
+    levelSlider->refreshVolLevel(level);
 }
 
 //==============================================================================

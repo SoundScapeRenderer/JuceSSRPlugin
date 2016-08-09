@@ -25,7 +25,7 @@
 
 #include "PanelBase.h"
 #include "SynthParams.h"
-#include "SourceNodeComponent.h"
+#include "SourceComponent.h"
 //[/Headers]
 
 
@@ -44,7 +44,7 @@ class SourceMenuPanel  : public PanelBase,
 {
 public:
     //==============================================================================
-    SourceMenuPanel (SynthParams &p, SourceNodeComponent *s);
+    SourceMenuPanel (SynthParams &p, SourceComponent *s);
     ~SourceMenuPanel();
 
     //==============================================================================
@@ -61,7 +61,7 @@ public:
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     SynthParams &params;
-    SourceNodeComponent *source;
+    SourceComponent *sourceComponent;
 
     void timerCallback() override;
     //[/UserVariables]
