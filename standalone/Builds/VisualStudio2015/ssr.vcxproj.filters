@@ -448,6 +448,9 @@
     <ClCompile Include="..\..\..\gui\PlugUI.cpp">
       <Filter>ssr\gui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\gui\SourceComponent.cpp">
+      <Filter>ssr\gui</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\Main.cpp">
       <Filter>ssr\Source</Filter>
     </ClCompile>
@@ -1921,6 +1924,9 @@
       <Filter>ssr\gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\gui\SourceBackgroundComponent.h">
+      <Filter>ssr\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gui\SourceNodeComponent.h">
       <Filter>ssr\gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\gui\SourceComponent.h">

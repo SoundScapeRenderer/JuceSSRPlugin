@@ -27,7 +27,7 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceComponent *s)
+SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceNodeComponent *s)
     : PanelBase(p), params(p), source(s)
 {
     //[Constructor_pre] You can add your own custom stuff here..
@@ -334,7 +334,7 @@ void SourceMenuPanel::timerCallback()
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="SourceMenuPanel" componentName=""
-                 parentClasses="public PanelBase" constructorParams="SynthParams &amp;p, SourceComponent *s"
+                 parentClasses="public PanelBase" constructorParams="SynthParams &amp;p, SourceNodeComponent *s"
                  variableInitialisers="PanelBase(p), params(p), source(s)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="0"
                  initialWidth="300" initialHeight="400">

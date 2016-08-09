@@ -28,6 +28,7 @@
 #include "GainLevelSlider.h"
 #include "ListenerComponent.h"
 #include "SourceBackgroundComponent.h"
+#include "SourceNodeComponent.h"
 #include "SourceComponent.h"
 //[/Headers]
 
@@ -51,21 +52,6 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-
-    /**
-        Derived small window class only to implement closeButtonPressed for now.
-        In this, we only need to set the window invisible if the close button was pressed.
-     */
-    class InfoWindow : public DocumentWindow
-    {
-    public:
-        InfoWindow(const String &name, Colour c, int requiredButtons, bool addToDesktop = true) : DocumentWindow(name, c, requiredButtons, addToDesktop) {}
-
-        ~InfoWindow() {}
-
-        virtual void closeButtonPressed() { this->setVisible(false); }
-    };
-
     void childBoundsChanged(Component *child);
     //[/UserMethods]
 
@@ -91,7 +77,8 @@ private:
     ScopedPointer<GainLevelSlider> gainSlider;
     ScopedPointer<SourceBackgroundComponent> sourceBackground;
     ScopedPointer<DocumentWindow> sourceMenu;
-    ScopedPointer<SourceComponent> source;
+    ScopedPointer<SourceNodeComponent> source;
+    ScopedPointer<SourceComponent> sourceComponent;
     ScopedPointer<Drawable> drawable1;
 
 

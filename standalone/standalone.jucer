@@ -257,7 +257,11 @@
       <FILE id="SuUk13" name="PlugUI.h" compile="0" resource="0" file="../gui/PlugUI.h"/>
       <FILE id="J8L0Qr" name="SourceBackgroundComponent.h" compile="0" resource="0"
             file="../gui/SourceBackgroundComponent.h"/>
-      <FILE id="CwrTa6" name="SourceComponent.h" compile="0" resource="0"
+      <FILE id="CwrTa6" name="SourceNodeComponent.h" compile="0" resource="0"
+            file="../gui/SourceNodeComponent.h"/>
+      <FILE id="WuyjUq" name="SourceComponent.cpp" compile="1" resource="0"
+            file="../gui/SourceComponent.cpp"/>
+      <FILE id="vIi6i0" name="SourceComponent.h" compile="0" resource="0"
             file="../gui/SourceComponent.h"/>
     </GROUP>
     <GROUP id="{2F300B23-92D5-3B2C-E37F-EAD1E0B25A60}" name="Source">

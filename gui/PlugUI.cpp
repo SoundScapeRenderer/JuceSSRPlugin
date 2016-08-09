@@ -73,8 +73,11 @@ PlugUI::PlugUI (SynthParams &p)
     addAndMakeVisible (sourceMenu = new DocumentWindow ("source menu", Colours::white, DocumentWindow::closeButton));
     sourceMenu->setName ("source menu");
 
-    addAndMakeVisible (source = new SourceComponent (params));
+    addAndMakeVisible (source = new SourceNodeComponent (params));
     source->setName ("source");
+
+    addAndMakeVisible (sourceComponent = new SourceComponent (params));
+    sourceComponent->setName ("source component");
 
     drawable1 = Drawable::createFromImageData (BinaryData::ssr_logo_png, BinaryData::ssr_logo_pngSize);
 
@@ -118,6 +121,7 @@ PlugUI::~PlugUI()
     sourceBackground = nullptr;
     sourceMenu = nullptr;
     source = nullptr;
+    sourceComponent = nullptr;
     drawable1 = nullptr;
 
 
@@ -156,6 +160,7 @@ void PlugUI::resized()
     sourceBackground->setBounds (350, 40, 200, 200);
     sourceMenu->setBounds (505, 95, 250, 225);
     source->setBounds (400, 90, 100, 100);
+    sourceComponent->setBounds (0, 0, 900, 600);
     //[UserResized] Add your own custom resize handling here..
     // draw components at their position
     juce::Point<int> pixPosSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
@@ -226,6 +231,7 @@ void PlugUI::childBoundsChanged(Component *child)
         juce::Point<int> pixPosSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
         float angle = pixPosRef.getAngleToPoint(pixPosSource);
         source->refreshBackground(radiansToDegrees(angle), params.sourceType.getStep() == eSourceType::ePlane);
+        sourceComponent->refreshBackground(radiansToDegrees(angle), params.sourceType.getStep() == eSourceType::ePlane);
     }
 }
 
@@ -236,7 +242,7 @@ void PlugUI::timerCallback()
     levelMeterLeft->setValue(params.outputLevelLeft.get(), dontSendNotification);
     levelMeterRight->setValue(params.outputLevelRight.get(), dontSendNotification);
 
-#if 0
+#if 1
     debugText->setText(
         "SourceX = " + String(params.sourceX.get()) +
         "\nSourceY = " + String(params.sourceY.get()) +
@@ -255,9 +261,7 @@ void PlugUI::timerCallback()
         "\nOutputLevelLeft = " + String(params.outputLevelLeft.get()) +
         "\nOutputLevelRight = " + String(params.outputLevelRight.get()) +
 
-        "\n\nZoomfactor = " + String(params.zoomFactor.get()) +
-        "\nDistX = " + String(params.sourceX.get() - params.referenceX.get()) +
-        "\nDistY = " + String(params.sourceY.get() - params.referenceY.get())
+        "\n\nZoomfactor = " + String(params.zoomFactor.get())
         , dontSendNotification);
 #endif
 }
@@ -308,8 +312,11 @@ BEGIN_JUCER_METADATA
   <GENERICCOMPONENT name="source menu" id="83eb0626dd657a1f" memberName="sourceMenu"
                     virtualName="" explicitFocusOrder="0" pos="505 95 250 225" class="DocumentWindow"
                     params="&quot;source menu&quot;, Colours::white, DocumentWindow::closeButton"/>
-  <GENERICCOMPONENT name="source" id="7b4082301ad63f28" memberName="source" virtualName="SourceComponent"
+  <GENERICCOMPONENT name="source" id="7b4082301ad63f28" memberName="source" virtualName="SourceNodeComponent"
                     explicitFocusOrder="0" pos="400 90 100 100" class="Component"
+                    params="params"/>
+  <GENERICCOMPONENT name="source component" id="3a94749bbf0b0aa6" memberName="sourceComponent"
+                    virtualName="" explicitFocusOrder="0" pos="0 0 900 600" class="SourceComponent"
                     params="params"/>
 </JUCER_COMPONENT>
 

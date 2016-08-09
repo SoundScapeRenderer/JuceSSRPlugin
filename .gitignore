@@ -214,3 +214,4 @@ ModelManifest.xml
 # git issue http://stackoverflow.com/questions/34319008/git-issue-with-visual-studio-2015
 *.VC.opendb
 *.VC.db
+/ssr data/images/Thumbs.db
