@@ -27,6 +27,7 @@
 #include "CustomLookAndFeel.h"
 #include "ListenerComponent.h"
 #include "SourceComponent.h"
+#include "ZoomSlider.h"
 //[/Headers]
 
 
@@ -68,12 +69,13 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<Label> debugText;
+    ScopedPointer<Label> zoomLabel;
     ScopedPointer<Slider> levelMeterRight;
     ScopedPointer<Slider> levelMeterLeft;
+    ScopedPointer<Label> debugText;
     ScopedPointer<SourceComponent> sourceComponent;
+    ScopedPointer<ZoomSlider> zoomSlider;
     ScopedPointer<ListenerComponent> listener;
-    ScopedPointer<Slider> zoomSlider;
     ScopedPointer<Drawable> drawable1;
 
 

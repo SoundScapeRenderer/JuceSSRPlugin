@@ -60,7 +60,7 @@ void SourceComponent::resized()
 {
     sourceMenu->setSize(250, 225);
 
-    int scaledSize = static_cast<int>(nodeSize * params.zoomFactor.get());
+    int scaledSize = static_cast<int>(nodeSize * params.zoomFactor.get() / 100.0f);
     juce::Point<int> pixPosSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
     sourceNode->setBounds(pixPosSource.x - scaledSize / 2, pixPosSource.y - scaledSize / 2, scaledSize, scaledSize);
 
@@ -74,7 +74,7 @@ void SourceComponent::childBoundsChanged(Component *child)
 {
     if (child == sourceNode)
     {
-        int scaledSize = static_cast<int>(nodeSize * params.zoomFactor.get());
+        int scaledSize = static_cast<int>(nodeSize * params.zoomFactor.get() / 100.0f);
 
         // sourceMenu, levelSlider and sourceBackground should always follow source node
         int offsetX = sourceNode->getX() + scaledSize + 25;

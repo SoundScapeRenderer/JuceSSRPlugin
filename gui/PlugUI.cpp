@@ -34,13 +34,13 @@ PlugUI::PlugUI (SynthParams &p)
     startTimerHz (60);
     //[/Constructor_pre]
 
-    addAndMakeVisible (debugText = new Label ("debug",
-                                              String::empty));
-    debugText->setFont (Font (15.00f, Font::plain));
-    debugText->setJustificationType (Justification::topLeft);
-    debugText->setEditable (false, false, false);
-    debugText->setColour (TextEditor::textColourId, Colours::black);
-    debugText->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    addAndMakeVisible (zoomLabel = new Label ("zoom label",
+                                              TRANS("zoom")));
+    zoomLabel->setFont (Font (22.00f, Font::plain));
+    zoomLabel->setJustificationType (Justification::centred);
+    zoomLabel->setEditable (false, false, false);
+    zoomLabel->setColour (TextEditor::textColourId, Colours::black);
+    zoomLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (levelMeterRight = new Slider ("level right"));
     levelMeterRight->setRange (0, 1, 0);
@@ -56,27 +56,36 @@ PlugUI::PlugUI (SynthParams &p)
     levelMeterLeft->setColour (Slider::thumbColourId, Colour (0xff60ff60));
     levelMeterLeft->addListener (this);
 
+    addAndMakeVisible (debugText = new Label ("debug",
+                                              String::empty));
+    debugText->setFont (Font (15.00f, Font::plain));
+    debugText->setJustificationType (Justification::topLeft);
+    debugText->setEditable (false, false, false);
+    debugText->setColour (TextEditor::textColourId, Colours::black);
+    debugText->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
     addAndMakeVisible (sourceComponent = new SourceComponent (params, 90, SynthParams::sourceColourBlue));
     sourceComponent->setName ("source component");
+
+    addAndMakeVisible (zoomSlider = new ZoomSlider());
+    zoomSlider->setName ("zoom slider");
 
     addAndMakeVisible (listener = new ListenerComponent (params));
     listener->setName ("listener");
 
-    addAndMakeVisible (zoomSlider = new Slider ("zoom slider"));
-    zoomSlider->setRange (0.3, 1.5, 0);
-    zoomSlider->setSliderStyle (Slider::LinearHorizontal);
-    zoomSlider->setTextBoxStyle (Slider::TextBoxLeft, false, 80, 20);
-    zoomSlider->addListener (this);
-
     drawable1 = Drawable::createFromImageData (BinaryData::ssr_logo_png, BinaryData::ssr_logo_pngSize);
 
     //[UserPreSize]
-    zoomSlider->setValue(1.0);
+    zoomSlider->addListener(this);
+    zoomSlider->setValue(100.0);
     zoomSlider->setTextValueSuffix(params.zoomFactor.getUnit());
 
     /// \todo create actual output gain level component
     levelMeterLeft->setSliderStyle(Slider::LinearBarVertical);
+    levelMeterLeft->setInterceptsMouseClicks(false, false);
     levelMeterRight->setSliderStyle(Slider::LinearBarVertical);
+    levelMeterRight->setInterceptsMouseClicks(false, false);
+    debugText->setInterceptsMouseClicks(false, false);
     //[/UserPreSize]
 
     setSize (900, 600);
@@ -94,12 +103,13 @@ PlugUI::~PlugUI()
     lnf = nullptr;
     //[/Destructor_pre]
 
-    debugText = nullptr;
+    zoomLabel = nullptr;
     levelMeterRight = nullptr;
     levelMeterLeft = nullptr;
+    debugText = nullptr;
     sourceComponent = nullptr;
-    listener = nullptr;
     zoomSlider = nullptr;
+    listener = nullptr;
     drawable1 = nullptr;
 
 
@@ -130,17 +140,18 @@ void PlugUI::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    debugText->setBounds (648, 8, 250, 584);
+    zoomLabel->setBounds (812, 540, 80, 24);
     levelMeterRight->setBounds (856, 150, 24, 300);
     levelMeterLeft->setBounds (824, 150, 24, 300);
+    debugText->setBounds (648, 8, 250, 584);
     sourceComponent->setBounds (0, 0, 900, 600);
+    zoomSlider->setBounds (812, 568, 80, 24);
     listener->setBounds (400, 250, 100, 100);
-    zoomSlider->setBounds (672, 568, 216, 24);
     //[UserResized] Add your own custom resize handling here..
     juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), getWidth(), getHeight());
 
-    int listenerW = static_cast<int>(listener->getWidth() * params.zoomFactor.get());
-    int listenerH = static_cast<int>(listener->getHeight() * params.zoomFactor.get());
+    int listenerW = static_cast<int>(listener->getWidth() * params.zoomFactor.get() / 100.0f);
+    int listenerH = static_cast<int>(listener->getHeight() * params.zoomFactor.get() / 100.0f);
     listener->setBounds(pixPosRef.x - listenerW / 2, pixPosRef.y - listenerH / 2, listenerW, listenerH);
 
     sourceComponent->resized();
@@ -150,6 +161,7 @@ void PlugUI::resized()
 void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
 {
     //[UsersliderValueChanged_Pre]
+    float val = static_cast<float>(sliderThatWasMoved->getValue());
     //[/UsersliderValueChanged_Pre]
 
     if (sliderThatWasMoved == levelMeterRight)
@@ -162,22 +174,21 @@ void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
         //[UserSliderCode_levelMeterLeft] -- add your slider handling code here..
         //[/UserSliderCode_levelMeterLeft]
     }
-    else if (sliderThatWasMoved == zoomSlider)
-    {
-        //[UserSliderCode_zoomSlider] -- add your slider handling code here..
-        params.zoomFactor.setUI(zoomSlider->getValue());
-        resized();
-        //[/UserSliderCode_zoomSlider]
-    }
 
     //[UsersliderValueChanged_Post]
+    else if (sliderThatWasMoved == zoomSlider)
+    {
+        params.zoomFactor.setUI(val);
+        resized();
+    }
     //[/UsersliderValueChanged_Post]
 }
 
 void PlugUI::mouseDoubleClick (const MouseEvent& e)
 {
     //[UserCode_mouseDoubleClick] -- Add your code here...
-    zoomSlider->setValue(1.0);
+    ignoreUnused(e);
+    zoomSlider->setValue(100.0);
     //[/UserCode_mouseDoubleClick]
 }
 
@@ -251,11 +262,11 @@ BEGIN_JUCER_METADATA
     <IMAGE pos="13 530 64 64" resource="BinaryData::ssr_logo_png" opacity="1"
            mode="1"/>
   </BACKGROUND>
-  <LABEL name="debug" id="3b44d9ef5ee9c1a" memberName="debugText" virtualName=""
-         explicitFocusOrder="0" pos="648 8 250 584" edTextCol="ff000000"
-         edBkgCol="0" labelText="" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
-         bold="0" italic="0" justification="9"/>
+  <LABEL name="zoom label" id="425995adac828d4e" memberName="zoomLabel"
+         virtualName="" explicitFocusOrder="0" pos="812 540 80 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="zoom" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="22"
+         bold="0" italic="0" justification="36"/>
   <SLIDER name="level right" id="a744d1a2c21ea6d8" memberName="levelMeterRight"
           virtualName="" explicitFocusOrder="0" pos="856 150 24 300" thumbcol="ff60ff60"
           min="0" max="1" int="0" style="LinearVertical" textBoxPos="NoTextBox"
@@ -264,16 +275,20 @@ BEGIN_JUCER_METADATA
           virtualName="" explicitFocusOrder="0" pos="824 150 24 300" thumbcol="ff60ff60"
           min="0" max="1" int="0" style="LinearVertical" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+  <LABEL name="debug" id="3b44d9ef5ee9c1a" memberName="debugText" virtualName=""
+         explicitFocusOrder="0" pos="648 8 250 584" edTextCol="ff000000"
+         edBkgCol="0" labelText="" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="9"/>
   <GENERICCOMPONENT name="source component" id="3a94749bbf0b0aa6" memberName="sourceComponent"
                     virtualName="" explicitFocusOrder="0" pos="0 0 900 600" class="SourceComponent"
                     params="params, 90, SynthParams::sourceColourBlue"/>
+  <GENERICCOMPONENT name="zoom slider" id="e94c3a78f0b8bd9a" memberName="zoomSlider"
+                    virtualName="" explicitFocusOrder="0" pos="812 568 80 24" class="ZoomSlider"
+                    params=""/>
   <GENERICCOMPONENT name="listener" id="a34b6db6e6ed2361" memberName="listener" virtualName="ListenerComponent"
                     explicitFocusOrder="0" pos="400 250 100 100" class="Component"
                     params="params"/>
-  <SLIDER name="zoom slider" id="8bceb5aca138d9c0" memberName="zoomSlider"
-          virtualName="" explicitFocusOrder="0" pos="672 568 216 24" min="0.2999999999999999889"
-          max="1.5" int="0" style="LinearHorizontal" textBoxPos="TextBoxLeft"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

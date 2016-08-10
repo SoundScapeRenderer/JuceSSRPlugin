@@ -49,7 +49,7 @@ public:
 
     // GUI scaling parameter
     Param zoomFactor;
-    const int pixelPerMeter = 100;
+    const int pixelPerMeter = 50;
 
     /**
         Converts a meter position into a pixel coordinate of a scene with given width and height.
@@ -64,8 +64,8 @@ public:
      */
     juce::Point<int> pos2pix(float meterCenterX, float meterCenterY, int screenWidth, int screenHeight)
     {
-        int x = static_cast<int>(meterCenterX * pixelPerMeter * zoomFactor.get() + screenWidth / 2);
-        int y = static_cast<int>(-meterCenterY * pixelPerMeter * zoomFactor.get() + screenHeight / 2);
+        int x = static_cast<int>(meterCenterX * pixelPerMeter * zoomFactor.get() / 100.0f + screenWidth / 2);
+        int y = static_cast<int>(-meterCenterY * pixelPerMeter * zoomFactor.get() / 100.0f + screenHeight / 2);
 
         return juce::Point<int>(x, y);
     }
@@ -83,8 +83,8 @@ public:
     */
     juce::Point<float> pix2pos(int pixCenterX, int pixCenterY, int screenWidth, int screenHeight)
     {
-        float x = (pixCenterX - screenWidth / 2) / (pixelPerMeter * zoomFactor.get());
-        float y = (pixCenterY - screenHeight / 2) / (pixelPerMeter * zoomFactor.get());
+        float x = (pixCenterX - screenWidth / 2) / (pixelPerMeter * zoomFactor.get() / 100.0f);
+        float y = (pixCenterY - screenHeight / 2) / (pixelPerMeter * zoomFactor.get() / 100.0f);
         return juce::Point<float>(x, -y);
     }
 
