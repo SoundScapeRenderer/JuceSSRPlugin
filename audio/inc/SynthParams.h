@@ -58,14 +58,14 @@ public:
     
         @param meterCenterX centerX position in meter of an object in the scene GUI
         @param meterCenterY centerY position in meter of an object in the scene GUI
-        @param sceneWidth width of the scene GUI in pixel
-        @param sceneHeight height of the scene GUI in pixel
+        @param screenWidth width of the scene GUI in pixel
+        @param screenHeight height of the scene GUI in pixel
         @return coordinate point in pixel with inverse y
      */
-    juce::Point<int> pos2pix(float meterCenterX, float meterCenterY, int sceneWidth, int sceneHeight)
+    juce::Point<int> pos2pix(float meterCenterX, float meterCenterY, int screenWidth, int screenHeight)
     {
-        int x = static_cast<int>(meterCenterX * pixelPerMeter * zoomFactor.get() + sceneWidth / 2);
-        int y = static_cast<int>(-meterCenterY * pixelPerMeter * zoomFactor.get() + sceneHeight / 2);
+        int x = static_cast<int>(meterCenterX * pixelPerMeter * zoomFactor.get() + screenWidth / 2);
+        int y = static_cast<int>(-meterCenterY * pixelPerMeter * zoomFactor.get() + screenHeight / 2);
 
         return juce::Point<int>(x, y);
     }
@@ -77,14 +77,14 @@ public:
 
         @param pixCenterX centerX pixel of an object in the scene GUI
         @param pixCenterY centerY pixel of an object in the scene GUI
-        @param sceneWidth width of the scene GUI in pixel
-        @param sceneHeight height of the scene GUI in pixel
+        @param screenWidth width of the scene GUI in pixel
+        @param screenHeight height of the scene GUI in pixel
         @return position point in meter with inverse y
     */
-    juce::Point<float> pix2pos(int pixCenterX, int pixCenterY, int sceneWidth, int sceneHeight)
+    juce::Point<float> pix2pos(int pixCenterX, int pixCenterY, int screenWidth, int screenHeight)
     {
-        float x = (pixCenterX - sceneWidth / 2) / (pixelPerMeter * zoomFactor.get());
-        float y = (pixCenterY - sceneHeight / 2) / (pixelPerMeter * zoomFactor.get());
+        float x = (pixCenterX - screenWidth / 2) / (pixelPerMeter * zoomFactor.get());
+        float y = (pixCenterY - screenHeight / 2) / (pixelPerMeter * zoomFactor.get());
         return juce::Point<float>(x, -y);
     }
 

@@ -62,9 +62,18 @@ PlugUI::PlugUI (SynthParams &p)
     addAndMakeVisible (listener = new ListenerComponent (params));
     listener->setName ("listener");
 
+    addAndMakeVisible (zoomSlider = new Slider ("zoom slider"));
+    zoomSlider->setRange (0.3, 1.5, 0);
+    zoomSlider->setSliderStyle (Slider::LinearHorizontal);
+    zoomSlider->setTextBoxStyle (Slider::TextBoxLeft, false, 80, 20);
+    zoomSlider->addListener (this);
+
     drawable1 = Drawable::createFromImageData (BinaryData::ssr_logo_png, BinaryData::ssr_logo_pngSize);
 
     //[UserPreSize]
+    zoomSlider->setValue(1.0);
+    zoomSlider->setTextValueSuffix(params.zoomFactor.getUnit());
+
     /// \todo create actual output gain level component
     levelMeterLeft->setSliderStyle(Slider::LinearBarVertical);
     levelMeterRight->setSliderStyle(Slider::LinearBarVertical);
@@ -90,6 +99,7 @@ PlugUI::~PlugUI()
     levelMeterLeft = nullptr;
     sourceComponent = nullptr;
     listener = nullptr;
+    zoomSlider = nullptr;
     drawable1 = nullptr;
 
 
@@ -125,9 +135,15 @@ void PlugUI::resized()
     levelMeterLeft->setBounds (824, 150, 24, 300);
     sourceComponent->setBounds (0, 0, 900, 600);
     listener->setBounds (400, 250, 100, 100);
+    zoomSlider->setBounds (672, 568, 216, 24);
     //[UserResized] Add your own custom resize handling here..
     juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), getWidth(), getHeight());
-    listener->setBounds(pixPosRef.x - listener->getWidth() / 2, pixPosRef.y - listener->getHeight() / 2, listener->getWidth(), listener->getHeight());
+
+    int listenerW = static_cast<int>(listener->getWidth() * params.zoomFactor.get());
+    int listenerH = static_cast<int>(listener->getHeight() * params.zoomFactor.get());
+    listener->setBounds(pixPosRef.x - listenerW / 2, pixPosRef.y - listenerH / 2, listenerW, listenerH);
+
+    sourceComponent->resized();
     //[/UserResized]
 }
 
@@ -146,9 +162,23 @@ void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
         //[UserSliderCode_levelMeterLeft] -- add your slider handling code here..
         //[/UserSliderCode_levelMeterLeft]
     }
+    else if (sliderThatWasMoved == zoomSlider)
+    {
+        //[UserSliderCode_zoomSlider] -- add your slider handling code here..
+        params.zoomFactor.setUI(zoomSlider->getValue());
+        resized();
+        //[/UserSliderCode_zoomSlider]
+    }
 
     //[UsersliderValueChanged_Post]
     //[/UsersliderValueChanged_Post]
+}
+
+void PlugUI::mouseDoubleClick (const MouseEvent& e)
+{
+    //[UserCode_mouseDoubleClick] -- Add your code here...
+    zoomSlider->setValue(1.0);
+    //[/UserCode_mouseDoubleClick]
 }
 
 
@@ -214,6 +244,9 @@ BEGIN_JUCER_METADATA
                  variableInitialisers="PanelBase(p), params(p)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="1"
                  initialWidth="900" initialHeight="600">
+  <METHODS>
+    <METHOD name="mouseDoubleClick (const MouseEvent&amp; e)"/>
+  </METHODS>
   <BACKGROUND backgroundColour="ffedede6">
     <IMAGE pos="13 530 64 64" resource="BinaryData::ssr_logo_png" opacity="1"
            mode="1"/>
@@ -237,6 +270,10 @@ BEGIN_JUCER_METADATA
   <GENERICCOMPONENT name="listener" id="a34b6db6e6ed2361" memberName="listener" virtualName="ListenerComponent"
                     explicitFocusOrder="0" pos="400 250 100 100" class="Component"
                     params="params"/>
+  <SLIDER name="zoom slider" id="8bceb5aca138d9c0" memberName="zoomSlider"
+          virtualName="" explicitFocusOrder="0" pos="672 568 216 24" min="0.2999999999999999889"
+          max="1.5" int="0" style="LinearHorizontal" textBoxPos="TextBoxLeft"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

@@ -59,10 +59,10 @@ void SourceComponent::paint (Graphics& g)
 void SourceComponent::resized()
 {
     sourceMenu->setSize(250, 225);
-    sourceNode->setSize(nodeSize, nodeSize);
 
+    int scaledSize = static_cast<int>(nodeSize * params.zoomFactor.get());
     juce::Point<int> pixPosSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
-    sourceNode->setBounds(pixPosSource.x - nodeSize / 2, pixPosSource.y - nodeSize / 2, nodeSize, nodeSize);
+    sourceNode->setBounds(pixPosSource.x - scaledSize / 2, pixPosSource.y - scaledSize / 2, scaledSize, scaledSize);
 
     levelSlider->setValue(params.sourceGain.get());
 }
@@ -74,20 +74,22 @@ void SourceComponent::childBoundsChanged(Component *child)
 {
     if (child == sourceNode)
     {
+        int scaledSize = static_cast<int>(nodeSize * params.zoomFactor.get());
+
         // sourceMenu, levelSlider and sourceBackground should always follow source node
-        int offsetX = sourceNode->getX() + nodeSize + 25;
-        int offsetY = sourceNode->getY() + nodeSize / 2;
+        int offsetX = sourceNode->getX() + scaledSize + 25;
+        int offsetY = sourceNode->getY() + scaledSize / 2;
         sourceMenu->setBounds(offsetX, offsetY, sourceMenu->getWidth(), sourceMenu->getHeight());
 
-        levelSlider->setSize(nodeSize * 3 / 4, nodeSize / 3);
-        offsetX = sourceNode->getX() + (nodeSize - levelSlider->getWidth()) / 2;
-        offsetY = sourceNode->getY() + static_cast<int>(nodeSize * 1.1f);
+        levelSlider->setSize(scaledSize * 3 / 4, scaledSize / 3);
+        offsetX = sourceNode->getX() + (scaledSize - levelSlider->getWidth()) / 2;
+        offsetY = sourceNode->getY() + static_cast<int>(scaledSize * 1.1f);
         levelSlider->setBounds(offsetX, offsetY, levelSlider->getWidth(), levelSlider->getHeight());
 
-        offsetX = sourceNode->getX() - nodeSize / 2;
-        offsetY = sourceNode->getY() - nodeSize / 2;
-        sourceBackground->setBounds(offsetX, offsetY, nodeSize * 2, nodeSize * 2);
-        sourceBackground->setBackgroundProperties(nodeSize * 0.5f);
+        offsetX = sourceNode->getX() - scaledSize / 2;
+        offsetY = sourceNode->getY() - scaledSize / 2;
+        sourceBackground->setBounds(offsetX, offsetY, scaledSize * 2, scaledSize * 2);
+        sourceBackground->setBackgroundProperties(scaledSize * 0.5f);
 
         // refresh plane wave of source background
         juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), getWidth(), getHeight());

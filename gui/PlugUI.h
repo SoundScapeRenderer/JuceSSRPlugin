@@ -55,6 +55,7 @@ public:
     void paint (Graphics& g);
     void resized();
     void sliderValueChanged (Slider* sliderThatWasMoved);
+    void mouseDoubleClick (const MouseEvent& e);
 
 
 
@@ -72,6 +73,7 @@ private:
     ScopedPointer<Slider> levelMeterLeft;
     ScopedPointer<SourceComponent> sourceComponent;
     ScopedPointer<ListenerComponent> listener;
+    ScopedPointer<Slider> zoomSlider;
     ScopedPointer<Drawable> drawable1;
 
 

@@ -41,7 +41,7 @@ SynthParams::SynthParams()
     , outputLevelLeft("output level left", "outputLevelLeft", "outputLevelLeft", "", -1.0f, 1.0f, 0.0f)
     , outputLevelRight("outputlevel right", "outputLevelRight", "outputLevelRight", "", -1.0f, 1.0f, 0.0f)
 
-    , zoomFactor("zoom factor", "zoomFactor", "zoomFactor", "", 0.3f, 1.5f, 1.0f)
+    , zoomFactor("zoom factor", "zoomFactor", "zoomFactor", "x", 0.3f, 1.5f, 1.0f)
 {
 }
 
