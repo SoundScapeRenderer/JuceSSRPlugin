@@ -1950,6 +1950,9 @@
     <ClInclude Include="..\..\..\gui\VolLevelSlider.h">
       <Filter>ssr\gui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\gui\ZoomSlider.h">
+      <Filter>ssr\gui</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\juce\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h">
       <Filter>Juce Modules\juce_audio_basics\buffers</Filter>
     </ClInclude>

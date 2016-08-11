@@ -270,6 +270,7 @@
             file="../gui/SourceNodeComponent.h"/>
       <FILE id="muMAJw" name="VolLevelSlider.h" compile="0" resource="0"
             file="../gui/VolLevelSlider.h"/>
+      <FILE id="WKiWWg" name="ZoomSlider.h" compile="0" resource="0" file="../gui/ZoomSlider.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>

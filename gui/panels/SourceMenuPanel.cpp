@@ -311,14 +311,15 @@ void SourceMenuPanel::buttonClicked (Button* buttonThatWasClicked)
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 void SourceMenuPanel::timerCallback()
 {
-    positionLabel2->setText(String(params.roundNearest(params.sourceX.get())) + " mtrs, " + String(params.roundNearest(params.sourceY.get())) + " mtrs", dontSendNotification);
+    positionLabel2->setText(String(params.roundNearest(params.sourceX.get()), 2) + " mtrs, "
+        + String(params.roundNearest(params.sourceY.get()), 2) + " mtrs", dontSendNotification);
 
     float dist = sqrtf(pow(params.referenceX.get() - params.sourceX.get(), 2.0f) + pow(params.referenceY.get() - params.sourceY.get(), 2.0f));
-    distanceLabel2->setText(String(params.roundNearest(dist)) + " mtrs", dontSendNotification);
+    distanceLabel2->setText(String(params.roundNearest(dist), 2) + " mtrs", dontSendNotification);
 
-    azimuthLabel2->setText(String(params.roundNearest(params.sourceOrientation.get())) + " degs", dontSendNotification);
+    azimuthLabel2->setText(String(params.roundNearest(params.sourceOrientation.get()), 2) + " degs", dontSendNotification);
 
-    volLabel2->setText(String(params.roundNearest(params.sourceGain.get())) + " dB", dontSendNotification);
+    volLabel2->setText(String(params.roundNearest(params.sourceGain.get()), 2) + " dB", dontSendNotification);
 }
 //[/MiscUserCode]
 

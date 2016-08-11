@@ -49,7 +49,20 @@ public:
 
     // GUI scaling parameter
     Param zoomFactor;
-    const int pixelPerMeter = 50;
+    const int pixelPerMeter;
+
+    //==============================================================================
+
+    // original SSR colour codes
+    static const Colour sourceColourBrown;
+    static const Colour sourceColourBlue;
+    static const Colour sourceColourGreen;
+    static const Colour sourceColourViolet;
+    static const Colour sourceColourRed;
+    static const Colour sceneBackgroundColour;
+    static const Colour sourceLevelColour;
+
+    //==============================================================================
 
     /**
         Converts a meter position into a pixel coordinate of a scene with given width and height.
@@ -62,13 +75,7 @@ public:
         @param screenHeight height of the scene GUI in pixel
         @return coordinate point in pixel with inverse y
      */
-    juce::Point<int> pos2pix(float meterCenterX, float meterCenterY, int screenWidth, int screenHeight)
-    {
-        int x = static_cast<int>(meterCenterX * pixelPerMeter * zoomFactor.get() / 100.0f + screenWidth / 2);
-        int y = static_cast<int>(-meterCenterY * pixelPerMeter * zoomFactor.get() / 100.0f + screenHeight / 2);
-
-        return juce::Point<int>(x, y);
-    }
+    juce::Point<int> pos2pix(float meterCenterX, float meterCenterY, int screenWidth, int screenHeight);
 
     /**
         Converts a pixel coordinate of a scene with given width and height into a meter position.
@@ -81,26 +88,14 @@ public:
         @param screenHeight height of the scene GUI in pixel
         @return position point in meter with inverse y
     */
-    juce::Point<float> pix2pos(int pixCenterX, int pixCenterY, int screenWidth, int screenHeight)
-    {
-        float x = (pixCenterX - screenWidth / 2) / (pixelPerMeter * zoomFactor.get() / 100.0f);
-        float y = (pixCenterY - screenHeight / 2) / (pixelPerMeter * zoomFactor.get() / 100.0f);
-        return juce::Point<float>(x, -y);
-    }
+    juce::Point<float> pix2pos(int pixCenterX, int pixCenterY, int screenWidth, int screenHeight);
 
-    float roundNearest(float val)
-    {
-        return roundf(val * 100) / 100;
-    }
+    /**
+        Round float value to not more than 2 numbers after comma.
+    */
+    float roundNearest(float val);
 
-    // original SSR colour codes
-    static const Colour sourceColourBrown;
-    static const Colour sourceColourBlue;
-    static const Colour sourceColourGreen;
-    static const Colour sourceColourViolet;
-    static const Colour sourceColourRed;
-    static const Colour sceneBackgroundColour;
-    static const Colour sourceLevelColour;
+    //==============================================================================
 
 private:
 };

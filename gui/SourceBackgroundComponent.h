@@ -24,6 +24,8 @@ public:
         // pass all mouse click events to component behind this
         setInterceptsMouseClicks(false, false);
         planeWaveColour = c;
+
+        shadowImg = ImageCache::getFromMemory(BinaryData::source_shadow_png, BinaryData::source_shadow_pngSize);
     }
 
     ~SourceBackgroundComponent()
@@ -43,27 +45,23 @@ public:
     {
         float wHalf = static_cast<float>(getWidth() * 0.5f);
         float hHalf = static_cast<float>(getHeight() * 0.5f);
-        float shadowCentreX = wHalf + offset;
-        float shadowCentreY = hHalf + offset;
+        int paddingL = static_cast<int>(wHalf + offset - shadowRadius);
+        int paddingT = static_cast<int>(hHalf + offset - shadowRadius);
+        int shadowSize = static_cast<int>(shadowRadius * 2.0f);
 
         // draw source shadow
-        Colour c1(Colours::black);
-        Colour c2(Colours::transparentWhite);
-        ColourGradient gradient(c1, shadowCentreX, shadowCentreY, c2, shadowCentreX, shadowCentreY + shadowRadius, true);
-        gradient.addColour(0.65, c1);
-        g.setGradientFill(gradient);
-        g.fillEllipse(shadowCentreX - shadowRadius, shadowCentreY - shadowRadius, shadowRadius * 2.0f, shadowRadius * 2.0f);
+        g.drawImageWithin(shadowImg, paddingL, paddingT, shadowSize, shadowSize, RectanglePlacement::centred);
 
         // draw plane wave
         if (drawPlaneWave)
         {
             Path plane, waveDirection, arc;
             plane.startNewSubPath(0.0f, 0.5f);
-            plane.lineTo(0.205f, 0.5f);
-            plane.startNewSubPath(0.795f, 0.5f);
+            plane.lineTo(0.2075f, 0.5f);
+            plane.startNewSubPath(0.7925f, 0.5f);
             plane.lineTo(1.0f, 0.5f);
 
-            waveDirection.startNewSubPath(0.5f, 0.795f);
+            waveDirection.startNewSubPath(0.5f, 0.7925f);
             waveDirection.lineTo(0.5f, 0.98f);
             waveDirection.startNewSubPath(0.44f, 0.9f);
             waveDirection.lineTo(0.5f, 0.98f);
@@ -99,6 +97,8 @@ public:
     //==============================================================================
 
 private:
+    Image shadowImg;
+
     Colour planeWaveColour;
     float shadowRadius;
     float offset;

@@ -36,8 +36,8 @@ PlugUI::PlugUI (SynthParams &p)
 
     addAndMakeVisible (zoomLabel = new Label ("zoom label",
                                               TRANS("zoom")));
-    zoomLabel->setFont (Font (22.00f, Font::plain));
-    zoomLabel->setJustificationType (Justification::centred);
+    zoomLabel->setFont (Font (20.00f, Font::plain));
+    zoomLabel->setJustificationType (Justification::centredBottom);
     zoomLabel->setEditable (false, false, false);
     zoomLabel->setColour (TextEditor::textColourId, Colours::black);
     zoomLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
@@ -128,7 +128,7 @@ void PlugUI::paint (Graphics& g)
     g.setColour (Colours::black);
     jassert (drawable1 != 0);
     if (drawable1 != 0)
-        drawable1->drawWithin (g, Rectangle<float> (13, 530, 64, 64),
+        drawable1->drawWithin (g, Rectangle<float> (23, 520, 64, 64),
                                RectanglePlacement::centred, 1.000f);
 
     //[UserPaint] Add your own custom painting code here..
@@ -140,13 +140,13 @@ void PlugUI::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    zoomLabel->setBounds (812, 540, 80, 24);
+    zoomLabel->setBounds (812, 544, 80, 24);
     levelMeterRight->setBounds (856, 150, 24, 300);
     levelMeterLeft->setBounds (824, 150, 24, 300);
     debugText->setBounds (648, 8, 250, 584);
     sourceComponent->setBounds (0, 0, 900, 600);
     zoomSlider->setBounds (812, 568, 80, 24);
-    listener->setBounds (400, 250, 100, 100);
+    listener->setBounds (405, 255, 90, 90);
     //[UserResized] Add your own custom resize handling here..
     juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), getWidth(), getHeight());
 
@@ -192,6 +192,16 @@ void PlugUI::mouseDoubleClick (const MouseEvent& e)
     //[/UserCode_mouseDoubleClick]
 }
 
+void PlugUI::mouseWheelMove (const MouseEvent& e, const MouseWheelDetails& wheel)
+{
+    //[UserCode_mouseWheelMove] -- Add your code here...
+    ignoreUnused(e);
+    float delta = wheel.deltaY;
+    double currZoom = zoomSlider->getValue();
+    zoomSlider->setValue(currZoom + 15.0 * delta);
+    //[/UserCode_mouseWheelMove]
+}
+
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
@@ -215,7 +225,7 @@ void PlugUI::timerCallback()
     levelMeterLeft->setValue(params.outputLevelLeft.get(), dontSendNotification);
     levelMeterRight->setValue(params.outputLevelRight.get(), dontSendNotification);
 
-#if 1
+#if 0
     debugText->setText(
         "SourceX = " + String(params.sourceX.get()) +
         "\nSourceY = " + String(params.sourceY.get()) +
@@ -257,16 +267,17 @@ BEGIN_JUCER_METADATA
                  initialWidth="900" initialHeight="600">
   <METHODS>
     <METHOD name="mouseDoubleClick (const MouseEvent&amp; e)"/>
+    <METHOD name="mouseWheelMove (const MouseEvent&amp; e, const MouseWheelDetails&amp; wheel)"/>
   </METHODS>
   <BACKGROUND backgroundColour="ffedede6">
-    <IMAGE pos="13 530 64 64" resource="BinaryData::ssr_logo_png" opacity="1"
+    <IMAGE pos="23 520 64 64" resource="BinaryData::ssr_logo_png" opacity="1"
            mode="1"/>
   </BACKGROUND>
   <LABEL name="zoom label" id="425995adac828d4e" memberName="zoomLabel"
-         virtualName="" explicitFocusOrder="0" pos="812 540 80 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="812 544 80 24" edTextCol="ff000000"
          edBkgCol="0" labelText="zoom" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="22"
-         bold="0" italic="0" justification="36"/>
+         focusDiscardsChanges="0" fontname="Default font" fontsize="20"
+         bold="0" italic="0" justification="20"/>
   <SLIDER name="level right" id="a744d1a2c21ea6d8" memberName="levelMeterRight"
           virtualName="" explicitFocusOrder="0" pos="856 150 24 300" thumbcol="ff60ff60"
           min="0" max="1" int="0" style="LinearVertical" textBoxPos="NoTextBox"
@@ -287,7 +298,7 @@ BEGIN_JUCER_METADATA
                     virtualName="" explicitFocusOrder="0" pos="812 568 80 24" class="ZoomSlider"
                     params=""/>
   <GENERICCOMPONENT name="listener" id="a34b6db6e6ed2361" memberName="listener" virtualName="ListenerComponent"
-                    explicitFocusOrder="0" pos="400 250 100 100" class="Component"
+                    explicitFocusOrder="0" pos="405 255 90 90" class="Component"
                     params="params"/>
 </JUCER_COMPONENT>
 

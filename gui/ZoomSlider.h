@@ -3,7 +3,7 @@
 
     ZoomSlider.h
     Created: 10 Aug 2016 11:33:20pm
-    Author:  Smoky
+    Author:  Nutty
 
   ==============================================================================
 */
@@ -23,8 +23,8 @@ public:
         : Slider()
     {
         setRange(25, 200, 1);
-        setSliderStyle(Slider::LinearHorizontal);
-        setTextBoxStyle(Slider::NoTextBox, false, 80, 24);
+        setSliderStyle(Slider::LinearBarVertical);
+        setTextBoxStyle(Slider::TextBoxBelow, false, 80, 24);
     }
 
     ~ZoomSlider()
@@ -39,20 +39,16 @@ public:
         g.setColour(Colours::black);
         g.drawRect(0, 0, getWidth(), getHeight());
 
-        String valText = String(getValue()) + getTextValueSuffix();
-        g.setFont(getHeight() * 0.8f);
-        g.drawFittedText(valText, 0, 0, getWidth() * 7 / 10, getHeight(), Justification::centredRight, 1);
-
         AffineTransform trans(AffineTransform::scale(static_cast<float>(getWidth()), static_cast<float>(getHeight())));
         Path arrow;
-        arrow.startNewSubPath(0.75f, 0.4f);
-        arrow.lineTo(0.825f, 0.2f);
-        arrow.lineTo(0.9f, 0.4f);
-        arrow.startNewSubPath(0.75f, 0.6f);
-        arrow.lineTo(0.825f, 0.8f);
-        arrow.lineTo(0.9f, 0.6f);
+        arrow.startNewSubPath(0.75f, 0.425f);
+        arrow.lineTo(0.805f, 0.25f);
+        arrow.lineTo(0.86f, 0.425f);
+        arrow.startNewSubPath(0.75f, 0.575f);
+        arrow.lineTo(0.805f, 0.75f);
+        arrow.lineTo(0.86f, 0.575f);
 
-        g.strokePath(arrow, PathStrokeType(2.0f), trans);
+        g.strokePath(arrow, PathStrokeType(1.5f), trans);
     }
 
     //==============================================================================
@@ -65,7 +61,7 @@ public:
 
     void mouseDrag(const MouseEvent& e)
     {
-        double delta = e.getDistanceFromDragStartY() / 1.0;
+        double delta = e.getDistanceFromDragStartY() / 2.0;
         setValue(valOnStartDrag - delta);
     }
 
@@ -74,7 +70,6 @@ public:
 private:
     double valOnStartDrag = 0.0;
 
-    ScopedPointer<TextEditor> editor;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ZoomSlider)
 };
 

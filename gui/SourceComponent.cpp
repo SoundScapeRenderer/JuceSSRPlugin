@@ -54,6 +54,16 @@ SourceComponent::~SourceComponent()
 
 void SourceComponent::paint (Graphics& g)
 {
+    float centerPointSize = 3.5f * params.zoomFactor.get() / 100.0f;
+
+    Path centerPoint;
+    centerPoint.startNewSubPath(getWidth() / 2.0f - centerPointSize, getHeight() / 2.0f);
+    centerPoint.lineTo(getWidth() / 2.0f + centerPointSize, getHeight() / 2.0f);
+    centerPoint.startNewSubPath(getWidth() / 2.0f, getHeight() / 2.0f - centerPointSize);
+    centerPoint.lineTo(getWidth() / 2.0f, getHeight() / 2.0f + centerPointSize);
+
+    g.setColour(Colours::grey);
+    g.strokePath(centerPoint, PathStrokeType(jmin(1.0f, 2.5f * params.zoomFactor.get() / 100.0f)));
 }
 
 void SourceComponent::resized()
@@ -83,7 +93,7 @@ void SourceComponent::childBoundsChanged(Component *child)
 
         levelSlider->setSize(scaledSize * 3 / 4, scaledSize / 3);
         offsetX = sourceNode->getX() + (scaledSize - levelSlider->getWidth()) / 2;
-        offsetY = sourceNode->getY() + static_cast<int>(scaledSize * 1.1f);
+        offsetY = sourceNode->getY() + static_cast<int>(scaledSize * 1.1625f);
         levelSlider->setBounds(offsetX, offsetY, levelSlider->getWidth(), levelSlider->getHeight());
 
         offsetX = sourceNode->getX() - scaledSize / 2;

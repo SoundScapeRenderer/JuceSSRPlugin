@@ -22,9 +22,11 @@ const Colour SynthParams::sourceColourRed(173, 54, 35);
 const Colour SynthParams::sceneBackgroundColour(237, 237, 230);
 const Colour SynthParams::sourceLevelColour(58, 239, 58);
 
+//==============================================================================
+
 SynthParams::SynthParams()
     : sourceX("source x", "sourceX", "sourceX", "m", -50.0f, 50.0f, 0.0f)
-    , sourceY("source y", "sourceY", "sourceY", "m", -50.0f, 50.0f, 3.5f)
+    , sourceY("source y", "sourceY", "sourceY", "m", -50.0f, 50.0f, 2.0f)
     , sourceOrientation("source orientation", "sourceOrientation", "sourceOrientation", "degs", -180.0f, 180.0f, 0.0f)
     , sourceGain("source gain", "sourceGain", "sourceGain", "db", -96.0f, 12.0f, -6.0f)
     , sourceLevel("sourceLevel", "sourceLevel", "sourceLevel", "", -1.0f, 1.0f, 0.0f)
@@ -42,9 +44,32 @@ SynthParams::SynthParams()
     , outputLevelRight("outputlevel right", "outputLevelRight", "outputLevelRight", "", -1.0f, 1.0f, 0.0f)
 
     , zoomFactor("zoom factor", "zoomFactor", "zoomFactor", "%", 25.0f, 200.0f, 100.0f)
+    , pixelPerMeter(100)
 {
 }
 
 SynthParams::~SynthParams() 
 {
+}
+
+//==============================================================================
+
+juce::Point<int> SynthParams::pos2pix(float meterCenterX, float meterCenterY, int screenWidth, int screenHeight)
+{
+    int x = static_cast<int>(meterCenterX * pixelPerMeter * zoomFactor.get() / 100.0f + screenWidth / 2);
+    int y = static_cast<int>(-meterCenterY * pixelPerMeter * zoomFactor.get() / 100.0f + screenHeight / 2);
+
+    return juce::Point<int>(x, y);
+}
+
+juce::Point<float> SynthParams::pix2pos(int pixCenterX, int pixCenterY, int screenWidth, int screenHeight)
+{
+    float x = (pixCenterX - screenWidth / 2) / (pixelPerMeter * zoomFactor.get() / 100.0f);
+    float y = (pixCenterY - screenHeight / 2) / (pixelPerMeter * zoomFactor.get() / 100.0f);
+    return juce::Point<float>(x, -y);
+}
+
+float SynthParams::roundNearest(float val)
+{
+    return roundf(val * 100) / 100;
 }

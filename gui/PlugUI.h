@@ -57,6 +57,7 @@ public:
     void resized();
     void sliderValueChanged (Slider* sliderThatWasMoved);
     void mouseDoubleClick (const MouseEvent& e);
+    void mouseWheelMove (const MouseEvent& e, const MouseWheelDetails& wheel);
 
 
 

@@ -1407,6 +1407,7 @@
     <ClInclude Include="..\..\..\gui\SourceComponent.h"/>
     <ClInclude Include="..\..\..\gui\SourceNodeComponent.h"/>
     <ClInclude Include="..\..\..\gui\VolLevelSlider.h"/>
+    <ClInclude Include="..\..\..\gui\ZoomSlider.h"/>
     <ClInclude Include="..\..\..\juce\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h"/>
     <ClInclude Include="..\..\..\juce\modules\juce_audio_basics\buffers\juce_AudioSampleBuffer.h"/>
     <ClInclude Include="..\..\..\juce\modules\juce_audio_basics\buffers\juce_FloatVectorOperations.h"/>

@@ -67,7 +67,7 @@ public:
                       int buttonX, int buttonY, int buttonW, int buttonH, ComboBox& box)
     {
         // draw combobox background and outline
-        g.fillAll(box.findColour(ComboBox::backgroundColourId));
+        g.fillAll(Colours::white);
         if (box.hasKeyboardFocus(false))
         {
             g.setColour(box.findColour(ComboBox::buttonColourId));
@@ -75,19 +75,21 @@ public:
         }
         else
         {
-            g.setColour(box.findColour(ComboBox::outlineColourId));
+            g.setColour(Colours::grey);
             g.drawRect(0, 0, width, height);
         }
 
         // draw box with arrow to open drop down selector
         float outlineThickness = isButtonDown ? 1.2f : 0.5f;
+        buttonX = static_cast<int>(width * 0.875f);
+        buttonW = width - buttonX;
         g.setColour(Colours::lightgrey.brighter(0.2f));
         g.fillRect(buttonX + outlineThickness, buttonY + outlineThickness,
                    buttonW - outlineThickness, buttonH - outlineThickness * 2.0f);
         Path p;
-        p.addTriangle(buttonX + buttonW * 0.18f, buttonY + buttonH * 0.35f,
-                      buttonX + buttonW * 0.82f, buttonY + buttonH * 0.35f,
-                      buttonX + buttonW * 0.5f, buttonY + buttonH * 0.6f);
+        p.addTriangle(buttonX + buttonW * 0.25f, buttonY + buttonH * 0.35f,
+                      buttonX + buttonW * 0.75f, buttonY + buttonH * 0.35f,
+                      buttonX + buttonW * 0.5f, buttonY + buttonH * 0.65f);
         g.setColour(Colours::black);
         g.fillPath(p);
 
