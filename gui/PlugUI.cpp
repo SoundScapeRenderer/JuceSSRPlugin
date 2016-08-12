@@ -80,7 +80,7 @@ PlugUI::PlugUI (SynthParams &p)
     zoomSlider->setValue(100.0);
     zoomSlider->setTextValueSuffix(params.zoomFactor.getUnit());
 
-    /// \todo create actual output gain level component
+    /// \todo create actual output vol level component
     levelMeterLeft->setSliderStyle(Slider::LinearBarVertical);
     levelMeterLeft->setInterceptsMouseClicks(false, false);
     levelMeterRight->setSliderStyle(Slider::LinearBarVertical);
@@ -92,6 +92,9 @@ PlugUI::PlugUI (SynthParams &p)
 
 
     //[Constructor] You can add your own custom stuff here..
+    registerListener(listener, &params.referenceX, &params.referenceY, &params.referenceOrientation, getWidth(), getHeight());
+    registerSource(sourceComponent, &params.sourceX, &params.sourceY, &params.sourceVol, getWidth(), getHeight());
+
     lnf = new CustomLookAndFeel();
     LookAndFeel::setDefaultLookAndFeel(lnf);
     //[/Constructor]
@@ -149,7 +152,6 @@ void PlugUI::resized()
     listener->setBounds (405, 255, 90, 90);
     //[UserResized] Add your own custom resize handling here..
     juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), getWidth(), getHeight());
-
     int listenerW = static_cast<int>(listener->getWidth() * params.zoomFactor.get() / 100.0f);
     int listenerH = static_cast<int>(listener->getHeight() * params.zoomFactor.get() / 100.0f);
     listener->setBounds(pixPosRef.x - listenerW / 2, pixPosRef.y - listenerH / 2, listenerW, listenerH);
@@ -214,14 +216,15 @@ void PlugUI::childBoundsChanged(Component *child)
         juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), getWidth(), getHeight());
         juce::Point<int> pixPosSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
         float angle = pixPosRef.getAngleToPoint(pixPosSource);
-        sourceComponent->refreshBackground(radiansToDegrees(angle), params.sourceType.getStep() == eSourceType::ePlane);
+        sourceComponent->repaintPlaneWave(radiansToDegrees(angle), params.sourceType.getStep() == eSourceType::ePlane);
     }
 }
 
 void PlugUI::timerCallback()
 {
-    sourceComponent->refreshGainLevel(params.sourceLevel.get());
+    PanelBase::timerCallback();
 
+    sourceComponent->refreshVolLevel(params.sourceLevel.get());
     levelMeterLeft->setValue(params.outputLevelLeft.get(), dontSendNotification);
     levelMeterRight->setValue(params.outputLevelRight.get(), dontSendNotification);
 
@@ -230,7 +233,7 @@ void PlugUI::timerCallback()
         "SourceX = " + String(params.sourceX.get()) +
         "\nSourceY = " + String(params.sourceY.get()) +
         "\nSourceOri = " + String(params.sourceOrientation.get()) +
-        "\nSourceGain = " + String(params.sourceGain.get()) +
+        "\nsourceVol = " + String(params.sourceVol.get()) +
         "\nSourceLevel = " + String(params.sourceLevel.get()) +
         "\nSourceMute = " + String(params.sourceMute.getUIString()) +
         "\nSourceType = " + String(params.sourceType.getUIString()) +

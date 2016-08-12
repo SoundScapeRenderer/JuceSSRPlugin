@@ -82,16 +82,16 @@ public:
 
     //==============================================================================
 
-    void refreshBackground(bool planeWaveVisible)
+    void repaintPlaneWave(bool planeWaveVisible)
     {
         drawPlaneWave = planeWaveVisible;
         repaint();
     }
 
-    void refreshBackground(float newangle, bool planeWaveVisible)
+    void repaintPlaneWave(float newangle, bool planeWaveVisible)
     {
         angle = newangle;
-        refreshBackground(planeWaveVisible);
+        repaintPlaneWave(planeWaveVisible);
     }
 
     //==============================================================================

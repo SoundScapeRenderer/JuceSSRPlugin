@@ -271,7 +271,7 @@ void SourceMenuPanel::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
         eSourceType type;
         selectedId == 0 ? type = eSourceType::ePoint : type = eSourceType::ePlane;
         params.sourceType.setStep(type);
-        sourceComponent->refreshBackground(type == eSourceType::ePlane);
+        sourceComponent->repaintPlaneWave(type == eSourceType::ePlane);
         //[/UserComboBoxCode_modelBox]
     }
 
@@ -291,18 +291,17 @@ void SourceMenuPanel::buttonClicked (Button* buttonThatWasClicked)
     {
         //[UserButtonCode_muteToggle] -- add your button handler code here..
         params.sourceMute.setStep(state);
-        sourceComponent->refreshSourceNode();
         //[/UserButtonCode_muteToggle]
     }
     else if (buttonThatWasClicked == fixToggle)
     {
         //[UserButtonCode_fixToggle] -- add your button handler code here..
         params.sourcePositionLock.setStep(state);
-        sourceComponent->refreshSourceNode();
         //[/UserButtonCode_fixToggle]
     }
 
     //[UserbuttonClicked_Post]
+    sourceComponent->repaintSourceNode();
     //[/UserbuttonClicked_Post]
 }
 
@@ -319,7 +318,7 @@ void SourceMenuPanel::timerCallback()
 
     azimuthLabel2->setText(String(params.roundNearest(params.sourceOrientation.get()), 2) + " degs", dontSendNotification);
 
-    volLabel2->setText(String(params.roundNearest(params.sourceGain.get()), 2) + " dB", dontSendNotification);
+    volLabel2->setText(String(params.roundNearest(params.sourceVol.get()), 2) + " dB", dontSendNotification);
 }
 //[/MiscUserCode]
 

@@ -30,7 +30,7 @@ public:
     Param sourceX;
     Param sourceY;
     Param sourceOrientation;
-    Param sourceGain;
+    Param sourceVol;
     Param sourceLevel;
     ParamStepped<eOnOffState> sourceMute;
     ParamStepped<eSourceType> sourceType;

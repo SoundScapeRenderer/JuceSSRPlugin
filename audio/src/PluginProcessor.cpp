@@ -30,7 +30,7 @@ PluginAudioProcessor::PluginAudioProcessor()
     // add automation params for host
     addParameter(new HostParam<Param>(sourceX));
     addParameter(new HostParam<Param>(sourceY));
-    addParameter(new HostParam<Param>(sourceGain));
+    addParameter(new HostParam<Param>(sourceVol));
 
     addParameter(new HostParam<Param>(referenceX));
     addParameter(new HostParam<Param>(referenceY));
@@ -192,7 +192,7 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     sourceType.getStep() == eSourceType::ePlane ? type = Source::model_t::plane : type = Source::model_t::point;
     source->model.setRT(type);
     source->mute.setRT(sourceMute.getStep() == eOnOffState::eOn);
-    source->gain.setRT(Param::fromDb(sourceGain.get()));
+    source->gain.setRT(Param::fromDb(sourceVol.get()));
 
     /// \todo fix gui bug of ssr azimuth
     // calculate angle from which the source is seen

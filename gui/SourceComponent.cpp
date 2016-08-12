@@ -19,10 +19,6 @@ SourceComponent::SourceComponent(SynthParams &p, int sourceNodeSize, Colour c)
     , nodeSize(sourceNodeSize)
     , nodeColour(c)
 {
-    // default settings
-    setAlwaysOnTop(true);
-    setInterceptsMouseClicks(false, true);
-
     // create child components
     addAndMakeVisible (levelSlider = new VolLevelSlider ("gain slider"));
     levelSlider->addListener (this);
@@ -74,7 +70,7 @@ void SourceComponent::resized()
     juce::Point<int> pixPosSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
     sourceNode->setBounds(pixPosSource.x - scaledSize / 2, pixPosSource.y - scaledSize / 2, scaledSize, scaledSize);
 
-    levelSlider->setValue(params.sourceGain.get());
+    levelSlider->setValue(params.sourceVol.get());
 }
 
 //==============================================================================
@@ -105,7 +101,7 @@ void SourceComponent::childBoundsChanged(Component *child)
         juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), getWidth(), getHeight());
         juce::Point<int> pixPosSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
         float angle = pixPosRef.getAngleToPoint(pixPosSource);
-        refreshBackground(radiansToDegrees(angle), params.sourceType.getStep() == eSourceType::ePlane);
+        repaintPlaneWave(radiansToDegrees(angle), params.sourceType.getStep() == eSourceType::ePlane);
     }
 }
 
@@ -113,28 +109,43 @@ void SourceComponent::sliderValueChanged (Slider* sliderThatWasMoved)
 {
     if (sliderThatWasMoved == levelSlider)
     {
-        params.sourceGain.setUI(static_cast<float>(sliderThatWasMoved->getValue()));
+        params.sourceVol.setUI(static_cast<float>(sliderThatWasMoved->getValue()));
     }
 }
 
 //==============================================================================
 
-void SourceComponent::refreshSourceNode()
+void SourceComponent::setScreenSize(int width, int height)
+{
+    sourceNode->setScreenSize(width, height);
+}
+
+void SourceComponent::relocateSourceNode()
+{
+    sourceNode->relocate();
+}
+
+void SourceComponent::repaintSourceNode()
 {
     sourceNode->repaint();
 }
 
-void SourceComponent::refreshBackground(bool isPlaneWave)
+void SourceComponent::repaintPlaneWave(bool isPlaneWave)
 {
-    sourceBackground->refreshBackground(isPlaneWave);
+    sourceBackground->repaintPlaneWave(isPlaneWave);
 }
 
-void SourceComponent::refreshBackground(float angle, bool isPlaneWave)
+void SourceComponent::repaintPlaneWave(float angle, bool isPlaneWave)
 {
-    sourceBackground->refreshBackground(angle, isPlaneWave);
+    sourceBackground->repaintPlaneWave(angle, isPlaneWave);
 }
 
-void SourceComponent::refreshGainLevel(float level)
+void SourceComponent::setVol(float volume)
+{
+    levelSlider->setValue(static_cast<double>(volume));
+}
+
+void SourceComponent::refreshVolLevel(float level)
 {
     levelSlider->refreshVolLevel(level);
 }

@@ -34,10 +34,15 @@ public:
     void childBoundsChanged(Component *c);
     void sliderValueChanged(Slider *s);
 
-    void refreshSourceNode();
-    void refreshBackground(bool isPlaneWave);
-    void refreshBackground(float angle, bool isPlaneWave);
-    void refreshGainLevel(float level);
+    void setScreenSize(int width, int height);
+    void relocateSourceNode();
+    void repaintSourceNode();
+
+    void repaintPlaneWave(bool isPlaneWave);
+    void repaintPlaneWave(float angle, bool isPlaneWave);
+
+    void setVol(float volume);
+    void refreshVolLevel(float level);
 
 private:
     SynthParams &params;

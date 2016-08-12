@@ -33,6 +33,12 @@ public:
     {
     }
 
+    void setScreenSize(int w, int h)
+    {
+        screenWidth = w;
+        screenHeight = h;
+    }
+
     //==============================================================================
 
     void paint (Graphics& g)
@@ -94,10 +100,20 @@ public:
 
     //==============================================================================
 
+    void relocate()
+    {
+        juce::Point<int> pixPosRef = params.pos2pix(params.sourceX.get(), params.sourceY.get(), screenWidth, screenHeight);
+        setBounds(pixPosRef.x - getWidth() / 2, pixPosRef.y - getHeight() / 2, getWidth(), getHeight());
+    }
+
+    //==============================================================================
+
 private:
     SynthParams &params;
-    DocumentWindow *menu;
     ComponentDragger dragger;
+    int screenWidth;
+    int screenHeight;
+    DocumentWindow *menu;
     Image lockImg, muteImg;
 
     Colour nodeColour;

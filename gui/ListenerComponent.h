@@ -32,6 +32,12 @@ public:
     {
     }
 
+    void setScreenSize(int w, int h)
+    {
+        screenWidth = w;
+        screenHeight = h;
+    }
+
     //==============================================================================
 
     void paint (Graphics& g)
@@ -99,11 +105,21 @@ public:
 
     //==============================================================================
 
+    void relocate()
+    {
+        juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), screenWidth, screenHeight);
+        setBounds(pixPosRef.x - getWidth() / 2, pixPosRef.y - getHeight() / 2, getWidth(), getHeight());
+    }
+
+    //==============================================================================
+
 private:
     SynthParams &params;
     ComponentDragger dragger;
+    int screenWidth;
+    int screenHeight;
     Image listenerImg, listenerBackgroundImg, listenerShadowImg;
-    
+
     float mouseStartY = 0.0f;
     float angleOnStartDrag = 0.0f;
     
