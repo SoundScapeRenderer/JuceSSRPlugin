@@ -27,8 +27,8 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceComponent *s)
-    : PanelBase(p), params(p), sourceComponent(s)
+SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceNodeComponent *s)
+    : PanelBase(p), params(p), sourceNode(s)
 {
     //[Constructor_pre] You can add your own custom stuff here..
     startTimerHz (60);
@@ -166,10 +166,8 @@ SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceComponent *s)
 
 
     //[UserPreSize]
-    fixToggle->setToggleState(params.sourcePositionLock.getStep() == eOnOffState::eOn, dontSendNotification);
-    fixToggle->setWantsKeyboardFocus(false);
-    muteToggle->setToggleState(params.sourceMute.getStep() == eOnOffState::eOn, dontSendNotification);
-    muteToggle->setWantsKeyboardFocus(false);
+    registerButton(muteToggle, &params.sourceMute);
+    registerButton(fixToggle, &params.sourcePositionLock);
 
     modelBox->setSelectedItemIndex(static_cast<int>(params.sourceType.getStep()), dontSendNotification);
     inputBox->setSelectedItemIndex(static_cast<int>(params.inputChannel.getStep()), dontSendNotification);
@@ -243,9 +241,6 @@ void SourceMenuPanel::resized()
     distanceLabel2->setBounds (96, 40, 144, 16);
     positionLabel2->setBounds (96, 16, 144, 16);
     //[UserResized] Add your own custom resize handling here..
-    fixToggle->setToggleState(params.sourcePositionLock.getStep() == eOnOffState::eOn, dontSendNotification);
-    muteToggle->setToggleState(params.sourceMute.getStep() == eOnOffState::eOn, dontSendNotification);
-
     modelBox->setSelectedItemIndex(static_cast<int>(params.sourceType.getStep()), dontSendNotification);
     inputBox->setSelectedItemIndex(static_cast<int>(params.inputChannel.getStep()), dontSendNotification);
     //[/UserResized]
@@ -262,7 +257,7 @@ void SourceMenuPanel::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
         //[UserComboBoxCode_inputBox] -- add your combo box handling code here..
         eInputChannel channel;
         selectedId == 0 ? channel = eInputChannel::eLeftChannel : channel = eInputChannel::eRightChannel;
-        params.inputChannel.setStep(channel);
+        params.inputChannel.setStepUI(channel);
         //[/UserComboBoxCode_inputBox]
     }
     else if (comboBoxThatHasChanged == modelBox)
@@ -270,8 +265,8 @@ void SourceMenuPanel::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
         //[UserComboBoxCode_modelBox] -- add your combo box handling code here..
         eSourceType type;
         selectedId == 0 ? type = eSourceType::ePoint : type = eSourceType::ePlane;
-        params.sourceType.setStep(type);
-        sourceComponent->repaintPlaneWave(type == eSourceType::ePlane);
+        params.sourceType.setStepUI(type);
+        sourceNode->updatePlaneWave(sourceNode->getPlaneWaveAngle(), type == eSourceType::ePlane);
         //[/UserComboBoxCode_modelBox]
     }
 
@@ -290,18 +285,18 @@ void SourceMenuPanel::buttonClicked (Button* buttonThatWasClicked)
     if (buttonThatWasClicked == muteToggle)
     {
         //[UserButtonCode_muteToggle] -- add your button handler code here..
-        params.sourceMute.setStep(state);
+        params.sourceMute.setStepUI(state);
         //[/UserButtonCode_muteToggle]
     }
     else if (buttonThatWasClicked == fixToggle)
     {
         //[UserButtonCode_fixToggle] -- add your button handler code here..
-        params.sourcePositionLock.setStep(state);
+        params.sourcePositionLock.setStepUI(state);
         //[/UserButtonCode_fixToggle]
     }
 
     //[UserbuttonClicked_Post]
-    sourceComponent->repaintSourceNode();
+    sourceNode->repaint();
     //[/UserbuttonClicked_Post]
 }
 
@@ -310,6 +305,8 @@ void SourceMenuPanel::buttonClicked (Button* buttonThatWasClicked)
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 void SourceMenuPanel::timerCallback()
 {
+    PanelBase::timerCallback();
+
     positionLabel2->setText(String(params.roundNearest(params.sourceX.get()), 2) + " mtrs, "
         + String(params.roundNearest(params.sourceY.get()), 2) + " mtrs", dontSendNotification);
 
@@ -333,8 +330,8 @@ void SourceMenuPanel::timerCallback()
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="SourceMenuPanel" componentName=""
-                 parentClasses="public PanelBase" constructorParams="SynthParams &amp;p, SourceComponent *s"
-                 variableInitialisers="PanelBase(p), params(p), sourceComponent(s)"
+                 parentClasses="public PanelBase" constructorParams="SynthParams &amp;p, SourceNodeComponent *s"
+                 variableInitialisers="PanelBase(p), params(p), sourceNode(s)"
                  snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
                  fixedSize="0" initialWidth="300" initialHeight="400">
   <BACKGROUND backgroundColour="ffffffff"/>

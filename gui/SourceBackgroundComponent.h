@@ -19,11 +19,10 @@
 class SourceBackgroundComponent    : public Component
 {
 public:
-    SourceBackgroundComponent(Colour c)
+    SourceBackgroundComponent()
     {
         // pass all mouse click events to component behind this
         setInterceptsMouseClicks(false, false);
-        planeWaveColour = c;
 
         shadowImg = ImageCache::getFromMemory(BinaryData::source_shadow_png, BinaryData::source_shadow_pngSize);
     }
@@ -32,11 +31,13 @@ public:
     {
     }
 
-    void setBackgroundProperties(float sourceRadius)
+    void setBackgroundProperties(float sourceRadius, Colour c)
     {
         shadowRadius = sourceRadius * 1.05f;
         offset = sourceRadius * 0.08f;
         lineThickness = sourceRadius * 0.065f;
+
+        planeWaveColour = c;
     }
 
     //==============================================================================
@@ -82,16 +83,16 @@ public:
 
     //==============================================================================
 
-    void repaintPlaneWave(bool planeWaveVisible)
+    float getPlaneWaveAngle()
     {
-        drawPlaneWave = planeWaveVisible;
-        repaint();
+        return angle;
     }
 
-    void repaintPlaneWave(float newangle, bool planeWaveVisible)
+    void updatePlaneWave(float newangle, bool planeWaveVisible)
     {
         angle = newangle;
-        repaintPlaneWave(planeWaveVisible);
+        drawPlaneWave = planeWaveVisible;
+        repaint();
     }
 
     //==============================================================================

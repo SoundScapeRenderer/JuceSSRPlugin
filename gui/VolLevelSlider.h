@@ -25,11 +25,6 @@ public:
     VolLevelSlider(const juce::String &componentName)
         : Slider(componentName)
     {
-        // default settings
-        setSliderStyle(Slider::LinearBar);
-        setTextBoxStyle(Slider::NoTextBox, false, 80, 20);
-        setRange(-96, 12, 0);
-        setSkewFactor(3);
     }
 
     ~VolLevelSlider()

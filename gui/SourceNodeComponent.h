@@ -13,6 +13,8 @@
 
 #include "JuceHeader.h"
 #include "SynthParams.h"
+#include "SourceBackgroundComponent.h"
+#include "VolLevelSlider.h"
 
 //==============================================================================
 /*
@@ -20,10 +22,11 @@
 class SourceNodeComponent    : public Component
 {
 public:
-    SourceNodeComponent(SynthParams &p, DocumentWindow *m, Colour c)
+    SourceNodeComponent(SynthParams &p, VolLevelSlider *v, SourceBackgroundComponent *bg, DocumentWindow *m)
         : params(p)
+        , volSlider(v)
+        , sourceBackground(bg)
         , menu(m)
-        , nodeColour(c)
     {
         lockImg = ImageCache::getFromMemory(BinaryData::lock_icon_png, BinaryData::lock_icon_pngSize);
         muteImg = ImageCache::getFromMemory(BinaryData::mute_icon_png, BinaryData::mute_icon_pngSize);
@@ -37,6 +40,31 @@ public:
     {
         screenWidth = w;
         screenHeight = h;
+    }
+
+    void setNodeColour(Colour c)
+    {
+        nodeColour = c;
+    }
+
+    Colour getNodeColour()
+    {
+        return nodeColour;
+    }
+
+    VolLevelSlider* getVolSlider()
+    {
+        return volSlider;
+    }
+
+    float getVolLevel()
+    {
+        return params.sourceLevel.get();
+    }
+
+    DocumentWindow* getMenu()
+    {
+        return menu;
     }
 
     //==============================================================================
@@ -108,13 +136,28 @@ public:
 
     //==============================================================================
 
+    float getPlaneWaveAngle()
+    {
+        return sourceBackground->getPlaneWaveAngle();
+    }
+
+    void updatePlaneWave(float newangle, bool planeWaveVisible)
+    {
+        sourceBackground->updatePlaneWave(newangle, planeWaveVisible);
+    }
+
+    //==============================================================================
+
 private:
     SynthParams &params;
     ComponentDragger dragger;
     int screenWidth;
     int screenHeight;
-    DocumentWindow *menu;
     Image lockImg, muteImg;
+
+    DocumentWindow *menu;
+    VolLevelSlider *volSlider;
+    SourceBackgroundComponent *sourceBackground;
 
     Colour nodeColour;
     const float ringRatio1 = 0.925f, ringRatio2 = 0.875f;

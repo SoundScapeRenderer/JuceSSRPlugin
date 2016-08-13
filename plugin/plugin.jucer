@@ -262,10 +262,6 @@
       <FILE id="ZkIMfu" name="PlugUI.h" compile="0" resource="0" file="../gui/PlugUI.h"/>
       <FILE id="v0GrQd" name="SourceBackgroundComponent.h" compile="0" resource="0"
             file="../gui/SourceBackgroundComponent.h"/>
-      <FILE id="RVvg6N" name="SourceComponent.cpp" compile="1" resource="0"
-            file="../gui/SourceComponent.cpp"/>
-      <FILE id="APLL4y" name="SourceComponent.h" compile="0" resource="0"
-            file="../gui/SourceComponent.h"/>
       <FILE id="skmcVO" name="SourceNodeComponent.h" compile="0" resource="0"
             file="../gui/SourceNodeComponent.h"/>
       <FILE id="muMAJw" name="VolLevelSlider.h" compile="0" resource="0"

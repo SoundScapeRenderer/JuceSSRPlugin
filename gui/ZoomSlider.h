@@ -19,12 +19,9 @@
 class ZoomSlider    : public Slider
 {
 public:
-    ZoomSlider()
-        : Slider()
+    ZoomSlider(const juce::String &componentName)
+        : Slider(componentName)
     {
-        setRange(25, 200, 1);
-        setSliderStyle(Slider::LinearBarVertical);
-        setTextBoxStyle(Slider::TextBoxBelow, false, 80, 24);
     }
 
     ~ZoomSlider()

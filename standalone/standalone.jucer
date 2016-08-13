@@ -257,10 +257,6 @@
             file="../gui/SourceBackgroundComponent.h"/>
       <FILE id="CwrTa6" name="SourceNodeComponent.h" compile="0" resource="0"
             file="../gui/SourceNodeComponent.h"/>
-      <FILE id="WuyjUq" name="SourceComponent.cpp" compile="1" resource="0"
-            file="../gui/SourceComponent.cpp"/>
-      <FILE id="vIi6i0" name="SourceComponent.h" compile="0" resource="0"
-            file="../gui/SourceComponent.h"/>
       <FILE id="WynvZ2" name="VolLevelSlider.h" compile="0" resource="0"
             file="../gui/VolLevelSlider.h"/>
       <FILE id="woiDNT" name="ZoomSlider.h" compile="0" resource="0" file="../gui/ZoomSlider.h"/>

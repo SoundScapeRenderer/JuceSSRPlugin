@@ -26,7 +26,9 @@
 #include "panels/PanelBase.h"
 #include "CustomLookAndFeel.h"
 #include "ListenerComponent.h"
-#include "SourceComponent.h"
+#include "SourceNodeComponent.h"
+#include "SourceBackgroundComponent.h"
+#include "VolLevelSlider.h"
 #include "ZoomSlider.h"
 //[/Headers]
 
@@ -70,13 +72,15 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<Label> zoomLabel;
+    ScopedPointer<Label> debugText;
     ScopedPointer<Slider> levelMeterRight;
     ScopedPointer<Slider> levelMeterLeft;
-    ScopedPointer<Label> debugText;
-    ScopedPointer<SourceComponent> sourceComponent;
     ScopedPointer<ZoomSlider> zoomSlider;
     ScopedPointer<ListenerComponent> listener;
+    ScopedPointer<VolLevelSlider> sourceVolSlider;
+    ScopedPointer<SourceBackgroundComponent> sourceBackground;
+    ScopedPointer<DocumentWindow> sourceMenu;
+    ScopedPointer<SourceNodeComponent> sourceNode;
     ScopedPointer<Drawable> drawable1;
 
 

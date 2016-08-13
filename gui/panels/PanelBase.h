@@ -5,10 +5,9 @@
 #include <functional>
 
 #include "JuceHeader.h"
-
 #include "SynthParams.h"
 #include "ListenerComponent.h"
-#include "SourceComponent.h"
+#include "SourceNodeComponent.h"
 
 class PanelBase : public Component, protected Timer
 {
@@ -46,6 +45,7 @@ protected:
     {
         for (auto l2p : listenerReg)
         {
+            //position
             for (int i = 0; i < 2; ++i)
             {
                 if (l2p.second[i]->isUIDirty())
@@ -54,6 +54,7 @@ protected:
                 }
             }
 
+            // orientation
             if (l2p.second[2]->isUIDirty())
             {
                 l2p.first->repaint();
@@ -69,13 +70,15 @@ protected:
 
     //=======================================================================================================================================
 
-    void registerSource(SourceComponent *s, Param *posX, Param *posY, Param *volLevel, int screenWidth, int screenHeight, const tHookFn hook = tHookFn())
+    void registerSource(SourceNodeComponent *s, Param *posX, Param *posY, Param *vol, int screenWidth, int screenHeight, const tHookFn hook = tHookFn())
     {
         s->setAlwaysOnTop(true);
-        s->setInterceptsMouseClicks(false, true);
         s->setScreenSize(screenWidth, screenHeight);
+        s->setNodeColour(SynthParams::sourceColourBlue);
 
-        sourceReg[s] = { posX, posY, volLevel };
+        s->getVolSlider()->setValue(static_cast<double>(vol->get()), dontSendNotification);
+
+        sourceReg[s] = { posX, posY , vol };
         if (hook)
         {
             postUpdateHook[s] = hook;
@@ -87,20 +90,62 @@ protected:
     {
         for (auto s2p : sourceReg)
         {
+            // position
             for (int i = 0; i < 2; ++i)
             {
                 if (s2p.second[i]->isUIDirty())
                 {
-                    s2p.first->relocateSourceNode();
+                    s2p.first->relocate();
                 }
             }
 
+            // volume
             if (s2p.second[2]->isUIDirty())
             {
-                s2p.first->setVol(s2p.second[2]->getUI());
+                s2p.first->getVolSlider()->setValue(s2p.second[2]->getUI(), dontSendNotification);
             }
 
             auto itHook = postUpdateHook.find(s2p.first);
+            if (itHook != postUpdateHook.end())
+            {
+                itHook->second();
+            }
+        }
+    }
+
+    void updateSourceVolLevel()
+    {
+        for (auto s2p : sourceReg)
+        {
+            s2p.first->getVolSlider()->refreshVolLevel(s2p.first->getVolLevel());
+        }
+    }
+
+    //=======================================================================================================================================
+
+    void registerButton(Button *b, ParamStepped<eOnOffState> *state, const tHookFn hook = tHookFn())
+    {
+        b->setWantsKeyboardFocus(false);
+        b->setToggleState(state->getStep() == eOnOffState::eOn, dontSendNotification);
+
+        buttonReg[b] = { state };
+        if (hook)
+        {
+            postUpdateHook[b] = hook;
+            hook();
+        }
+    }
+
+    void updateDirtyButton()
+    {
+        for (auto b2p : buttonReg)
+        {
+            if (b2p.second->isUIDirty())
+            {
+                b2p.first->setToggleState(b2p.second->getStep() == eOnOffState::eOn, sendNotificationAsync);
+            }
+
+            auto itHook = postUpdateHook.find(b2p.first);
             if (itHook != postUpdateHook.end())
             {
                 itHook->second();
@@ -114,10 +159,14 @@ protected:
     {
         updateDirtyListener();
         updateDirtySource();
+        updateDirtyButton();
+
+        updateSourceVolLevel();
     }
 
     SynthParams &params;
     std::map<Component*, tHookFn> postUpdateHook;
     std::map<ListenerComponent*, std::array<Param*, 3>> listenerReg;
-    std::map<SourceComponent*, std::array<Param*, 3>> sourceReg;
+    std::map<SourceNodeComponent*, std::array<Param*, 3>> sourceReg;
+    std::map<Button*, ParamStepped<eOnOffState>*> buttonReg;
 };

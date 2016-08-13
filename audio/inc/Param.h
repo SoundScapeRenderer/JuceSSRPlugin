@@ -173,6 +173,11 @@ public:
         set(static_cast<float>(v));
     }
 
+    void setStepUI(_enum v) {
+        step_.store(v);
+        setUI(static_cast<float>(v));
+    }
+
     virtual void setUI(float f, bool notifyHost = true) override {
         set(f);
         int ival = static_cast<int>(std::trunc(f + .5f));
