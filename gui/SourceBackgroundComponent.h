@@ -31,19 +31,13 @@ public:
     {
     }
 
-    void setBackgroundProperties(float sourceRadius, Colour c)
-    {
-        shadowRadius = sourceRadius * 1.05f;
-        offset = sourceRadius * 0.08f;
-        lineThickness = sourceRadius * 0.065f;
-
-        planeWaveColour = c;
-    }
-
     //==============================================================================
 
     void paint (Graphics& g)
     {
+        float shadowRadius = jmin(getWidth(), getHeight()) * 0.25f * 1.05f;
+        float offset = jmin(getWidth(), getHeight()) * 0.25f * 0.08f;
+
         float wHalf = static_cast<float>(getWidth() * 0.5f);
         float hHalf = static_cast<float>(getHeight() * 0.5f);
         int paddingL = static_cast<int>(wHalf + offset - shadowRadius);
@@ -56,6 +50,9 @@ public:
         // draw plane wave
         if (drawPlaneWave)
         {
+            float lineThickness = jmin(getWidth(), getHeight()) * 0.25f * 0.065f;
+            float waveSize = static_cast<float>(jmin(getWidth(), getHeight()));
+
             Path plane, waveDirection, arc;
             plane.startNewSubPath(0.0f, 0.5f);
             plane.lineTo(0.2075f, 0.5f);
@@ -71,7 +68,8 @@ public:
             arc.addPieSegment(0.2f, 0.2f, 0.6f, 0.6f, float_Pi * 0.5f, float_Pi * 1.0f, 1.0f);
             arc.addPieSegment(0.2f, 0.2f, 0.6f, 0.6f, float_Pi * 1.06f, float_Pi * 1.5f, 1.0f);
 
-            AffineTransform trans(AffineTransform::scale(static_cast<float>(getWidth()), static_cast<float>(getHeight())));
+            AffineTransform trans(AffineTransform::scale(waveSize, waveSize));
+            trans = trans.translated(getWidth() * 0.5f - waveSize * 0.5f, getHeight() * 0.5f - waveSize * 0.5f);
             trans = trans.rotated(degreesToRadians(angle), wHalf, hHalf);
 
             g.setColour(planeWaveColour);
@@ -88,10 +86,11 @@ public:
         return angle;
     }
 
-    void updatePlaneWave(float newangle, bool planeWaveVisible)
+    void updatePlaneWave(float newangle, bool planeWaveVisible, Colour c)
     {
         angle = newangle;
         drawPlaneWave = planeWaveVisible;
+        planeWaveColour = c;
         repaint();
     }
 
@@ -99,11 +98,7 @@ public:
 
 private:
     Image shadowImg;
-
     Colour planeWaveColour;
-    float shadowRadius;
-    float offset;
-    float lineThickness;
 
     bool drawPlaneWave = false;
     float angle = 0.0f;

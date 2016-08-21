@@ -44,7 +44,8 @@
 //#include "apf/posix_thread_policy.h"
 
 #include "apf/pointer_policy.h"
-#include "apf/dummy_thread_policy.h"
+//#include "apf/dummy_thread_policy.h"
+#include "apf/default_thread_policy.h"
 
 #define SSR_QUERY_POLICY apf::enable_queries
 

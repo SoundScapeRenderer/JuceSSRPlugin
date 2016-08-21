@@ -16,6 +16,7 @@
             file="../assets/DejaVuSansMono.ttf"/>
       <FILE id="fLpRLc" name="lock icon.png" compile="0" resource="1" file="../assets/lock icon.png"/>
       <FILE id="EnsaoS" name="mute icon.png" compile="0" resource="1" file="../assets/mute icon.png"/>
+      <FILE id="tOO8Z8" name="plus icon.png" compile="0" resource="1" file="../assets/plus icon.png"/>
     </GROUP>
     <GROUP id="{2F948DE4-F9C4-14BA-D49A-B21CB547997D}" name="ssr data">
       <FILE id="mnRrKO" name="default_hrirs.wav" compile="0" resource="1"
@@ -253,6 +254,8 @@
       </GROUP>
       <FILE id="w1HIHk" name="CustomLookAndFeel.h" compile="0" resource="0"
             file="../gui/CustomLookAndFeel.h"/>
+      <FILE id="dqo9VI" name="ListenerBackgroundComponent.h" compile="0"
+            resource="0" file="../gui/ListenerBackgroundComponent.h"/>
       <FILE id="PmJPgR" name="ListenerComponent.h" compile="0" resource="0"
             file="../gui/ListenerComponent.h"/>
       <FILE id="GIgiQD" name="PluginEditor.cpp" compile="1" resource="0"

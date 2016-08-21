@@ -63,7 +63,10 @@ PlugUI::PlugUI (SynthParams &p)
     zoomSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 24);
     zoomSlider->addListener (this);
 
-    addAndMakeVisible (listener = new ListenerComponent (params));
+    addAndMakeVisible (listenerBackground = new ListenerBackgroundComponent());
+    listenerBackground->setName ("listener background");
+
+    addAndMakeVisible (listener = new ListenerComponent (params, listenerBackground));
     listener->setName ("listener");
 
     addAndMakeVisible (sourceVolSlider = new VolLevelSlider ("source vol slider"));
@@ -82,14 +85,23 @@ PlugUI::PlugUI (SynthParams &p)
     addAndMakeVisible (sourceNode = new SourceNodeComponent (params, sourceVolSlider, sourceBackground, sourceMenu));
     sourceNode->setName ("source node");
 
+    addAndMakeVisible (refPoint = new ImageComponent());
+    refPoint->setName ("reference point");
+
     drawable1 = Drawable::createFromImageData (BinaryData::ssr_logo_png, BinaryData::ssr_logo_pngSize);
 
     //[UserPreSize]
+    plusImg = ImageCache::getFromMemory(BinaryData::plus_icon_png, BinaryData::plus_icon_pngSize);
+    refPoint->setImage(plusImg);
+    refPoint->setInterceptsMouseClicks(false, false);
+
     sourceMenu->setTitleBarHeight(0);
     sourceMenu->setDraggable(false);
     sourceMenu->setVisible(false);
     sourceMenu->setContentOwned(new SourceMenuPanel(params, sourceNode), true);
 
+    params.sceneOffsetX.setUI(params.sceneOffsetX.getDefaultUI());
+    params.sceneOffsetY.setUI(params.sceneOffsetY.getDefaultUI());
     zoomSlider->setValue(100.0);
     zoomSlider->setTextValueSuffix(params.zoomFactor.getUnit());
 
@@ -117,18 +129,19 @@ PlugUI::~PlugUI()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
     lnf = nullptr;
-    sourceMenu = nullptr;
     //[/Destructor_pre]
 
     debugText = nullptr;
     levelMeterRight = nullptr;
     levelMeterLeft = nullptr;
     zoomSlider = nullptr;
+    listenerBackground = nullptr;
     listener = nullptr;
     sourceVolSlider = nullptr;
     sourceBackground = nullptr;
     sourceMenu = nullptr;
     sourceNode = nullptr;
+    refPoint = nullptr;
     drawable1 = nullptr;
 
 
@@ -151,16 +164,6 @@ void PlugUI::paint (Graphics& g)
                                RectanglePlacement::centred, 1.000f);
 
     //[UserPaint] Add your own custom painting code here..
-    float centerPointSize = 3.5f * params.zoomFactor.get() / 100.0f;
-
-    Path centerPoint;
-    centerPoint.startNewSubPath(getWidth() / 2.0f - centerPointSize, getHeight() / 2.0f);
-    centerPoint.lineTo(getWidth() / 2.0f + centerPointSize, getHeight() / 2.0f);
-    centerPoint.startNewSubPath(getWidth() / 2.0f, getHeight() / 2.0f - centerPointSize);
-    centerPoint.lineTo(getWidth() / 2.0f, getHeight() / 2.0f + centerPointSize);
-
-    g.setColour(Colours::grey);
-    g.strokePath(centerPoint, PathStrokeType(jmin(1.0f, 2.5f * params.zoomFactor.get() / 100.0f)));
     //[/UserPaint]
 }
 
@@ -173,11 +176,13 @@ void PlugUI::resized()
     levelMeterRight->setBounds (856, 150, 24, 300);
     levelMeterLeft->setBounds (824, 150, 24, 300);
     zoomSlider->setBounds (808, 568, 80, 24);
-    listener->setBounds (405, 255, 90, 90);
+    listenerBackground->setBounds (360, 210, 180, 180);
+    listener->setBounds (405, 250, 90, 90);
     sourceVolSlider->setBounds (418, 155, 64, 16);
-    sourceBackground->setBounds (360, 10, 180, 180);
+    sourceBackground->setBounds (360, 9, 180, 180);
     sourceMenu->setBounds (512, 100, 250, 225);
-    sourceNode->setBounds (405, 54, 90, 90);
+    sourceNode->setBounds (405, 50, 90, 90);
+    refPoint->setBounds (8, 8, 8, 8);
     //[UserResized] Add your own custom resize handling here..
     int listenerW = static_cast<int>(listener->getWidth() * params.zoomFactor.get() / 100.0f);
     int listenerH = static_cast<int>(listener->getHeight() * params.zoomFactor.get() / 100.0f);
@@ -187,6 +192,11 @@ void PlugUI::resized()
     int sourceNodeSize = static_cast<int>(sourceNode->getWidth() * params.zoomFactor.get() / 100.0f);
     juce::Point<int> pixPosSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
     sourceNode->setBounds(pixPosSource.x - sourceNodeSize / 2, pixPosSource.y - sourceNodeSize / 2, sourceNodeSize, sourceNodeSize);
+
+    int refPointSize = static_cast<int>(refPoint->getWidth() * jmax(63.0f, params.zoomFactor.get()) / 100.0f);
+    int paddingL = static_cast<int>(getWidth() / 2 - refPointSize / 2 + params.sceneOffsetX.get());
+    int paddingT = static_cast<int>(getHeight() / 2 - refPointSize / 2 + params.sceneOffsetY.get());
+    refPoint->setBounds(paddingL, paddingT, refPointSize, refPointSize);
     //[/UserResized]
 }
 
@@ -224,11 +234,33 @@ void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
     //[/UsersliderValueChanged_Post]
 }
 
+void PlugUI::mouseDown (const MouseEvent& e)
+{
+    //[UserCode_mouseDown] -- Add your code here...
+    ignoreUnused(e);
+    dragStartOffset = Point<float>(params.sceneOffsetX.get(), params.sceneOffsetY.get());
+    //[/UserCode_mouseDown]
+}
+
+void PlugUI::mouseDrag (const MouseEvent& e)
+{
+    //[UserCode_mouseDrag] -- Add your code here...
+    float deltaX = e.getDistanceFromDragStartX() / 1.0f;
+    float deltaY = e.getDistanceFromDragStartY() / 1.0f;
+    params.sceneOffsetX.setUI(dragStartOffset.x + deltaX);
+    params.sceneOffsetY.setUI(dragStartOffset.y + deltaY);
+    resized();
+    //[/UserCode_mouseDrag]
+}
+
 void PlugUI::mouseDoubleClick (const MouseEvent& e)
 {
     //[UserCode_mouseDoubleClick] -- Add your code here...
     ignoreUnused(e);
+    params.sceneOffsetX.setUI(0.0f);
+    params.sceneOffsetY.setUI(0.0f);
     zoomSlider->setValue(100.0);
+    resized();
     //[/UserCode_mouseDoubleClick]
 }
 
@@ -249,31 +281,37 @@ void PlugUI::childBoundsChanged(Component *child)
 {
     if (child == listener || child == sourceNode)
     {
+        int paddingL, paddingT;
         if (child == sourceNode)
         {
             int sourceNodeSize = static_cast<int>(sourceNode->getWidth());
 
             // sourceMenu, sourceVolSlider and sourceBackground should always follow sourceNode
-            int offsetX = sourceNode->getX() + sourceNodeSize + 25;
-            int offsetY = sourceNode->getY() + sourceNodeSize / 2;
-            sourceMenu->setBounds(offsetX, offsetY, sourceMenu->getWidth(), sourceMenu->getHeight());
+            paddingL = sourceNode->getX() + sourceNodeSize + 25;
+            paddingT = sourceNode->getY() + sourceNodeSize / 2;
+            sourceMenu->setBounds(paddingL, paddingT, sourceMenu->getWidth(), sourceMenu->getHeight());
 
             sourceVolSlider->setSize(sourceNodeSize * 3 / 4, sourceNodeSize / 3);
-            offsetX = sourceNode->getX() + (sourceNodeSize - sourceVolSlider->getWidth()) / 2;
-            offsetY = sourceNode->getY() + static_cast<int>(sourceNodeSize * 1.1625f);
-            sourceVolSlider->setBounds(offsetX, offsetY, sourceVolSlider->getWidth(), sourceVolSlider->getHeight());
+            paddingL = sourceNode->getX() + (sourceNodeSize - sourceVolSlider->getWidth()) / 2;
+            paddingT = sourceNode->getY() + static_cast<int>(sourceNodeSize * 1.1625f);
+            sourceVolSlider->setBounds(paddingL, paddingT, sourceVolSlider->getWidth(), sourceVolSlider->getHeight());
 
-            offsetX = sourceNode->getX() - sourceNodeSize / 2;
-            offsetY = sourceNode->getY() - sourceNodeSize / 2;
-            sourceBackground->setBounds(offsetX, offsetY, sourceNodeSize * 2, sourceNodeSize * 2);
-            sourceBackground->setBackgroundProperties(sourceNodeSize * 0.5f, sourceNode->getNodeColour());
+            paddingL = sourceNode->getX() - sourceNodeSize / 2;
+            paddingT = sourceNode->getY() - sourceNodeSize / 2;
+            sourceBackground->setBounds(paddingL, paddingT, sourceNodeSize * 2, sourceNodeSize * 2);
+        }
+        else if (child == listener)
+        {
+            paddingL = listener->getX() - listener->getWidth() / 2;
+            paddingT = listener->getY() - listener->getHeight() / 2;
+            listenerBackground->setBounds(paddingL, paddingT, listener->getWidth() * 2, listener->getHeight() * 2);
         }
 
         // refresh plane wave of source background
         juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), getWidth(), getHeight());
         juce::Point<int> pixPosSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
         float angle = pixPosRef.getAngleToPoint(pixPosSource);
-        sourceNode->updatePlaneWave(radiansToDegrees(angle), params.sourceType.getStep() == eSourceType::ePlane);
+        sourceNode->updatePlaneWave(radiansToDegrees(angle), params.sourceType.getStep() == eSourceType::ePlane, sourceNode->getNodeColour());
     }
 }
 
@@ -286,24 +324,27 @@ void PlugUI::timerCallback()
 
 #if 0
     debugText->setText(
-        "SourceX = " + String(params.sourceX.get()) +
-        "\nSourceY = " + String(params.sourceY.get()) +
-        "\nSourceOri = " + String(params.sourceOrientation.get()) +
-        "\nsourceVol = " + String(params.sourceVol.get()) +
-        "\nSourceLevel = " + String(params.sourceLevel.get()) +
-        "\nSourceMute = " + String(params.sourceMute.getUIString()) +
-        "\nSourceType = " + String(params.sourceType.getUIString()) +
+        "SourceX = " + String(params.sourceX.get())
+        + "\nSourceY = " + String(params.sourceY.get())
+        + "\nSourceOri = " + String(params.sourceOrientation.get())
+        + "\nsourceVol = " + String(params.sourceVol.get())
+        + "\nSourceLevel = " + String(params.sourceLevel.get())
+        + "\nSourceMute = " + String(params.sourceMute.getUIString())
+        + "\nSourceType = " + String(params.sourceType.getUIString())
+        + "\nPositionLock = " + String(params.sourcePositionLock.getUIString())
 
-        "\n\nRefX = " + String(params.referenceX.get()) +
-        "\nRefY = " + String(params.referenceY.get()) +
-        "\nRefOri = " + String(params.referenceOrientation.get()) +
-        "\nAmpliRefDist = " + String(params.amplitudeReferenceDistance.get()) +
+        + "\n\nRefX = " + String(params.referenceX.get())
+        + "\nRefY = " + String(params.referenceY.get())
+        + "\nRefOri = " + String(params.referenceOrientation.get())
+        + "\nAmpliRefDist = " + String(params.amplitudeReferenceDistance.get())
 
-        "\n\nInputChannel = " + String(params.inputChannel.getUIString()) +
-        "\nOutputLevelLeft = " + String(params.outputLevelLeft.get()) +
-        "\nOutputLevelRight = " + String(params.outputLevelRight.get()) +
+        + "\n\nInputChannel = " + String(params.inputChannel.getUIString())
+        + "\nOutputLevelLeft = " + String(params.outputLevelLeft.get())
+        + "\nOutputLevelRight = " + String(params.outputLevelRight.get())
 
-        "\n\nZoomfactor = " + String(params.zoomFactor.get())
+        + "\n\nZoomfactor = " + String(params.zoomFactor.get())
+        + "\nSceneOffsetX = " + String(params.sceneOffsetX.get())
+        + "\nSceneOffsetY = " + String(params.sceneOffsetY.get())
         , dontSendNotification);
 #endif
 }
@@ -327,6 +368,8 @@ BEGIN_JUCER_METADATA
   <METHODS>
     <METHOD name="mouseDoubleClick (const MouseEvent&amp; e)"/>
     <METHOD name="mouseWheelMove (const MouseEvent&amp; e, const MouseWheelDetails&amp; wheel)"/>
+    <METHOD name="mouseDown (const MouseEvent&amp; e)"/>
+    <METHOD name="mouseDrag (const MouseEvent&amp; e)"/>
   </METHODS>
   <BACKGROUND backgroundColour="ffedede6">
     <IMAGE pos="23 520 64 64" resource="BinaryData::ssr_logo_png" opacity="1"
@@ -349,22 +392,28 @@ BEGIN_JUCER_METADATA
           virtualName="ZoomSlider" explicitFocusOrder="0" pos="808 568 80 24"
           min="25" max="200" int="1" style="LinearBar" textBoxPos="TextBoxBelow"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="24" skewFactor="1"/>
+  <GENERICCOMPONENT name="listener background" id="e76731aed8ec2623" memberName="listenerBackground"
+                    virtualName="ListenerBackgroundComponent" explicitFocusOrder="0"
+                    pos="360 210 180 180" class="Component" params=""/>
   <GENERICCOMPONENT name="listener" id="a34b6db6e6ed2361" memberName="listener" virtualName="ListenerComponent"
-                    explicitFocusOrder="0" pos="405 255 90 90" class="Component"
-                    params="params"/>
+                    explicitFocusOrder="0" pos="405 250 90 90" class="Component"
+                    params="params, listenerBackground"/>
   <SLIDER name="source vol slider" id="9fdf624eba9dd99e" memberName="sourceVolSlider"
           virtualName="VolLevelSlider" explicitFocusOrder="0" pos="418 155 64 16"
           min="-96" max="12" int="0" style="LinearBar" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="3"/>
   <GENERICCOMPONENT name="source background" id="65be2d0e1ef0c83a" memberName="sourceBackground"
-                    virtualName="" explicitFocusOrder="0" pos="360 10 180 180" class="SourceBackgroundComponent"
+                    virtualName="" explicitFocusOrder="0" pos="360 9 180 180" class="SourceBackgroundComponent"
                     params=""/>
   <GENERICCOMPONENT name="source menu" id="36a5225af81e8044" memberName="sourceMenu"
                     virtualName="" explicitFocusOrder="0" pos="512 100 250 225" class="DocumentWindow"
                     params="&quot;source menu&quot;, Colours::white, DocumentWindow::closeButton"/>
   <GENERICCOMPONENT name="source node" id="6d034e540e6cd90" memberName="sourceNode"
-                    virtualName="" explicitFocusOrder="0" pos="405 54 90 90" class="SourceNodeComponent"
+                    virtualName="" explicitFocusOrder="0" pos="405 50 90 90" class="SourceNodeComponent"
                     params="params, sourceVolSlider, sourceBackground, sourceMenu"/>
+  <GENERICCOMPONENT name="reference point" id="e4d6be6fb98cf44e" memberName="refPoint"
+                    virtualName="" explicitFocusOrder="0" pos="8 8 8 8" class="ImageComponent"
+                    params=""/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

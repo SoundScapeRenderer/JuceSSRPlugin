@@ -237,21 +237,8 @@ inline void BinauralRenderer::load_reproduction_setup()
   }
   this->add(params);
 #else
-  Input::Params ip;
-  std::string in_port_prefix = this->params.get("in_port_prefix", "");
-  int in_ch = this->params.get<int>("in_channels");
-  for (int i = 1; i <= in_ch; ++i)
-  {
-      ip.set("id", i);
-      if (in_port_prefix != "")
-      {
-          ip.set("connect_to", in_port_prefix + apf::str::A2S(i));
-      }
-      this->add(ip);  // ignore return value
-  }
-
   Output::Params op;
-  std::string out_port_prefix = this->params.get("out_port_prefix", "");
+  std::string out_port_prefix = this->params.get("system_output_prefix", "");
   auto out_ch = this->params.get<int>("out_channels");
   for (int i = 1; i <= out_ch; ++i)
   {

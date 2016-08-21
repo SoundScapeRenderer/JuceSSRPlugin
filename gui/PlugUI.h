@@ -26,6 +26,7 @@
 #include "panels/PanelBase.h"
 #include "CustomLookAndFeel.h"
 #include "ListenerComponent.h"
+#include "ListenerBackgroundComponent.h"
 #include "SourceNodeComponent.h"
 #include "SourceBackgroundComponent.h"
 #include "VolLevelSlider.h"
@@ -58,6 +59,8 @@ public:
     void paint (Graphics& g);
     void resized();
     void sliderValueChanged (Slider* sliderThatWasMoved);
+    void mouseDown (const MouseEvent& e);
+    void mouseDrag (const MouseEvent& e);
     void mouseDoubleClick (const MouseEvent& e);
     void mouseWheelMove (const MouseEvent& e, const MouseWheelDetails& wheel);
 
@@ -67,6 +70,9 @@ private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     SynthParams &params;
     ScopedPointer<CustomLookAndFeel> lnf;
+    Image plusImg; //< http://iconmonstr.com/
+
+    Point<float> dragStartOffset = Point<float>(0.0f, 0.0f);
 
     void timerCallback() override;
     //[/UserVariables]
@@ -76,11 +82,13 @@ private:
     ScopedPointer<Slider> levelMeterRight;
     ScopedPointer<Slider> levelMeterLeft;
     ScopedPointer<ZoomSlider> zoomSlider;
+    ScopedPointer<ListenerBackgroundComponent> listenerBackground;
     ScopedPointer<ListenerComponent> listener;
     ScopedPointer<VolLevelSlider> sourceVolSlider;
     ScopedPointer<SourceBackgroundComponent> sourceBackground;
     ScopedPointer<DocumentWindow> sourceMenu;
     ScopedPointer<SourceNodeComponent> sourceNode;
+    ScopedPointer<ImageComponent> refPoint;
     ScopedPointer<Drawable> drawable1;
 
 

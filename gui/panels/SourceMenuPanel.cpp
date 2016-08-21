@@ -266,7 +266,7 @@ void SourceMenuPanel::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
         eSourceType type;
         selectedId == 0 ? type = eSourceType::ePoint : type = eSourceType::ePlane;
         params.sourceType.setStepUI(type);
-        sourceNode->updatePlaneWave(sourceNode->getPlaneWaveAngle(), type == eSourceType::ePlane);
+        sourceNode->updatePlaneWave(sourceNode->getPlaneWaveAngle(), type == eSourceType::ePlane, sourceNode->getNodeColour());
         //[/UserComboBoxCode_modelBox]
     }
 

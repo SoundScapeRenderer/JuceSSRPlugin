@@ -7,8 +7,9 @@
     <GROUP id="{74BBF3D3-63F7-C0D4-94BA-D30A101BB85C}" name="assets">
       <FILE id="ce1fuw" name="DejaVuSansMono.ttf" compile="0" resource="1"
             file="../assets/DejaVuSansMono.ttf"/>
-      <FILE id="BYw8E6" name="lock icon.png" compile="0" resource="1" file="../assets/lock icon.png"/>
-      <FILE id="Xy6bwW" name="mute icon.png" compile="0" resource="1" file="../assets/mute icon.png"/>
+      <FILE id="vljkJH" name="lock icon.png" compile="0" resource="1" file="../assets/lock icon.png"/>
+      <FILE id="AeJ81q" name="mute icon.png" compile="0" resource="1" file="../assets/mute icon.png"/>
+      <FILE id="jCX9mS" name="plus icon.png" compile="0" resource="1" file="../assets/plus icon.png"/>
     </GROUP>
     <GROUP id="{15FC078A-D7EC-ED70-E8F2-79886D332AC0}" name="ssr data">
       <FILE id="D3H0pE" name="default_hrirs.wav" compile="0" resource="1"
@@ -246,6 +247,8 @@
       </GROUP>
       <FILE id="Ld6QRe" name="CustomLookAndFeel.h" compile="0" resource="0"
             file="../gui/CustomLookAndFeel.h"/>
+      <FILE id="T3KFbG" name="ListenerBackgroundComponent.h" compile="0"
+            resource="0" file="../gui/ListenerBackgroundComponent.h"/>
       <FILE id="JKj2RB" name="ListenerComponent.h" compile="0" resource="0"
             file="../gui/ListenerComponent.h"/>
       <FILE id="eGCmM0" name="PluginEditor.cpp" compile="1" resource="0"

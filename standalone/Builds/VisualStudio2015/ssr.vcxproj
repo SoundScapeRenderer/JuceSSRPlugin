@@ -1401,6 +1401,7 @@
     <ClInclude Include="..\..\..\gui\panels\SourceMenuPanel.h"/>
     <ClInclude Include="..\..\..\gui\panels\PanelBase.h"/>
     <ClInclude Include="..\..\..\gui\CustomLookAndFeel.h"/>
+    <ClInclude Include="..\..\..\gui\ListenerBackgroundComponent.h"/>
     <ClInclude Include="..\..\..\gui\ListenerComponent.h"/>
     <ClInclude Include="..\..\..\gui\PluginEditor.h"/>
     <ClInclude Include="..\..\..\gui\PlugUI.h"/>
@@ -1872,6 +1873,7 @@
     <None Include="..\..\..\assets\DejaVuSansMono.ttf"/>
     <None Include="..\..\..\assets\lock icon.png"/>
     <None Include="..\..\..\assets\mute icon.png"/>
+    <None Include="..\..\..\assets\plus icon.png"/>
     <None Include="..\..\..\ssr data\default_hrirs.wav"/>
     <None Include="..\..\..\ssr data\asdf.xsd"/>
     <None Include="..\..\..\ssr data\images\listener.png"/>

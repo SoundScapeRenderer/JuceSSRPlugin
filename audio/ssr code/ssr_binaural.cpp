@@ -30,12 +30,12 @@
 #include "controller.h"
 #include "binauralrenderer.h"
 
-//int main(int argc, char* argv[])
-//{
-//  ssr::Controller<ssr::BinauralRenderer> controller(argc, argv);
-//
-//  controller.run();
-//}
+int main(int argc, char* argv[])
+{
+  ssr::Controller<ssr::BinauralRenderer> controller(argc, argv);
+
+  controller.run();
+}
 
 // Settings for Vim (http://www.vim.org/), please do not remove:
 // vim:softtabstop=2:shiftwidth=2:expandtab:textwidth=80:cindent

@@ -30,10 +30,13 @@ public:
     {
         lockImg = ImageCache::getFromMemory(BinaryData::lock_icon_png, BinaryData::lock_icon_pngSize);
         muteImg = ImageCache::getFromMemory(BinaryData::mute_icon_png, BinaryData::mute_icon_pngSize);
+
+        bounds = new ComponentBoundsConstrainer();;
     }
 
     ~SourceNodeComponent()
     {
+        bounds = nullptr;
     }
 
     void setScreenSize(int w, int h)
@@ -73,8 +76,8 @@ public:
     {
         drawSourceNode(g);
 
-        int nodeSize = getWidth();
-        int imageSize = jmin(24, nodeSize / 3);
+        int nodeSize = jmin(getWidth(), getHeight());
+        int imageSize = jmax(10 , jmin(56, nodeSize / 3));
         int padding1 = nodeSize / 20;
         int padding2 = nodeSize - imageSize - padding1;
 
@@ -89,6 +92,11 @@ public:
         {
             g.drawImageWithin(muteImg, padding2, padding2, imageSize, imageSize, RectanglePlacement::centred);
         }
+    }
+
+    void resized()
+    {
+        bounds->setMinimumOnscreenAmounts(getHeight() / 2, getWidth() / 2, getHeight() / 2, getWidth() / 2);
     }
 
     //==============================================================================
@@ -115,7 +123,7 @@ public:
         // drag on left-click if position is not locked
         if (e.mods == ModifierKeys::leftButtonModifier && params.sourcePositionLock.getStep() == eOnOffState::eOff)
         {
-            dragger.dragComponent(this, e, nullptr);
+            dragger.dragComponent(this, e, bounds);
 
             // parent must be scene UI or of same size as scene UI
             int middleX = getX() + getWidth() / 2;
@@ -141,9 +149,9 @@ public:
         return sourceBackground->getPlaneWaveAngle();
     }
 
-    void updatePlaneWave(float newangle, bool planeWaveVisible)
+    void updatePlaneWave(float newangle, bool planeWaveVisible, Colour c)
     {
-        sourceBackground->updatePlaneWave(newangle, planeWaveVisible);
+        sourceBackground->updatePlaneWave(newangle, planeWaveVisible, c);
     }
 
     //==============================================================================
@@ -151,10 +159,11 @@ public:
 private:
     SynthParams &params;
     ComponentDragger dragger;
+    ScopedPointer<ComponentBoundsConstrainer> bounds;
     int screenWidth;
     int screenHeight;
-    Image lockImg, muteImg;
 
+    Image lockImg, muteImg; //< http://iconmonstr.com/
     DocumentWindow *menu;
     VolLevelSlider *volSlider;
     SourceBackgroundComponent *sourceBackground;

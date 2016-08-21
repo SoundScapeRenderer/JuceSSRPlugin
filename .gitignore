@@ -215,3 +215,4 @@ ModelManifest.xml
 *.VC.opendb
 *.VC.db
 /ssr data/images/Thumbs.db
+*.db

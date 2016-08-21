@@ -53,19 +53,19 @@ public:
     void mouseDown(const MouseEvent& e)
     {
         ignoreUnused(e);
-        valOnStartDrag = getValue();
+        dragStartValue = getValue();
     }
 
     void mouseDrag(const MouseEvent& e)
     {
         double delta = e.getDistanceFromDragStartY() / 2.0;
-        setValue(valOnStartDrag - delta);
+        setValue(dragStartValue - delta);
     }
 
     //==============================================================================
 
 private:
-    double valOnStartDrag = 0.0;
+    double dragStartValue = 0.0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ZoomSlider)
 };

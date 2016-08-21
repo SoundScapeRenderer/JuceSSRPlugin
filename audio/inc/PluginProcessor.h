@@ -11,11 +11,8 @@
 #ifndef PLUGINPROCESSOR_H_INCLUDED
 #define PLUGINPROCESSOR_H_INCLUDED
 
-#include "../JuceLibraryCode/JuceHeader.h"
-
+#include "JuceHeader.h"
 #include "SynthParams.h"
-#include <math.h>
-
 
 #include "ssr code/controller.h"
 #include "ssr code/binauralrenderer.h"
@@ -69,6 +66,7 @@ public:
 private:
     //==============================================================================
     std::unique_ptr<ssr::BinauralRenderer> renderer;
+    int sourceID = 0;
 
     String hrirFilePath;
     ScopedPointer<TemporaryFile> tempFile;

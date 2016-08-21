@@ -47,9 +47,11 @@ public:
     Param outputLevelLeft;
     Param outputLevelRight;
 
-    // GUI scaling parameter
+    // GUI scaling and dragging parameter
     Param zoomFactor;
     const int pixelPerMeter;
+    Param sceneOffsetX;
+    Param sceneOffsetY;
 
     //==============================================================================
 

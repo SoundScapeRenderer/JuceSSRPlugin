@@ -32,6 +32,7 @@ protected:
     void registerListener(ListenerComponent *l, Param *posX, Param *posY, Param *ori, int screenWidth, int screenHeight, const tHookFn hook = tHookFn())
     {
         l->setScreenSize(screenWidth, screenHeight);
+        l->updateBackgroundAngle(ori->getUI());
 
         listenerReg[l] = { posX, posY, ori };
         if (hook) 
@@ -58,6 +59,7 @@ protected:
             if (l2p.second[2]->isUIDirty())
             {
                 l2p.first->repaint();
+                l2p.first->updateBackgroundAngle(l2p.second[2]->getUI());
             }
 
             auto itHook = postUpdateHook.find(l2p.first);
@@ -72,7 +74,6 @@ protected:
 
     void registerSource(SourceNodeComponent *s, Param *posX, Param *posY, Param *vol, int screenWidth, int screenHeight, const tHookFn hook = tHookFn())
     {
-        s->setAlwaysOnTop(true);
         s->setScreenSize(screenWidth, screenHeight);
         s->setNodeColour(SynthParams::sourceColourBlue);
 

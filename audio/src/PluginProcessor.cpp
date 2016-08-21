@@ -14,8 +14,6 @@
 // UI header, should be hidden behind a factory
 #include <PluginEditor.h>
 
-#include "ssr code/configuration.h"
-
 //==============================================================================
 PluginAudioProcessor::PluginAudioProcessor()
 {
@@ -153,10 +151,9 @@ void PluginAudioProcessor::prepareToPlay (double sRate, int samplesPerBlock)
     renderer.reset(new ssr::BinauralRenderer(conf.renderer_params));
     renderer->load_reproduction_setup();
 
-    /// \todo add source for each input channel?
     // add input source
     apf::parameter_map sourceParam;
-    renderer->add_source(sourceParam);
+    sourceID = renderer->add_source(sourceParam);
 }
 
 void PluginAudioProcessor::releaseResources()
@@ -185,7 +182,7 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     renderer->state.amplitude_reference_distance.setRT(amplitudeReferenceDistance.get());
 
     // set source parameter
-    ssr::RendererBase<ssr::BinauralRenderer>::Source *source = renderer->get_source(1);
+    ssr::RendererBase<ssr::BinauralRenderer>::Source *source = renderer->get_source(sourceID);
     Position sourcePos = Position(sourceX.get(), sourceY.get());
     source->position.setRT(sourcePos);
     source->orientation.setRT((listenerPos - sourcePos).orientation()); // quserinterface.cpp
@@ -208,6 +205,7 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     // choose between left or right channel for stereo input
     int channelIndex = static_cast<int>(inputChannel.getStep());
 
+    /// \todo correct level
     // get source input level
     float inputLevel;
     source->mute ? inputLevel = 0.0f : inputLevel = buffer.getRMSLevel(channelIndex, 0, buffer.getNumSamples());

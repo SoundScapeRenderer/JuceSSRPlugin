@@ -13,6 +13,7 @@
 
 #include "JuceHeader.h"
 #include "SynthParams.h"
+#include "ListenerBackgroundComponent.h"
 
 //==============================================================================
 /*
@@ -20,16 +21,20 @@
 class ListenerComponent    : public ImageComponent
 {
 public:
-    ListenerComponent(SynthParams &p)
+    ListenerComponent(SynthParams &p, ListenerBackgroundComponent *bg)
         : params(p)
+        , listenerBackground(bg)
     {
         listenerImg = ImageCache::getFromMemory(BinaryData::listener_png, BinaryData::listener_pngSize);
         listenerBackgroundImg = ImageCache::getFromMemory(BinaryData::listener_background_png, BinaryData::listener_background_pngSize);
         listenerShadowImg = ImageCache::getFromMemory(BinaryData::listener_shadow_png, BinaryData::listener_shadow_pngSize);
+
+        bounds = new ComponentBoundsConstrainer();
     }
 
     ~ListenerComponent()
     {
+        bounds = nullptr;
     }
 
     void setScreenSize(int w, int h)
@@ -53,8 +58,7 @@ public:
 
     void resized()
     {
-        // This method is where you should set the bounds of any child
-        // components that your component contains..
+        bounds->setMinimumOnscreenAmounts(getHeight() / 2, getWidth() / 2, getHeight() / 2, getWidth() / 2);
     }
     
     //==============================================================================
@@ -78,7 +82,7 @@ public:
     {
         if (e.mods == ModifierKeys::rightButtonModifier)
         {
-            dragger.dragComponent(this, e, nullptr);
+            dragger.dragComponent(this, e, bounds);
 
             // parent must be scene UI
             int middleX = getX() + getWidth() / 2;
@@ -98,6 +102,7 @@ public:
                     newAngle = 360.0f + newAngle;
                 }
                 params.referenceOrientation.setUI(newAngle);
+                updateBackgroundAngle(newAngle);
                 repaint();
             }
         }
@@ -111,14 +116,22 @@ public:
         setBounds(pixPosRef.x - getWidth() / 2, pixPosRef.y - getHeight() / 2, getWidth(), getHeight());
     }
 
+    void updateBackgroundAngle(float angle)
+    {
+        listenerBackground->updateShadowAngle(angle);
+    }
+
     //==============================================================================
 
 private:
     SynthParams &params;
     ComponentDragger dragger;
+    ScopedPointer<ComponentBoundsConstrainer> bounds;
     int screenWidth;
     int screenHeight;
+
     Image listenerImg, listenerBackgroundImg, listenerShadowImg;
+    ListenerBackgroundComponent *listenerBackground;
 
     float mouseStartY = 0.0f;
     float angleOnStartDrag = 0.0f;
