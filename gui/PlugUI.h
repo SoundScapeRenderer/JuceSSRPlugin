@@ -44,7 +44,8 @@
                                                                     //[/Comments]
 */
 class PlugUI  : public PanelBase,
-                public SliderListener
+                public SliderListener,
+                public ButtonListener
 {
 public:
     //==============================================================================
@@ -59,6 +60,7 @@ public:
     void paint (Graphics& g);
     void resized();
     void sliderValueChanged (Slider* sliderThatWasMoved);
+    void buttonClicked (Button* buttonThatWasClicked);
     void mouseDown (const MouseEvent& e);
     void mouseDrag (const MouseEvent& e);
     void mouseDoubleClick (const MouseEvent& e);
@@ -81,7 +83,6 @@ private:
     ScopedPointer<Label> debugText;
     ScopedPointer<Slider> levelMeterRight;
     ScopedPointer<Slider> levelMeterLeft;
-    ScopedPointer<ZoomSlider> zoomSlider;
     ScopedPointer<ListenerBackgroundComponent> listenerBackground;
     ScopedPointer<ListenerComponent> listener;
     ScopedPointer<VolLevelSlider> sourceVolSlider;
@@ -89,6 +90,9 @@ private:
     ScopedPointer<DocumentWindow> sourceMenu;
     ScopedPointer<SourceNodeComponent> sourceNode;
     ScopedPointer<ImageComponent> refPoint;
+    ScopedPointer<ZoomSlider> zoomSlider;
+    ScopedPointer<TextButton> saveButton;
+    ScopedPointer<TextButton> loadButton;
     ScopedPointer<Drawable> drawable1;
 
 

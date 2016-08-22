@@ -57,12 +57,6 @@ PlugUI::PlugUI (SynthParams &p)
     levelMeterLeft->setColour (Slider::thumbColourId, Colour (0xff60ff60));
     levelMeterLeft->addListener (this);
 
-    addAndMakeVisible (zoomSlider = new ZoomSlider ("zoom slider"));
-    zoomSlider->setRange (25, 200, 1);
-    zoomSlider->setSliderStyle (Slider::LinearBar);
-    zoomSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 24);
-    zoomSlider->addListener (this);
-
     addAndMakeVisible (listenerBackground = new ListenerBackgroundComponent());
     listenerBackground->setName ("listener background");
 
@@ -88,6 +82,20 @@ PlugUI::PlugUI (SynthParams &p)
     addAndMakeVisible (refPoint = new ImageComponent());
     refPoint->setName ("reference point");
 
+    addAndMakeVisible (zoomSlider = new ZoomSlider ("zoom slider"));
+    zoomSlider->setRange (25, 200, 1);
+    zoomSlider->setSliderStyle (Slider::LinearBar);
+    zoomSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 24);
+    zoomSlider->addListener (this);
+
+    addAndMakeVisible (saveButton = new TextButton ("save button"));
+    saveButton->setButtonText (TRANS("save"));
+    saveButton->addListener (this);
+
+    addAndMakeVisible (loadButton = new TextButton ("load button"));
+    loadButton->setButtonText (TRANS("load"));
+    loadButton->addListener (this);
+
     drawable1 = Drawable::createFromImageData (BinaryData::ssr_logo_png, BinaryData::ssr_logo_pngSize);
 
     //[UserPreSize]
@@ -102,7 +110,7 @@ PlugUI::PlugUI (SynthParams &p)
 
     params.sceneOffsetX.setUI(params.sceneOffsetX.getDefaultUI());
     params.sceneOffsetY.setUI(params.sceneOffsetY.getDefaultUI());
-    zoomSlider->setValue(100.0);
+    //zoomSlider->setValue(params.zoomFactor.getDefaultUI());
     zoomSlider->setTextValueSuffix(params.zoomFactor.getUnit());
 
     /// \todo create actual output vol level component
@@ -134,7 +142,6 @@ PlugUI::~PlugUI()
     debugText = nullptr;
     levelMeterRight = nullptr;
     levelMeterLeft = nullptr;
-    zoomSlider = nullptr;
     listenerBackground = nullptr;
     listener = nullptr;
     sourceVolSlider = nullptr;
@@ -142,6 +149,9 @@ PlugUI::~PlugUI()
     sourceMenu = nullptr;
     sourceNode = nullptr;
     refPoint = nullptr;
+    zoomSlider = nullptr;
+    saveButton = nullptr;
+    loadButton = nullptr;
     drawable1 = nullptr;
 
 
@@ -170,12 +180,13 @@ void PlugUI::paint (Graphics& g)
 void PlugUI::resized()
 {
     //[UserPreResize] Add your own custom resize code here..
+    /// \todo register zoomslider instead
+    zoomSlider->setValue(params.zoomFactor.getUI(), dontSendNotification);
     //[/UserPreResize]
 
     debugText->setBounds (648, 8, 250, 584);
     levelMeterRight->setBounds (856, 150, 24, 300);
     levelMeterLeft->setBounds (824, 150, 24, 300);
-    zoomSlider->setBounds (808, 568, 80, 24);
     listenerBackground->setBounds (360, 210, 180, 180);
     listener->setBounds (405, 250, 90, 90);
     sourceVolSlider->setBounds (418, 155, 64, 16);
@@ -183,6 +194,9 @@ void PlugUI::resized()
     sourceMenu->setBounds (512, 100, 250, 225);
     sourceNode->setBounds (405, 50, 90, 90);
     refPoint->setBounds (8, 8, 8, 8);
+    zoomSlider->setBounds (808, 568, 80, 24);
+    saveButton->setBounds (105, 565, 80, 24);
+    loadButton->setBounds (200, 565, 80, 24);
     //[UserResized] Add your own custom resize handling here..
     int listenerW = static_cast<int>(listener->getWidth() * params.zoomFactor.get() / 100.0f);
     int listenerH = static_cast<int>(listener->getHeight() * params.zoomFactor.get() / 100.0f);
@@ -216,6 +230,12 @@ void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
         //[UserSliderCode_levelMeterLeft] -- add your slider handling code here..
         //[/UserSliderCode_levelMeterLeft]
     }
+    else if (sliderThatWasMoved == sourceVolSlider)
+    {
+        //[UserSliderCode_sourceVolSlider] -- add your slider handling code here..
+        params.sourceVol.setUI(val);
+        //[/UserSliderCode_sourceVolSlider]
+    }
     else if (sliderThatWasMoved == zoomSlider)
     {
         //[UserSliderCode_zoomSlider] -- add your slider handling code here..
@@ -223,15 +243,35 @@ void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
         resized();
         //[/UserSliderCode_zoomSlider]
     }
-    else if (sliderThatWasMoved == sourceVolSlider)
-    {
-        //[UserSliderCode_sourceVolSlider] -- add your slider handling code here..
-        params.sourceVol.setUI(val);
-        //[/UserSliderCode_sourceVolSlider]
-    }
 
     //[UsersliderValueChanged_Post]
     //[/UsersliderValueChanged_Post]
+}
+
+void PlugUI::buttonClicked (Button* buttonThatWasClicked)
+{
+    //[UserbuttonClicked_Pre]
+    //[/UserbuttonClicked_Pre]
+
+    if (buttonThatWasClicked == saveButton)
+    {
+        //[UserButtonCode_saveButton] -- add your button handler code here..
+        params.writeXMLPatchStandalone();
+        //[/UserButtonCode_saveButton]
+    }
+    else if (buttonThatWasClicked == loadButton)
+    {
+        //[UserButtonCode_loadButton] -- add your button handler code here..
+        params.readXMLPatchStandalone();
+
+        /// \todo register zoomslider instead
+        sourceMenu->setVisible(false);
+        resized();
+        //[/UserButtonCode_loadButton]
+    }
+
+    //[UserbuttonClicked_Post]
+    //[/UserbuttonClicked_Post]
 }
 
 void PlugUI::mouseDown (const MouseEvent& e)
@@ -257,9 +297,9 @@ void PlugUI::mouseDoubleClick (const MouseEvent& e)
 {
     //[UserCode_mouseDoubleClick] -- Add your code here...
     ignoreUnused(e);
-    params.sceneOffsetX.setUI(0.0f);
-    params.sceneOffsetY.setUI(0.0f);
-    zoomSlider->setValue(100.0);
+    params.sceneOffsetX.setUI(params.sceneOffsetX.getDefaultUI());
+    params.sceneOffsetY.setUI(params.sceneOffsetY.getDefaultUI());
+    zoomSlider->setValue(params.zoomFactor.getDefaultUI());
     resized();
     //[/UserCode_mouseDoubleClick]
 }
@@ -388,10 +428,6 @@ BEGIN_JUCER_METADATA
           virtualName="" explicitFocusOrder="0" pos="824 150 24 300" thumbcol="ff60ff60"
           min="0" max="1" int="0" style="LinearVertical" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <SLIDER name="zoom slider" id="c8e0b018d0c69bbf" memberName="zoomSlider"
-          virtualName="ZoomSlider" explicitFocusOrder="0" pos="808 568 80 24"
-          min="25" max="200" int="1" style="LinearBar" textBoxPos="TextBoxBelow"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="24" skewFactor="1"/>
   <GENERICCOMPONENT name="listener background" id="e76731aed8ec2623" memberName="listenerBackground"
                     virtualName="ListenerBackgroundComponent" explicitFocusOrder="0"
                     pos="360 210 180 180" class="Component" params=""/>
@@ -414,6 +450,16 @@ BEGIN_JUCER_METADATA
   <GENERICCOMPONENT name="reference point" id="e4d6be6fb98cf44e" memberName="refPoint"
                     virtualName="" explicitFocusOrder="0" pos="8 8 8 8" class="ImageComponent"
                     params=""/>
+  <SLIDER name="zoom slider" id="c8e0b018d0c69bbf" memberName="zoomSlider"
+          virtualName="ZoomSlider" explicitFocusOrder="0" pos="808 568 80 24"
+          min="25" max="200" int="1" style="LinearBar" textBoxPos="TextBoxBelow"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="24" skewFactor="1"/>
+  <TEXTBUTTON name="save button" id="b25b544b7310227e" memberName="saveButton"
+              virtualName="" explicitFocusOrder="0" pos="105 565 80 24" buttonText="save"
+              connectedEdges="0" needsCallback="1" radioGroupId="0"/>
+  <TEXTBUTTON name="load button" id="7a6f9aa471624d92" memberName="loadButton"
+              virtualName="" explicitFocusOrder="0" pos="200 565 80 24" buttonText="load"
+              connectedEdges="0" needsCallback="1" radioGroupId="0"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

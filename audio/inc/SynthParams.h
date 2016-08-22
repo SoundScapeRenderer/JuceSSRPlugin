@@ -26,6 +26,8 @@ public:
     SynthParams();
     ~SynthParams();
 
+    //==============================================================================
+
     // source parameter
     Param sourceX;
     Param sourceY;
@@ -99,5 +101,64 @@ public:
 
     //==============================================================================
 
+    std::vector<Param*> serializeParams; //!< vector of params to be serialized
+    String patchName = "";
+    bool patchNameDirty = false;
+    const String appName = ProjectInfo::projectName;
+    const String appVersion = ProjectInfo::versionString; //!< application version of the patch, to be written into the xml
+
+    /**
+    * Store host state by creating XML file to serialize parameters by using writeXMLPatchTree().
+    @param destData host data
+    */
+    void writeXMLPatchHost(MemoryBlock& destData);
+
+    /**
+    * Create XML file to serialize parameters by using writeXMLPatchTree().
+    */
+    void writeXMLPatchStandalone();
+
+    /**
+    * Restore host state by converting binary data into a XML file and set serialized parameters by using fillValues().
+    @param data binary data to return to XML
+    @param sizeInBytes data size
+    */
+    void readXMLPatchHost(const void * data, int sizeInBytes);
+
+    /**
+    * Read XML file to set serialized parameters by using fillValues().
+    */
+    void readXMLPatchStandalone();
+
+    //==============================================================================
+
 private:
+
+    /**
+    * Adds an element to the XML tree.
+    @param patch XML pstch to work on
+    @param name parameter name
+    @param value  value of parameter to be added
+    */
+    void addElement(XmlElement* patch, String name, float value);
+
+    /**
+    * Write the XML patch tree for parameters to be serialized.
+    @param patch XML patch to work on
+    */
+    void writeXMLPatchTree(XmlElement * patch);
+
+    /**
+    * Set the parameters if they exist in the XML patch.
+    @param patch XML patch to work on
+    @param paramName name to check whether parameter exist in XML patch
+    @param param parameter to set
+    */
+    void fillValueIfExists(XmlElement * patch, String paramName, Param& param);
+
+    /**
+    * Iterate over parameters and set the values in the xml by using fillValueIfExists().
+    @param patch XML patch to work on
+    */
+    void fillValues(XmlElement * patch);
 };
