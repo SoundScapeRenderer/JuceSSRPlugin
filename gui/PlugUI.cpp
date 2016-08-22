@@ -110,7 +110,7 @@ PlugUI::PlugUI (SynthParams &p)
 
     params.sceneOffsetX.setUI(params.sceneOffsetX.getDefaultUI());
     params.sceneOffsetY.setUI(params.sceneOffsetY.getDefaultUI());
-    //zoomSlider->setValue(params.zoomFactor.getDefaultUI());
+    zoomSlider->setValue(params.zoomFactor.getDefaultUI());
     zoomSlider->setTextValueSuffix(params.zoomFactor.getUnit());
 
     /// \todo create actual output vol level component
@@ -180,8 +180,6 @@ void PlugUI::paint (Graphics& g)
 void PlugUI::resized()
 {
     //[UserPreResize] Add your own custom resize code here..
-    /// \todo register zoomslider instead
-    zoomSlider->setValue(params.zoomFactor.getUI(), dontSendNotification);
     //[/UserPreResize]
 
     debugText->setBounds (648, 8, 250, 584);
@@ -265,8 +263,7 @@ void PlugUI::buttonClicked (Button* buttonThatWasClicked)
         params.readXMLPatchStandalone();
 
         /// \todo register zoomslider instead
-        sourceMenu->setVisible(false);
-        resized();
+        zoomSlider->setValue(params.zoomFactor.get());
         //[/UserButtonCode_loadButton]
     }
 
