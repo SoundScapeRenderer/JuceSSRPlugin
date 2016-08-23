@@ -445,6 +445,9 @@
     <ClCompile Include="..\..\..\audio\src\SynthParams.cpp">
       <Filter>ssr\audio\src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\gui\panels\InfoPanel.cpp">
+      <Filter>ssr\gui\panels</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\gui\panels\SourceMenuPanel.cpp">
       <Filter>ssr\gui\panels</Filter>
     </ClCompile>
@@ -1916,6 +1919,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\audio\inc\SynthParams.h">
       <Filter>ssr\audio\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gui\panels\InfoPanel.h">
+      <Filter>ssr\gui\panels</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\gui\panels\SourceMenuPanel.h">
       <Filter>ssr\gui\panels</Filter>

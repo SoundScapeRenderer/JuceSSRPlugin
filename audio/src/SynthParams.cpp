@@ -60,18 +60,18 @@ SynthParams::~SynthParams()
 
 //==============================================================================
 
-juce::Point<int> SynthParams::pos2pix(float meterCenterX, float meterCenterY, int screenWidth, int screenHeight)
+juce::Point<int> SynthParams::pos2pix(float meterCenterX, float meterCenterY, int sceneWidth, int sceneHeight)
 {
-    int x = static_cast<int>(meterCenterX * pixelPerMeter * zoomFactor.get() / 100.0f + (screenWidth / 2 + sceneOffsetX.get()));
-    int y = static_cast<int>(-meterCenterY * pixelPerMeter * zoomFactor.get() / 100.0f + (screenHeight / 2 + sceneOffsetY.get()));
+    int x = static_cast<int>(meterCenterX * pixelPerMeter * zoomFactor.get() / 100.0f + (sceneWidth / 2 + sceneOffsetX.get()));
+    int y = static_cast<int>(-meterCenterY * pixelPerMeter * zoomFactor.get() / 100.0f + (sceneHeight / 2 + sceneOffsetY.get()));
 
     return juce::Point<int>(x, y);
 }
 
-juce::Point<float> SynthParams::pix2pos(int pixCenterX, int pixCenterY, int screenWidth, int screenHeight)
+juce::Point<float> SynthParams::pix2pos(int pixCenterX, int pixCenterY, int sceneWidth, int sceneHeight)
 {
-    float x = (pixCenterX - (screenWidth / 2 + sceneOffsetX.get())) / (pixelPerMeter * zoomFactor.get() / 100.0f);
-    float y = (pixCenterY - (screenHeight / 2 + sceneOffsetY.get())) / (pixelPerMeter * zoomFactor.get() / 100.0f);
+    float x = (pixCenterX - (sceneWidth / 2 + sceneOffsetX.get())) / (pixelPerMeter * zoomFactor.get() / 100.0f);
+    float y = (pixCenterY - (sceneHeight / 2 + sceneOffsetY.get())) / (pixelPerMeter * zoomFactor.get() / 100.0f);
 
     return juce::Point<float>(x, -y);
 }

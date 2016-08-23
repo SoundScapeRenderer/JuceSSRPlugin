@@ -17,6 +17,7 @@ class CustomLookAndFeel : public LookAndFeel_V2
 {
 public:
     //==============================================================================
+
     CustomLookAndFeel() : LookAndFeel_V2()
     {
         customFont = Typeface::createSystemTypefaceFor(BinaryData::DejaVuSansMono_ttf, BinaryData::DejaVuSansMono_ttfSize);
@@ -24,12 +25,34 @@ public:
     virtual ~CustomLookAndFeel()
     {
     }
+    
     //==============================================================================
 
     Typeface::Ptr getTypefaceForFont(const Font & font)
     {
         ignoreUnused(font);
         return customFont;
+    }
+
+    //==============================================================================
+
+    void drawButtonBackground(Graphics& g, Button& button, const Colour& backgroundColour,
+                              bool isMouseOverButton, bool isButtonDown)
+    {
+        ignoreUnused(backgroundColour);
+
+        float width = static_cast<float>(button.getWidth());
+        float height = static_cast<float>(button.getHeight());
+
+        g.fillAll(isButtonDown? Colours::white.darker(0.1f) :
+            isMouseOverButton? Colours::white.darker(0.025f) : Colours::white);
+        g.setColour(Colours::grey.brighter());
+        g.drawRect(0.0f, 0.0f, width, height, 0.5f);
+    }
+
+    Font getTextButtonFont(TextButton&, int buttonHeight)
+    {
+        return Font(buttonHeight * 0.75f);
     }
 
     //==============================================================================

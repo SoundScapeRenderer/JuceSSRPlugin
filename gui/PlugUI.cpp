@@ -19,6 +19,7 @@
 
 //[Headers] You can add your own extra header files here...
 #include "panels/SourceMenuPanel.h"
+#include "panels/InfoPanel.h"
 //[/Headers]
 
 #include "PlugUI.h"
@@ -86,6 +87,7 @@ PlugUI::PlugUI (SynthParams &p)
     zoomSlider->setRange (25, 200, 1);
     zoomSlider->setSliderStyle (Slider::LinearBar);
     zoomSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 24);
+    zoomSlider->setColour (Slider::textBoxOutlineColourId, Colour (0x00000000));
     zoomSlider->addListener (this);
 
     addAndMakeVisible (saveButton = new TextButton ("save button"));
@@ -96,12 +98,27 @@ PlugUI::PlugUI (SynthParams &p)
     loadButton->setButtonText (TRANS("load"));
     loadButton->addListener (this);
 
-    drawable1 = Drawable::createFromImageData (BinaryData::ssr_logo_png, BinaryData::ssr_logo_pngSize);
+    addAndMakeVisible (logoButton = new ImageButton ("logoButton"));
+    logoButton->setButtonText (String::empty);
+    logoButton->addListener (this);
+
+    logoButton->setImages (false, true, true,
+                           ImageCache::getFromMemory (BinaryData::ssr_logo_png, BinaryData::ssr_logo_pngSize), 1.000f, Colour (0x00000000),
+                           ImageCache::getFromMemory (BinaryData::ssr_logo_png, BinaryData::ssr_logo_pngSize), 1.000f, Colour (0x00000000),
+                           ImageCache::getFromMemory (BinaryData::ssr_logo_png, BinaryData::ssr_logo_pngSize), 1.000f, Colour (0x00000000));
+    addAndMakeVisible (infoWindow = new DocumentWindow ("info window", Colours::white, DocumentWindow::closeButton));
+    infoWindow->setName ("info window");
+
 
     //[UserPreSize]
     plusImg = ImageCache::getFromMemory(BinaryData::plus_icon_png, BinaryData::plus_icon_pngSize);
     refPoint->setImage(plusImg);
     refPoint->setInterceptsMouseClicks(false, false);
+
+    infoWindow->setTitleBarHeight(0);
+    infoWindow->setDraggable(false);
+    infoWindow->setVisible(false);
+    infoWindow->setContentOwned(new InfoPanel(), true);
 
     sourceMenu->setTitleBarHeight(0);
     sourceMenu->setDraggable(false);
@@ -152,7 +169,8 @@ PlugUI::~PlugUI()
     zoomSlider = nullptr;
     saveButton = nullptr;
     loadButton = nullptr;
-    drawable1 = nullptr;
+    logoButton = nullptr;
+    infoWindow = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -166,12 +184,6 @@ void PlugUI::paint (Graphics& g)
     //[/UserPrePaint]
 
     g.fillAll (Colour (0xffedede6));
-
-    g.setColour (Colours::black);
-    jassert (drawable1 != 0);
-    if (drawable1 != 0)
-        drawable1->drawWithin (g, Rectangle<float> (23, 520, 64, 64),
-                               RectanglePlacement::centred, 1.000f);
 
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]
@@ -192,9 +204,11 @@ void PlugUI::resized()
     sourceMenu->setBounds (512, 100, 250, 225);
     sourceNode->setBounds (405, 50, 90, 90);
     refPoint->setBounds (8, 8, 8, 8);
-    zoomSlider->setBounds (808, 568, 80, 24);
-    saveButton->setBounds (105, 565, 80, 24);
-    loadButton->setBounds (200, 565, 80, 24);
+    zoomSlider->setBounds (808, 565, 80, 24);
+    saveButton->setBounds (635, 565, 80, 24);
+    loadButton->setBounds (715, 565, 80, 24);
+    logoButton->setBounds (23, 520, 64, 64);
+    infoWindow->setBounds (55, 40, 280, 470);
     //[UserResized] Add your own custom resize handling here..
     int listenerW = static_cast<int>(listener->getWidth() * params.zoomFactor.get() / 100.0f);
     int listenerH = static_cast<int>(listener->getHeight() * params.zoomFactor.get() / 100.0f);
@@ -262,9 +276,15 @@ void PlugUI::buttonClicked (Button* buttonThatWasClicked)
         //[UserButtonCode_loadButton] -- add your button handler code here..
         params.readXMLPatchStandalone();
 
-        /// \todo register zoomslider instead
+        // set zoom slider and resize UI
         zoomSlider->setValue(params.zoomFactor.get());
         //[/UserButtonCode_loadButton]
+    }
+    else if (buttonThatWasClicked == logoButton)
+    {
+        //[UserButtonCode_logoButton] -- add your button handler code here..
+        infoWindow->setVisible(!infoWindow->isVisible());
+        //[/UserButtonCode_logoButton]
     }
 
     //[UserbuttonClicked_Post]
@@ -294,9 +314,9 @@ void PlugUI::mouseDoubleClick (const MouseEvent& e)
 {
     //[UserCode_mouseDoubleClick] -- Add your code here...
     ignoreUnused(e);
+    zoomSlider->setValue(params.zoomFactor.getDefaultUI());
     params.sceneOffsetX.setUI(params.sceneOffsetX.getDefaultUI());
     params.sceneOffsetY.setUI(params.sceneOffsetY.getDefaultUI());
-    zoomSlider->setValue(params.zoomFactor.getDefaultUI());
     resized();
     //[/UserCode_mouseDoubleClick]
 }
@@ -408,10 +428,7 @@ BEGIN_JUCER_METADATA
     <METHOD name="mouseDown (const MouseEvent&amp; e)"/>
     <METHOD name="mouseDrag (const MouseEvent&amp; e)"/>
   </METHODS>
-  <BACKGROUND backgroundColour="ffedede6">
-    <IMAGE pos="23 520 64 64" resource="BinaryData::ssr_logo_png" opacity="1"
-           mode="1"/>
-  </BACKGROUND>
+  <BACKGROUND backgroundColour="ffedede6"/>
   <LABEL name="debug" id="3b44d9ef5ee9c1a" memberName="debugText" virtualName=""
          explicitFocusOrder="0" pos="648 8 250 584" edTextCol="ff000000"
          edBkgCol="0" labelText="" editableSingleClick="0" editableDoubleClick="0"
@@ -448,15 +465,25 @@ BEGIN_JUCER_METADATA
                     virtualName="" explicitFocusOrder="0" pos="8 8 8 8" class="ImageComponent"
                     params=""/>
   <SLIDER name="zoom slider" id="c8e0b018d0c69bbf" memberName="zoomSlider"
-          virtualName="ZoomSlider" explicitFocusOrder="0" pos="808 568 80 24"
-          min="25" max="200" int="1" style="LinearBar" textBoxPos="TextBoxBelow"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="24" skewFactor="1"/>
+          virtualName="ZoomSlider" explicitFocusOrder="0" pos="808 565 80 24"
+          textboxoutline="0" min="25" max="200" int="1" style="LinearBar"
+          textBoxPos="TextBoxBelow" textBoxEditable="1" textBoxWidth="80"
+          textBoxHeight="24" skewFactor="1"/>
   <TEXTBUTTON name="save button" id="b25b544b7310227e" memberName="saveButton"
-              virtualName="" explicitFocusOrder="0" pos="105 565 80 24" buttonText="save"
+              virtualName="" explicitFocusOrder="0" pos="635 565 80 24" buttonText="save"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <TEXTBUTTON name="load button" id="7a6f9aa471624d92" memberName="loadButton"
-              virtualName="" explicitFocusOrder="0" pos="200 565 80 24" buttonText="load"
+              virtualName="" explicitFocusOrder="0" pos="715 565 80 24" buttonText="load"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
+  <IMAGEBUTTON name="logoButton" id="745603b0a7c4f516" memberName="logoButton"
+               virtualName="" explicitFocusOrder="0" pos="23 520 64 64" buttonText=""
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="BinaryData::ssr_logo_png" opacityNormal="1" colourNormal="0"
+               resourceOver="BinaryData::ssr_logo_png" opacityOver="1" colourOver="0"
+               resourceDown="BinaryData::ssr_logo_png" opacityDown="1" colourDown="0"/>
+  <GENERICCOMPONENT name="info window" id="d32f4f4a23658b93" memberName="infoWindow"
+                    virtualName="" explicitFocusOrder="0" pos="55 40 280 470" class="DocumentWindow"
+                    params="&quot;info window&quot;, Colours::white, DocumentWindow::closeButton"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

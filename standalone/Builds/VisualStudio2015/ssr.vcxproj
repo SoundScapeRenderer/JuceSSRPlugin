@@ -187,6 +187,7 @@
     <ClCompile Include="..\..\..\audio\ssr code\xmlparser.cpp"/>
     <ClCompile Include="..\..\..\audio\src\PluginProcessor.cpp"/>
     <ClCompile Include="..\..\..\audio\src\SynthParams.cpp"/>
+    <ClCompile Include="..\..\..\gui\panels\InfoPanel.cpp"/>
     <ClCompile Include="..\..\..\gui\panels\SourceMenuPanel.cpp"/>
     <ClCompile Include="..\..\..\gui\PluginEditor.cpp"/>
     <ClCompile Include="..\..\..\gui\PlugUI.cpp"/>
@@ -1398,6 +1399,7 @@
     <ClInclude Include="..\..\..\audio\inc\Param.h"/>
     <ClInclude Include="..\..\..\audio\inc\PluginProcessor.h"/>
     <ClInclude Include="..\..\..\audio\inc\SynthParams.h"/>
+    <ClInclude Include="..\..\..\gui\panels\InfoPanel.h"/>
     <ClInclude Include="..\..\..\gui\panels\SourceMenuPanel.h"/>
     <ClInclude Include="..\..\..\gui\panels\PanelBase.h"/>
     <ClInclude Include="..\..\..\gui\CustomLookAndFeel.h"/>

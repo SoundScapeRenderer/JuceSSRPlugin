@@ -32,9 +32,9 @@ public:
     
     void paint (Graphics& g)
     {
-        g.fillAll (Colours::white);
-        g.setColour(Colours::black);
-        g.drawRect(0, 0, getWidth(), getHeight());
+        g.fillAll(isMouseOver ? Colours::white.darker(0.025f) : Colours::white);
+        g.setColour(Colours::grey.brighter());
+        g.drawRect(0.0f, 0.0f, static_cast<float>(getWidth()), static_cast<float>(getHeight()), 0.5f);
 
         AffineTransform trans(AffineTransform::scale(static_cast<float>(getWidth()), static_cast<float>(getHeight())));
         Path arrow;
@@ -45,10 +45,25 @@ public:
         arrow.lineTo(0.805f, 0.75f);
         arrow.lineTo(0.86f, 0.575f);
 
+        g.setColour(Colours::black);
         g.strokePath(arrow, PathStrokeType(1.5f), trans);
     }
 
     //==============================================================================
+
+    void mouseEnter(const MouseEvent& e)
+    {
+        ignoreUnused(e);
+        isMouseOver = true;
+        repaint();
+    }
+
+    void mouseExit(const MouseEvent& e)
+    {
+        ignoreUnused(e);
+        isMouseOver = false;
+        repaint();
+    }
 
     void mouseDown(const MouseEvent& e)
     {
@@ -66,6 +81,7 @@ public:
 
 private:
     double dragStartValue = 0.0;
+    bool isMouseOver = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ZoomSlider)
 };

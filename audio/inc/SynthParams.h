@@ -75,11 +75,11 @@ public:
     
         @param meterCenterX centerX position in meter of an object in the scene GUI
         @param meterCenterY centerY position in meter of an object in the scene GUI
-        @param screenWidth width of the scene GUI in pixel
-        @param screenHeight height of the scene GUI in pixel
+        @param sceneWidth width of the scene GUI in pixel
+        @param sceneHeight height of the scene GUI in pixel
         @return coordinate point in pixel with inverse y
      */
-    juce::Point<int> pos2pix(float meterCenterX, float meterCenterY, int screenWidth, int screenHeight);
+    juce::Point<int> pos2pix(float meterCenterX, float meterCenterY, int sceneWidth, int sceneHeight);
 
     /**
         Converts a pixel coordinate of a scene with given width and height into a meter position.
@@ -88,11 +88,11 @@ public:
 
         @param pixCenterX centerX pixel of an object in the scene GUI
         @param pixCenterY centerY pixel of an object in the scene GUI
-        @param screenWidth width of the scene GUI in pixel
-        @param screenHeight height of the scene GUI in pixel
+        @param sceneWidth width of the scene GUI in pixel
+        @param sceneHeight height of the scene GUI in pixel
         @return position point in meter with inverse y
     */
-    juce::Point<float> pix2pos(int pixCenterX, int pixCenterY, int screenWidth, int screenHeight);
+    juce::Point<float> pix2pos(int pixCenterX, int pixCenterY, int sceneWidth, int sceneHeight);
 
     /**
         Round float value to not more than 2 numbers after comma.

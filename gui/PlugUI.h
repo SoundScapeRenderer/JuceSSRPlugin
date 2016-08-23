@@ -93,7 +93,8 @@ private:
     ScopedPointer<ZoomSlider> zoomSlider;
     ScopedPointer<TextButton> saveButton;
     ScopedPointer<TextButton> loadButton;
-    ScopedPointer<Drawable> drawable1;
+    ScopedPointer<ImageButton> logoButton;
+    ScopedPointer<DocumentWindow> infoWindow;
 
 
     //==============================================================================
