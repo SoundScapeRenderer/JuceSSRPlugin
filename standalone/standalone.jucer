@@ -239,6 +239,8 @@
     </GROUP>
     <GROUP id="{F6382FEF-D578-65A9-AE2B-732BBA4674EA}" name="gui">
       <GROUP id="{97002C86-853A-E142-A502-E0F82A3882D2}" name="panels">
+        <FILE id="CSjbtc" name="ScenePanel.cpp" compile="1" resource="0" file="../gui/panels/ScenePanel.cpp"/>
+        <FILE id="WrCX58" name="ScenePanel.h" compile="0" resource="0" file="../gui/panels/ScenePanel.h"/>
         <FILE id="EEyOF2" name="InfoPanel.cpp" compile="1" resource="0" file="../gui/panels/InfoPanel.cpp"/>
         <FILE id="wWW4ir" name="InfoPanel.h" compile="0" resource="0" file="../gui/panels/InfoPanel.h"/>
         <FILE id="ekOQUU" name="SourceMenuPanel.cpp" compile="1" resource="0"

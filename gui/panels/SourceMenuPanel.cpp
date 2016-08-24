@@ -173,7 +173,7 @@ SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceNodeComponent *s)
     inputBox->setSelectedItemIndex(static_cast<int>(params.inputChannel.getStep()), dontSendNotification);
     //[/UserPreSize]
 
-    setSize (300, 400);
+    setSize (250, 225);
 
 
     //[Constructor] You can add your own custom stuff here..
@@ -333,7 +333,7 @@ BEGIN_JUCER_METADATA
                  parentClasses="public PanelBase" constructorParams="SynthParams &amp;p, SourceNodeComponent *s"
                  variableInitialisers="PanelBase(p), params(p), sourceNode(s)"
                  snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
-                 fixedSize="0" initialWidth="300" initialHeight="400">
+                 fixedSize="1" initialWidth="250" initialHeight="225">
   <BACKGROUND backgroundColour="ffffffff"/>
   <LABEL name="position label" id="4fb7b389efd80fef" memberName="positionLabel"
          virtualName="" explicitFocusOrder="0" pos="8 16 80 16" textCol="ff808080"

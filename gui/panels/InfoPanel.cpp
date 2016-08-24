@@ -93,7 +93,7 @@ BEGIN_JUCER_METADATA
 <JUCER_COMPONENT documentType="Component" className="InfoPanel" componentName=""
                  parentClasses="public Component" constructorParams="" variableInitialisers=""
                  snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
-                 fixedSize="0" initialWidth="300" initialHeight="500">
+                 fixedSize="1" initialWidth="300" initialHeight="500">
   <BACKGROUND backgroundColour="ffffffff"/>
 </JUCER_COMPONENT>
 
