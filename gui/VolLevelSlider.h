@@ -15,10 +15,10 @@
 
 //==============================================================================
 /**
-    Bar slider that draws its internal volume level. Currently used by calling 
-    refreshVolLevel() from a timerCallback().
-    Uses an arrow thumb to show the current slider value.
-*/
+ * Bar slider that draws its internal volume level. Currently used by calling 
+ * refreshVolLevel() from a timerCallback().
+ * Uses an arrow thumb to show the current slider value.
+ */
 class VolLevelSlider    : public Slider
 {
 public:
@@ -66,7 +66,7 @@ public:
     //==============================================================================
 
     /**
-        Set current volume level and repaint this component with updated values.
+     * Set current volume level and repaint this component with updated values.
      */
     void refreshVolLevel(float level)
     {

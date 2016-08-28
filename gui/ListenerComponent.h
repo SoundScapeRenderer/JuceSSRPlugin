@@ -16,8 +16,11 @@
 #include "ListenerBackgroundComponent.h"
 
 //==============================================================================
-/*
-*/
+/**
+ * Draggable component on right-click which can not be dragged outside of the plugin window.
+ * Used as reference listener which can be rotated by vertical left-click dragging.
+ * Has a reference pointer to its background component to update shadow orientation.
+ */
 class ListenerComponent    : public ImageComponent
 {
 public:
@@ -37,10 +40,16 @@ public:
         bounds = nullptr;
     }
 
-    void setScreenSize(int w, int h)
+    //==============================================================================
+
+    /**
+    * Let this component know the size in pixel of the scene in which it is,
+    * so that the pixel to meter can be done correctly.
+    */
+    void setSceneSize(int w, int h)
     {
-        screenWidth = w;
-        screenHeight = h;
+        sceneWidth = w;
+        sceneHeight = h;
     }
 
     //==============================================================================
@@ -110,15 +119,22 @@ public:
 
     //==============================================================================
 
+    /**
+     * Relocate component within its parent component.
+     */
     void relocate()
     {
-        juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), screenWidth, screenHeight);
+        juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), sceneWidth, sceneHeight);
         setBounds(pixPosRef.x - getWidth() / 2, pixPosRef.y - getHeight() / 2, getWidth(), getHeight());
     }
 
-    void updateBackgroundAngle(float angle)
+    /**
+     * Update listenerBackground's shadow orientation.
+     * @param newAngle new angle in degrees
+     */
+    void updateBackgroundAngle(float newAngle)
     {
-        listenerBackground->updateShadowAngle(angle);
+        listenerBackground->updateShadowAngle(newAngle);
     }
 
     //==============================================================================
@@ -127,8 +143,8 @@ private:
     SynthParams &params;
     ComponentDragger dragger;
     ScopedPointer<ComponentBoundsConstrainer> bounds;
-    int screenWidth;
-    int screenHeight;
+    int sceneWidth;
+    int sceneHeight;
 
     Image listenerImg, listenerBackgroundImg, listenerShadowImg;
     ListenerBackgroundComponent *listenerBackground;

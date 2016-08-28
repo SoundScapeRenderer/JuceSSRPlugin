@@ -19,12 +19,12 @@
 
 //==============================================================================
 /**
-*/
-class Sequencer;
+ * Common JUCE PluginProcessor. Derived from SynthParams for communication with UI.
+ * The SSR is integrated in this class.
+ */
 class PluginAudioProcessor  : public AudioProcessor, public SynthParams
 {
-public:
-    //==============================================================================
+public:    
     PluginAudioProcessor();
     ~PluginAudioProcessor();
 
@@ -62,14 +62,13 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-
 private:
     //==============================================================================
-    std::unique_ptr<ssr::BinauralRenderer> renderer;
+    std::unique_ptr<ssr::BinauralRenderer> renderer; //!< SSR renderer
     int sourceID = 0;
 
-    String hrirFilePath;
     ScopedPointer<TemporaryFile> tempFile;
+    String hrirFilePath; //!< temporary hrir file path
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginAudioProcessor)
 };

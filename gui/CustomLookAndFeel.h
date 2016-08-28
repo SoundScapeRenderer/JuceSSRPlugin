@@ -13,6 +13,9 @@
 
 #include "JuceHeader.h"
 
+/**
+ * Nothing but custom drawing functions for JUCE components and replacing fonts.
+ */
 class CustomLookAndFeel : public LookAndFeel_V2
 {
 public:

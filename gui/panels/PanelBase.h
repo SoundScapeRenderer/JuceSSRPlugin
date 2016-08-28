@@ -9,6 +9,10 @@
 #include "ListenerComponent.h"
 #include "SourceNodeComponent.h"
 
+/**
+ * Parent class for all components that make use of the dirtyFlag of SynthParams (e.g. for automation).
+ * The child components in these have to be registered with their corresponding Param.
+ */
 class PanelBase : public Component, protected Timer
 {
 public:
@@ -29,9 +33,12 @@ protected:
 
     //=======================================================================================================================================
 
-    void registerListener(ListenerComponent *l, Param *posX, Param *posY, Param *ori, int screenWidth, int screenHeight, const tHookFn hook = tHookFn())
+    /**
+     * Register reference listener component with all its automatable params and sceneWidth and sceneHeight.
+     */
+    void registerListener(ListenerComponent *l, Param *posX, Param *posY, Param *ori, int sceneWidth, int sceneHeight, const tHookFn hook = tHookFn())
     {
-        l->setScreenSize(screenWidth, screenHeight);
+        l->setSceneSize(sceneWidth, sceneHeight);
         l->updateBackgroundAngle(ori->getUI());
 
         listenerReg[l] = { posX, posY, ori };
@@ -42,6 +49,9 @@ protected:
         }
     }
 
+    /**
+     * Check whether registered Params of listener have been changed and handle these correctly.
+     */
     void updateDirtyListener()
     {
         for (auto l2p : listenerReg)
@@ -72,9 +82,12 @@ protected:
 
     //=======================================================================================================================================
 
-    void registerSource(SourceNodeComponent *s, Param *posX, Param *posY, Param *vol, int screenWidth, int screenHeight, const tHookFn hook = tHookFn())
+    /**
+     * Register source component with all its automatable params and sceneWidth and sceneHeight.
+     */
+    void registerSource(SourceNodeComponent *s, Param *posX, Param *posY, Param *vol, int sceneWidth, int sceneHeight, const tHookFn hook = tHookFn())
     {
-        s->setScreenSize(screenWidth, screenHeight);
+        s->setSceneSize(sceneWidth, sceneHeight);
         s->setNodeColour(SynthParams::sourceColourBlue);
 
         s->getVolSlider()->setValue(static_cast<double>(vol->get()), dontSendNotification);
@@ -87,6 +100,9 @@ protected:
         }
     }
 
+    /**
+     * Check whether registered Params of source have been changed and handle these correctly.
+     */
     void updateDirtySource()
     {
         for (auto s2p : sourceReg)
@@ -114,6 +130,9 @@ protected:
         }
     }
 
+    /**
+     * Update source volume slider level.
+     */
     void updateSourceVolLevel()
     {
         for (auto s2p : sourceReg)
@@ -124,6 +143,9 @@ protected:
 
     //=======================================================================================================================================
 
+    /**
+     * Register button component with corresponding Param that needs to be checked.
+     */
     void registerButton(Button *b, ParamStepped<eOnOffState> *state, const tHookFn hook = tHookFn())
     {
         b->setWantsKeyboardFocus(false);
@@ -137,6 +159,9 @@ protected:
         }
     }
 
+    /**
+     * Check whether registered Params of buttons have been changed and handle these correctly.
+     */
     void updateDirtyButton()
     {
         for (auto b2p : buttonReg)
@@ -162,6 +187,7 @@ protected:
         updateDirtySource();
         updateDirtyButton();
 
+        // constantly update level
         updateSourceVolLevel();
     }
 

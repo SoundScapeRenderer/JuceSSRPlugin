@@ -14,8 +14,12 @@
 #include "JuceHeader.h"
 
 //==============================================================================
-/*
-*/
+/**
+ * Reference Listener's background component class.
+ * Using updateShadowAngle() to change shadow orientation according to reference listener.
+ * For correct drawing results this component should be set exactly double the width 
+ * and height of the reference listener component.
+ */
 class ListenerBackgroundComponent    : public Component
 {
 public:
@@ -39,6 +43,7 @@ public:
         float w = static_cast<float>(getWidth());
         float h = static_cast<float>(getHeight());
 
+        // draw listener background
         Image bg = listenerBackgroundImg.rescaled(getWidth(), getHeight(), Graphics::highResamplingQuality);
         g.setTiledImageFill(bg, 0, 0, 1.0f);
         g.fillEllipse(0.0f, 0.0f, w, h);
@@ -59,6 +64,10 @@ public:
 
     //==============================================================================
 
+    /**
+     * Update shadow angle and repaint().
+     * @param a new angle of the shadow to be drawn
+     */
     void updateShadowAngle(float a)
     {
         angle = a;

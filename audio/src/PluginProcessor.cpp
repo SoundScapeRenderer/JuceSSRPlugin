@@ -17,7 +17,7 @@
 //==============================================================================
 PluginAudioProcessor::PluginAudioProcessor()
 {
-    // write default_hrir binary into temporary file
+    // write default_hrir_wav binary into temporary file
     tempFile = new TemporaryFile(".wav");
     ScopedPointer<FileOutputStream> out = tempFile->getFile().createOutputStream();
     out->write(BinaryData::default_hrirs_wav, BinaryData::default_hrirs_wavSize);
@@ -48,8 +48,7 @@ const String PluginAudioProcessor::getName() const
 #ifdef JucePlugin_Name
     return JucePlugin_Name;
 #else
-    // standalone
-    return "plugin";
+    return "juceSSR plugin";
 #endif
 }
 
@@ -213,9 +212,10 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
 
     // call internal ssr process function of renderer
     renderer->audio_callback(getBlockSize()
-        , buffer.getArrayOfWritePointers() + channelIndex // NOTE: write ~ read pointer (same address) but read is const
+        , buffer.getArrayOfWritePointers() + channelIndex // NOTE: write = read pointer (same address), read is just const
         , buffer.getArrayOfWritePointers());
 
+    /// \todo correct level
     // get ssr output level
     outputLevelLeft.set(buffer.getRMSLevel(0, 0, buffer.getNumSamples()));
     outputLevelRight.set(buffer.getRMSLevel(1, 0, buffer.getNumSamples()));

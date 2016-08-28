@@ -78,8 +78,7 @@ PlugUI::PlugUI (SynthParams &p)
 
 
     //[UserPreSize]
-    params.sceneOffsetX.setUI(params.sceneOffsetX.getDefaultUI());
-    params.sceneOffsetY.setUI(params.sceneOffsetY.getDefaultUI());
+    // reset zoom to default
     zoomSlider->setValue(params.zoomFactor.getDefaultUI());
     zoomSlider->setTextValueSuffix(params.zoomFactor.getUnit());
 
@@ -187,9 +186,8 @@ void PlugUI::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == loadButton)
     {
         //[UserButtonCode_loadButton] -- add your button handler code here..
+        // read all serialized parameters and set zoomSlider to resize scene UI
         params.readXMLPatchStandalone();
-
-        // set zoom slider and resize UI
         zoomSlider->setValue(params.zoomFactor.getUI());
         //[/UserButtonCode_loadButton]
     }
@@ -203,9 +201,10 @@ void PlugUI::buttonClicked (Button* buttonThatWasClicked)
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 void PlugUI::timerCallback()
 {
-
+    // check whether params.zoomFactor hass been changed and set slider display accordingly
     zoomSlider->setValue(params.zoomFactor.getUI(), dontSendNotification);
 
+    // set output meter
     levelMeterLeft->setValue(params.outputLevelLeft.get(), dontSendNotification);
     levelMeterRight->setValue(params.outputLevelRight.get(), dontSendNotification);
 

@@ -14,8 +14,9 @@
 #include "JuceHeader.h"
 
 //==============================================================================
-/*
-*/
+/**
+ * Slider class which uses a custom drag mechanism.
+ */
 class ZoomSlider    : public Slider
 {
 public:

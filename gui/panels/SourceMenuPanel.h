@@ -33,9 +33,8 @@
 //==============================================================================
 /**
                                                                     //[Comments]
-    An auto-generated component, created by the Introjucer.
-
-    Describe your class and how it works here!
+    Source menu panel which can be used to do some settings as mute source or
+    cahnging source model. Further source position, orientation etc. are shown.
                                                                     //[/Comments]
 */
 class SourceMenuPanel  : public PanelBase,

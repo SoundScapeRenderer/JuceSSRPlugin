@@ -14,8 +14,12 @@
 #include "JuceHeader.h"
 
 //==============================================================================
-/*
-*/
+/**
+ * Source background component class.
+ * Shows plane waves which direction can be set via updatePlaneWave().
+ * For correct drawing results this component should be set exactly double the width 
+ * and height of the source node component.
+ */
 class SourceBackgroundComponent    : public Component
 {
 public:
@@ -86,9 +90,15 @@ public:
         return angle;
     }
 
-    void updatePlaneWave(float newangle, bool planeWaveVisible, Colour c)
+    /**
+     * Update angle of the plane wave direction and repaint.
+     * @param newAngle new angle in degrees
+     * @param planeWaveVisible false do not show plane wave, true show it
+     * @param c colour of plane wave
+     */
+    void updatePlaneWave(float newAngle, bool planeWaveVisible, Colour c)
     {
-        angle = newangle;
+        angle = newAngle;
         drawPlaneWave = planeWaveVisible;
         planeWaveColour = c;
         repaint();

@@ -17,8 +17,11 @@
 #include "VolLevelSlider.h"
 
 //==============================================================================
-/*
-*/
+/**
+ * Draggable component on left-click which can not be dragged outside of the plugin window.
+ * Used as Source node with references pointers to VolLevelSlider, SourceBackgroundComponent
+ * and DocumentWindow (for right-click menu). Menu stays open until right-click again.
+ */
 class SourceNodeComponent    : public Component
 {
 public:
@@ -39,10 +42,16 @@ public:
         bounds = nullptr;
     }
 
-    void setScreenSize(int w, int h)
+    //==============================================================================
+
+    /**
+     * Must be called for this component to know the size in pixel of the scene in which it is,
+     * so that the pixel to meter can be done correctly.
+     */
+    void setSceneSize(int w, int h)
     {
-        screenWidth = w;
-        screenHeight = h;
+        sceneWidth = w;
+        sceneHeight = h;
     }
 
     void setNodeColour(Colour c)
@@ -65,16 +74,32 @@ public:
         return params.sourceLevel.get();
     }
 
-    DocumentWindow* getMenu()
-    {
-        return menu;
-    }
-
     //==============================================================================
 
     void paint (Graphics& g)
     {
-        drawSourceNode(g);
+        float w = static_cast<float>(getWidth());
+        float h = static_cast<float>(getHeight());
+        float paddingL = (getWidth() - w) * 0.5f;
+        float paddingT = (getHeight() - h) * 0.5f;
+
+        // draw actual node
+        g.setColour(nodeColour);
+        g.fillEllipse(paddingL, paddingT, w, h);
+
+        w *= ringRatio1;
+        h *= ringRatio1;
+        paddingL = (getWidth() - w) * 0.5f;
+        paddingT = (getHeight() - h) * 0.5f;
+        g.setColour(Colours::white);
+        g.fillEllipse(paddingL, paddingT, w, h);
+
+        w *= ringRatio2;
+        h *= ringRatio2;
+        paddingL = (getWidth() - w) * 0.5f;
+        paddingT = (getHeight() - h) * 0.5f;
+        g.setColour(nodeColour);
+        g.fillEllipse(paddingL, paddingT, w, h);
 
         int nodeSize = jmin(getWidth(), getHeight());
         int imageSize = jmax(10 , jmin(56, nodeSize / 3));
@@ -136,22 +161,34 @@ public:
 
     //==============================================================================
 
+    /**
+     * Relocate component within its parent component.
+     */
     void relocate()
     {
-        juce::Point<int> pixPosRef = params.pos2pix(params.sourceX.get(), params.sourceY.get(), screenWidth, screenHeight);
+        juce::Point<int> pixPosRef = params.pos2pix(params.sourceX.get(), params.sourceY.get(), sceneWidth, sceneHeight);
         setBounds(pixPosRef.x - getWidth() / 2, pixPosRef.y - getHeight() / 2, getWidth(), getHeight());
     }
 
     //==============================================================================
 
+    /**
+     * Get angle of the plane wave direction of sourceBackground.
+     */
     float getPlaneWaveAngle()
     {
         return sourceBackground->getPlaneWaveAngle();
     }
 
-    void updatePlaneWave(float newangle, bool planeWaveVisible, Colour c)
+    /**
+     * Update angle of the plane wave direction of sourceBackground.
+     * @param newAngle new angle in degrees
+     * @param planeWaveVisible false do not show plane wave, true show it
+     * @param c colour of plane wave
+     */
+    void updatePlaneWave(float newAngle, bool planeWaveVisible, Colour c)
     {
-        sourceBackground->updatePlaneWave(newangle, planeWaveVisible, c);
+        sourceBackground->updatePlaneWave(newAngle, planeWaveVisible, c);
     }
 
     //==============================================================================
@@ -160,15 +197,15 @@ private:
     SynthParams &params;
     ComponentDragger dragger;
     ScopedPointer<ComponentBoundsConstrainer> bounds;
-    int screenWidth;
-    int screenHeight;
+    int sceneWidth;
+    int sceneHeight;
 
-    Image lockImg, muteImg; //< http://iconmonstr.com/
+    Image lockImg, muteImg; //!< from http://iconmonstr.com/
     DocumentWindow *menu;
     VolLevelSlider *volSlider;
     SourceBackgroundComponent *sourceBackground;
 
-    Colour nodeColour;
+    Colour nodeColour = SynthParams::sourceColourBlue;
     const float ringRatio1 = 0.925f, ringRatio2 = 0.875f;
 
     //==============================================================================

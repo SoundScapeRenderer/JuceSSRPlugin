@@ -34,9 +34,8 @@
 //==============================================================================
 /**
                                                                     //[Comments]
-    An auto-generated component, created by the Introjucer.
-
-    Describe your class and how it works here!
+    Plugin UI that contains the scene UI, zoomSlider of the scene,
+    serialization buttons and output levels (left/right channel).
                                                                     //[/Comments]
 */
 class PlugUI  : public PanelBase,
