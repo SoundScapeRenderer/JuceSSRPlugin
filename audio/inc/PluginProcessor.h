@@ -29,16 +29,19 @@ public:
     ~PluginAudioProcessor();
 
     //==============================================================================
+    
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
 
     void processBlock (AudioSampleBuffer&, MidiBuffer&) override;
 
     //==============================================================================
+    
     AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override;
 
     //==============================================================================
+    
     const String getName() const override;
 
     const String getInputChannelName (int channelIndex) const override;
@@ -52,6 +55,7 @@ public:
     double getTailLengthSeconds() const override;
 
     //==============================================================================
+    
     int getNumPrograms() override;
     int getCurrentProgram() override;
     void setCurrentProgram (int index) override;
@@ -59,11 +63,13 @@ public:
     void changeProgramName (int index, const String& newName) override;
 
     //==============================================================================
+    
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-private:
     //==============================================================================
+
+private:
     std::unique_ptr<ssr::BinauralRenderer> renderer; //!< SSR renderer
     int sourceID = 0;
 

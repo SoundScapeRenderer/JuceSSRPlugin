@@ -64,6 +64,7 @@ const String PluginAudioProcessor::getOutputChannelName (int channelIndex) const
 
 bool PluginAudioProcessor::isInputChannelStereoPair (int index) const
 {
+    /// \todo return false means always mono?
     ignoreUnused(index);
     return true;
 }
@@ -198,7 +199,7 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     ang = std::fmod(ang, 360.0f);
     if (ang > 180.0f) ang -= 360.0f;
     else if (ang <= -180.0f) ang += 360.0f;
-    sourceOrientation.set(ang);
+    sourceOrientation.setUI(ang);
 
     /// \todo how to handle mono input from host correctly?
     // choose between left or right channel for stereo input
@@ -208,7 +209,7 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     // get source input level
     float inputLevel;
     source->mute ? inputLevel = 0.0f : inputLevel = buffer.getRMSLevel(channelIndex, 0, buffer.getNumSamples());
-    sourceLevel.set(inputLevel);
+    sourceLevel.set(inputLevel, true);
 
     // call internal ssr process function of renderer
     renderer->audio_callback(getBlockSize()
@@ -217,8 +218,8 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
 
     /// \todo correct level
     // get ssr output level
-    outputLevelLeft.set(buffer.getRMSLevel(0, 0, buffer.getNumSamples()));
-    outputLevelRight.set(buffer.getRMSLevel(1, 0, buffer.getNumSamples()));
+    outputLevelLeft.set(buffer.getRMSLevel(0, 0, buffer.getNumSamples()), true);
+    outputLevelRight.set(buffer.getRMSLevel(1, 0, buffer.getNumSamples()), true);
 }
 
 //==============================================================================
@@ -235,12 +236,12 @@ AudioProcessorEditor* PluginAudioProcessor::createEditor()
 //==============================================================================
 void PluginAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    ignoreUnused(destData);
+    SynthParams::writeXMLPatchHost(destData);
 }
 
 void PluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    ignoreUnused(data, sizeInBytes);
+    SynthParams::readXMLPatchHost(data, sizeInBytes);
 }
 
 //==============================================================================

@@ -79,7 +79,7 @@ ScenePanel::ScenePanel(SynthParams &p)
 
     // register listener and source for host changes etc.
     registerListener(listener, &params.referenceX, &params.referenceY, &params.referenceOrientation, getWidth(), getHeight());
-    registerSource(sourceNode, &params.sourceX, &params.sourceY, &params.sourceVol, getWidth(), getHeight());
+    registerSource(sourceNode, &params.sourceX, &params.sourceY, &params.sourceVol, &params.sourceLevel, getWidth(), getHeight());
 }
 
 ScenePanel::~ScenePanel()
@@ -204,9 +204,9 @@ void ScenePanel::mouseDrag(const MouseEvent& e)
 void ScenePanel::mouseDoubleClick(const MouseEvent& e)
 {
     ignoreUnused(e);
-    params.zoomFactor.setUI(params.zoomFactor.getDefaultUI());
     params.sceneOffsetX.setUI(params.sceneOffsetX.getDefaultUI());
     params.sceneOffsetY.setUI(params.sceneOffsetY.getDefaultUI());
+    params.zoomFactor.set(params.zoomFactor.getDefaultUI(), true);
     resized();
 }
 
@@ -215,6 +215,6 @@ void ScenePanel::mouseWheelMove(const MouseEvent& e, const MouseWheelDetails& wh
     ignoreUnused(e);
     float delta = wheel.deltaY;
     float currZoom = params.zoomFactor.getUI();
-    params.zoomFactor.setUI(currZoom + 15.0f * delta);
-    resized();
+    float newZoom = jmin(jmax(params.zoomFactor.getMin(), currZoom + 15.0f * delta), params.zoomFactor.getMax());
+    params.zoomFactor.set(newZoom, true);
 }

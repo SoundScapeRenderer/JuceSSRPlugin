@@ -33,7 +33,6 @@ PlugUI::PlugUI (SynthParams &p)
     : PanelBase(p), params(p)
 {
     //[Constructor_pre] You can add your own custom stuff here..
-    startTimerHz (60);
     //[/Constructor_pre]
 
     addAndMakeVisible (scene = new ScenePanel (params));
@@ -78,9 +77,9 @@ PlugUI::PlugUI (SynthParams &p)
 
 
     //[UserPreSize]
-    // reset zoom to default
-    zoomSlider->setValue(params.zoomFactor.getDefaultUI());
-    zoomSlider->setTextValueSuffix(params.zoomFactor.getUnit());
+    registerSlider(zoomSlider, &params.zoomFactor);
+    registerSlider(levelMeterLeft, &params.outputLevelLeft);
+    registerSlider(levelMeterRight, &params.outputLevelRight);
 
     /// \todo create actual output vol level component
     levelMeterLeft->setInterceptsMouseClicks(false, false);
@@ -147,7 +146,6 @@ void PlugUI::resized()
 void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
 {
     //[UsersliderValueChanged_Pre]
-    float val = static_cast<float>(sliderThatWasMoved->getValue());
     //[/UsersliderValueChanged_Pre]
 
     if (sliderThatWasMoved == levelMeterRight)
@@ -163,6 +161,7 @@ void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
     else if (sliderThatWasMoved == zoomSlider)
     {
         //[UserSliderCode_zoomSlider] -- add your slider handling code here..
+        float val = static_cast<float>(sliderThatWasMoved->getValue());
         params.zoomFactor.setUI(val);
         scene->resized();
         //[/UserSliderCode_zoomSlider]
@@ -186,9 +185,7 @@ void PlugUI::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == loadButton)
     {
         //[UserButtonCode_loadButton] -- add your button handler code here..
-        // read all serialized parameters and set zoomSlider to resize scene UI
         params.readXMLPatchStandalone();
-        zoomSlider->setValue(params.zoomFactor.getUI());
         //[/UserButtonCode_loadButton]
     }
 
@@ -201,12 +198,7 @@ void PlugUI::buttonClicked (Button* buttonThatWasClicked)
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 void PlugUI::timerCallback()
 {
-    // check whether params.zoomFactor hass been changed and set slider display accordingly
-    zoomSlider->setValue(params.zoomFactor.getUI(), dontSendNotification);
-
-    // set output meter
-    levelMeterLeft->setValue(params.outputLevelLeft.get(), dontSendNotification);
-    levelMeterRight->setValue(params.outputLevelRight.get(), dontSendNotification);
+    PanelBase::timerCallback();
 
 #if 0
     debugText->setText(

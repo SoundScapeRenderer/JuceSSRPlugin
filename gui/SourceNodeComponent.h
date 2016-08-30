@@ -34,7 +34,7 @@ public:
         lockImg = ImageCache::getFromMemory(BinaryData::lock_icon_png, BinaryData::lock_icon_pngSize);
         muteImg = ImageCache::getFromMemory(BinaryData::mute_icon_png, BinaryData::mute_icon_pngSize);
 
-        bounds = new ComponentBoundsConstrainer();;
+        bounds = new ComponentBoundsConstrainer();
     }
 
     ~SourceNodeComponent()
@@ -67,11 +67,6 @@ public:
     VolLevelSlider* getVolSlider()
     {
         return volSlider;
-    }
-
-    float getVolLevel()
-    {
-        return params.sourceLevel.get();
     }
 
     //==============================================================================

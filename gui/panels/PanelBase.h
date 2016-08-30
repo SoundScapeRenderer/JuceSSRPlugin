@@ -34,7 +34,13 @@ protected:
     //=======================================================================================================================================
 
     /**
-     * Register reference listener component with all its automatable params and sceneWidth and sceneHeight.
+     * Register reference listener component with affiliated parameters that needs to be checked.
+     * @param posX x position of reference listener
+     * @param posY y position of reference listener
+     * @param ori reference listener orientation 
+     * @param sceneWidth width of the scene component in px
+     * @param sceneHeight height of the scene component in px
+     * @param hook callback function
      */
     void registerListener(ListenerComponent *l, Param *posX, Param *posY, Param *ori, int sceneWidth, int sceneHeight, const tHookFn hook = tHookFn())
     {
@@ -83,16 +89,23 @@ protected:
     //=======================================================================================================================================
 
     /**
-     * Register source component with all its automatable params and sceneWidth and sceneHeight.
+     * Register source component with affiliated parameters that needs to be checked.
+     * @param posX x position of source
+     * @param posY y position of source
+     * @param vol source input volume
+     * @param level real time input level of the source
+     * @param sceneWidth width of the scene component in px
+     * @param sceneHeight height of the scene component in px
+     * @param hook callback function
      */
-    void registerSource(SourceNodeComponent *s, Param *posX, Param *posY, Param *vol, int sceneWidth, int sceneHeight, const tHookFn hook = tHookFn())
+    void registerSource(SourceNodeComponent *s, Param *posX, Param *posY, Param *vol, Param *level, int sceneWidth, int sceneHeight, const tHookFn hook = tHookFn())
     {
         s->setSceneSize(sceneWidth, sceneHeight);
         s->setNodeColour(SynthParams::sourceColourBlue);
 
         s->getVolSlider()->setValue(static_cast<double>(vol->get()), dontSendNotification);
 
-        sourceReg[s] = { posX, posY , vol };
+        sourceReg[s] = { posX, posY , vol, level };
         if (hook)
         {
             postUpdateHook[s] = hook;
@@ -122,6 +135,12 @@ protected:
                 s2p.first->getVolSlider()->setValue(s2p.second[2]->getUI(), dontSendNotification);
             }
 
+            // level
+            if (s2p.second[3]->isUIDirty())
+            {
+                s2p.first->getVolSlider()->refreshVolLevel(s2p.second[3]->getUI());
+            }
+
             auto itHook = postUpdateHook.find(s2p.first);
             if (itHook != postUpdateHook.end())
             {
@@ -130,21 +149,54 @@ protected:
         }
     }
 
+    //=======================================================================================================================================
+
     /**
-     * Update source volume slider level.
+     * Register slider component with affiliated parameter that needs to be checked.
+     * @param s slider to register
+     * @param p parameter to register and handle if dirty
+     * @param hook callback function
      */
-    void updateSourceVolLevel()
+    void registerSlider(Slider *s, Param* p, const tHookFn hook = tHookFn())
     {
-        for (auto s2p : sourceReg)
+        s->setValue(p->getDefaultUI());
+        s->setTextValueSuffix(p->getUnit());
+
+        sliderReg[s] = { p };
+        if (hook)
         {
-            s2p.first->getVolSlider()->refreshVolLevel(s2p.first->getVolLevel());
+            postUpdateHook[s] = hook;
+            hook();
+        }
+    }
+
+    /**
+     * Check whether registered parameters of slider have changed and handle these correctly.
+     */
+    void updateDirtySlider()
+    {
+        for (auto s2p : sliderReg)
+        {
+            if (s2p.second->isUIDirty())
+            {
+                s2p.first->setValue(s2p.second->getUI(), sendNotificationAsync);
+            }
+
+            auto itHook = postUpdateHook.find(s2p.first);
+            if (itHook != postUpdateHook.end())
+            {
+                itHook->second();
+            }
         }
     }
 
     //=======================================================================================================================================
 
     /**
-     * Register button component with corresponding Param that needs to be checked.
+     * Register button component with affiliated parameter that needs to be checked.
+     * @param b button to register
+     * @param state ParamStepped to register and handle if dirty
+     * @param hook callback function
      */
     void registerButton(Button *b, ParamStepped<eOnOffState> *state, const tHookFn hook = tHookFn())
     {
@@ -160,7 +212,7 @@ protected:
     }
 
     /**
-     * Check whether registered Params of buttons have been changed and handle these correctly.
+     * Check whether registered parameters of buttons have changed and handle these correctly.
      */
     void updateDirtyButton()
     {
@@ -185,15 +237,14 @@ protected:
     {
         updateDirtyListener();
         updateDirtySource();
+        updateDirtySlider();
         updateDirtyButton();
-
-        // constantly update level
-        updateSourceVolLevel();
     }
 
     SynthParams &params;
     std::map<Component*, tHookFn> postUpdateHook;
     std::map<ListenerComponent*, std::array<Param*, 3>> listenerReg;
-    std::map<SourceNodeComponent*, std::array<Param*, 3>> sourceReg;
+    std::map<SourceNodeComponent*, std::array<Param*, 4>> sourceReg;
+    std::map<Slider*, Param*> sliderReg;
     std::map<Button*, ParamStepped<eOnOffState>*> buttonReg;
 };
