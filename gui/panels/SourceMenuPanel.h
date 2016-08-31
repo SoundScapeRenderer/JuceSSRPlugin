@@ -35,6 +35,7 @@
                                                                     //[Comments]
     Source menu panel which can be used to do some settings as mute source or
     cahnging source model. Further source position, orientation etc. are shown.
+    Designed according to SSR's source menu with minor changes.
                                                                     //[/Comments]
 */
 class SourceMenuPanel  : public PanelBase,

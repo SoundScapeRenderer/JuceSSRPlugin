@@ -19,6 +19,7 @@
  * Using updateShadowAngle() to change shadow orientation according to reference listener.
  * For correct drawing results this component should be set exactly double the width 
  * and height of the reference listener component.
+ * Designed according to SSR's reference listener background.
  */
 class ListenerBackgroundComponent    : public Component
 {

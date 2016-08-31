@@ -20,16 +20,17 @@
 //==============================================================================
 /**
  * Common JUCE PluginProcessor. Derived from SynthParams for communication with UI.
- * The SSR is integrated in this class.
+ * The SSR is incorporated in this class.
  */
 class PluginAudioProcessor  : public AudioProcessor, public SynthParams
 {
-public:    
+public:
     PluginAudioProcessor();
     ~PluginAudioProcessor();
 
     //==============================================================================
     
+    /// plugin audio processing callbacks
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
 
@@ -37,11 +38,13 @@ public:
 
     //==============================================================================
     
+    /// audio processor editor stuff
     AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override;
 
     //==============================================================================
     
+    /// plugin information about name, routing and midi
     const String getName() const override;
 
     const String getInputChannelName (int channelIndex) const override;
@@ -56,6 +59,7 @@ public:
 
     //==============================================================================
     
+    /// plugin programm getter and setter
     int getNumPrograms() override;
     int getCurrentProgram() override;
     void setCurrentProgram (int index) override;
@@ -64,6 +68,7 @@ public:
 
     //==============================================================================
     
+    /// host serializiation functions to read and write patches
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
@@ -71,9 +76,9 @@ public:
 
 private:
     std::unique_ptr<ssr::BinauralRenderer> renderer; //!< SSR renderer
-    int sourceID = 0;
+    int sourceID = 0; //!< ID of created SSR source for accessing parameters
 
-    ScopedPointer<TemporaryFile> tempFile;
+    ScopedPointer<TemporaryFile> tempFile; //!< temporary hrir file to be created from binary
     String hrirFilePath; //!< temporary hrir file path
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginAudioProcessor)

@@ -31,7 +31,7 @@ public:
 protected:
     typedef std::function<void()> tHookFn;
 
-    //=======================================================================================================================================
+    //==============================================================================
 
     /**
      * Register reference listener component with affiliated parameters that needs to be checked.
@@ -42,7 +42,8 @@ protected:
      * @param sceneHeight height of the scene component in px
      * @param hook callback function
      */
-    void registerListener(ListenerComponent *l, Param *posX, Param *posY, Param *ori, int sceneWidth, int sceneHeight, const tHookFn hook = tHookFn())
+    void registerListener(ListenerComponent *l, Param *posX, Param *posY, Param *ori,
+        int sceneWidth, int sceneHeight, const tHookFn hook = tHookFn())
     {
         l->setSceneSize(sceneWidth, sceneHeight);
         l->updateBackgroundAngle(ori->getUI());
@@ -86,7 +87,7 @@ protected:
         }
     }
 
-    //=======================================================================================================================================
+    //==============================================================================
 
     /**
      * Register source component with affiliated parameters that needs to be checked.
@@ -94,11 +95,13 @@ protected:
      * @param posY y position of source
      * @param vol source input volume
      * @param level real time input level of the source
+     * @param lock indicator solely for whether source is allowed to be moved
      * @param sceneWidth width of the scene component in px
      * @param sceneHeight height of the scene component in px
      * @param hook callback function
      */
-    void registerSource(SourceNodeComponent *s, Param *posX, Param *posY, Param *vol, Param *level, int sceneWidth, int sceneHeight, const tHookFn hook = tHookFn())
+    void registerSource(SourceNodeComponent *s, Param *posX, Param *posY, Param *vol, Param *level,
+        int sceneWidth, int sceneHeight, const tHookFn hook = tHookFn())
     {
         s->setSceneSize(sceneWidth, sceneHeight);
         s->setNodeColour(SynthParams::sourceColourBlue);
@@ -149,7 +152,7 @@ protected:
         }
     }
 
-    //=======================================================================================================================================
+    //==============================================================================
 
     /**
      * Register slider component with affiliated parameter that needs to be checked.
@@ -190,7 +193,7 @@ protected:
         }
     }
 
-    //=======================================================================================================================================
+    //==============================================================================
 
     /**
      * Register button component with affiliated parameter that needs to be checked.
@@ -231,7 +234,7 @@ protected:
         }
     }
 
-    //=======================================================================================================================================
+    //==============================================================================
 
     virtual void timerCallback() override
     {
@@ -244,7 +247,7 @@ protected:
     SynthParams &params;
     std::map<Component*, tHookFn> postUpdateHook;
     std::map<ListenerComponent*, std::array<Param*, 3>> listenerReg;
-    std::map<SourceNodeComponent*, std::array<Param*, 4>> sourceReg;
+    std::map<SourceNodeComponent*, std::array<Param*, 5>> sourceReg;
     std::map<Slider*, Param*> sliderReg;
     std::map<Button*, ParamStepped<eOnOffState>*> buttonReg;
 };

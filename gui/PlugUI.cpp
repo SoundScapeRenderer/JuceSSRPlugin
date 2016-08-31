@@ -18,8 +18,6 @@
 */
 
 //[Headers] You can add your own extra header files here...
-#include "panels/SourceMenuPanel.h"
-#include "panels/InfoPanel.h"
 //[/Headers]
 
 #include "PlugUI.h"

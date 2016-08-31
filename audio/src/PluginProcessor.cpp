@@ -64,7 +64,6 @@ const String PluginAudioProcessor::getOutputChannelName (int channelIndex) const
 
 bool PluginAudioProcessor::isInputChannelStereoPair (int index) const
 {
-    /// \todo return false means always mono?
     ignoreUnused(index);
     return true;
 }
@@ -103,6 +102,8 @@ double PluginAudioProcessor::getTailLengthSeconds() const
     return 0.0;
 }
 
+//==============================================================================
+
 int PluginAudioProcessor::getNumPrograms()
 {
     return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
@@ -130,12 +131,14 @@ void PluginAudioProcessor::changeProgramName (int index, const String& newName)
     ignoreUnused(index,newName);
 }
 
+//==============================================================================
+
+// SSR configuration args stuff
 namespace {
     char* ssr_argv[] = { "ssr_juce", "--binaural", "--no-ip-server", "--no-gui", "--no-tracker", "--verbose" };
     int ssr_argc = sizeof(ssr_argv)/sizeof(ssr_argv[0]);
 }
 
-//==============================================================================
 void PluginAudioProcessor::prepareToPlay (double sRate, int samplesPerBlock)
 {
     auto conf = ssr::configuration(ssr_argc, ssr_argv);
@@ -192,10 +195,9 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     source->mute.setRT(sourceMute.getStep() == eOnOffState::eOn);
     source->gain.setRT(Param::fromDb(sourceVol.get()));
 
-    /// \todo fix gui bug of ssr azimuth
     // calculate angle from which the source is seen
     // and confine angle to interval ]-180, 180], see qsourceproperties.cpp
-    float ang = radiansToDegrees(angle(source->position, renderer->state.reference_orientation));
+    float ang = source->orientation.get().azimuth - referenceOrientation.get() + 180.0f;
     ang = std::fmod(ang, 360.0f);
     if (ang > 180.0f) ang -= 360.0f;
     else if (ang <= -180.0f) ang += 360.0f;
@@ -223,6 +225,7 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
 }
 
 //==============================================================================
+
 bool PluginAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
@@ -234,6 +237,7 @@ AudioProcessorEditor* PluginAudioProcessor::createEditor()
 }
 
 //==============================================================================
+
 void PluginAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
     SynthParams::writeXMLPatchHost(destData);
@@ -245,6 +249,7 @@ void PluginAudioProcessor::setStateInformation (const void* data, int sizeInByte
 }
 
 //==============================================================================
+
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {

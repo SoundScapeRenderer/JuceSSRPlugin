@@ -180,6 +180,7 @@ void ScenePanel::buttonClicked(Button* buttonThatWasClicked)
 {
     if (buttonThatWasClicked == logoButton)
     {
+        /// \todo add content for infopanel
         infoWindow->setVisible(!infoWindow->isVisible());
     }
 }

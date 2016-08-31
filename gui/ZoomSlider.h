@@ -15,7 +15,7 @@
 
 //==============================================================================
 /**
- * Slider class which uses a custom drag mechanism.
+ * Slider class which uses a custom drag mechanism. Designed according to SSR's zoom slider.
  */
 class ZoomSlider    : public Slider
 {
@@ -52,6 +52,7 @@ public:
 
     //==============================================================================
 
+    /// redraw to indicate mouse is over this component
     void mouseEnter(const MouseEvent& e)
     {
         ignoreUnused(e);
@@ -66,6 +67,7 @@ public:
         repaint();
     }
 
+    /// vertical drag of this slider component
     void mouseDown(const MouseEvent& e)
     {
         ignoreUnused(e);

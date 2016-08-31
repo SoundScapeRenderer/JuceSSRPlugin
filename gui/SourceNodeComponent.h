@@ -21,6 +21,7 @@
  * Draggable component on left-click which can not be dragged outside of the plugin window.
  * Used as Source node with references pointers to VolLevelSlider, SourceBackgroundComponent
  * and DocumentWindow (for right-click menu). Menu stays open until right-click again.
+ * Designed according to SSR's source node with small changes (mute and fixed state).
  */
 class SourceNodeComponent    : public Component
 {
@@ -45,8 +46,10 @@ public:
     //==============================================================================
 
     /**
-     * Must be called for this component to know the size in pixel of the scene in which it is,
-     * so that the pixel to meter can be done correctly.
+     * Let this component know the size in pixel of the scene in which it is,
+     * so that the pixel to meter conversion can be done correctly.
+     * @param w scene width in pixel
+     * @param h scene height in pixel
      */
     void setSceneSize(int w, int h)
     {
@@ -121,16 +124,19 @@ public:
 
     //==============================================================================
 
+    /**
+     * Handle mouse down event.
+     * Drag on left-click if position is not locked to move.
+     * En-/disable popup menu on right-click.
+     */
     void mouseDown (const MouseEvent& e)
     {
-        // drag on left-click if position is not locked
         if (e.mods == ModifierKeys::leftButtonModifier && params.sourcePositionLock.getStep() == eOnOffState::eOff)
         {
             dragger.startDraggingComponent(this, e);
         }
         else
         {
-            // en-/disable popup menu on right-click 
             if (e.mods == ModifierKeys::rightButtonModifier)
             {
                 menu->setVisible(!menu->isVisible());
@@ -138,6 +144,7 @@ public:
         }
     }
     
+    /// handle mouse dragging and calculating new position in meter
     void mouseDrag (const MouseEvent& e)
     {
         // drag on left-click if position is not locked
@@ -145,10 +152,9 @@ public:
         {
             dragger.dragComponent(this, e, bounds);
 
-            // parent must be scene UI or of same size as scene UI
             int middleX = getX() + getWidth() / 2;
             int middleY = getY() + getHeight() / 2;
-            juce::Point<float> posSource = params.pix2pos(middleX, middleY, getParentWidth(), getParentHeight());
+            juce::Point<float> posSource = params.pix2pos(middleX, middleY, sceneWidth, sceneHeight);
             params.sourceX.setUI(posSource.x);
             params.sourceY.setUI(posSource.y);
         }

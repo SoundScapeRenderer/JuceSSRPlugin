@@ -24,8 +24,8 @@
 /**
  * Scene panel of the SSR where source node and listener can be dragged.
  * Scene with all child components within can be dragged and zoomed in/out
- * via scrolling.
- * On double-click the zoom and dragging offset can be reset to default.
+ * via scrolling. On double-click the zoom and dragging offset can be reset to default.
+ * Designed according to SSR's scene.
  */
 class ScenePanel : public PanelBase,
                    public SliderListener,
@@ -38,7 +38,14 @@ public:
     //==============================================================================
 
     void paint(Graphics& g);
+    
     void resized();
+
+    /**
+     * If source or reference listener has been moved or resized then make sure
+     * affilliated components such as background etc. follow them.
+     * Further redraw plane wave directed at reference listener if necessary. 
+     */
     void childBoundsChanged(Component *child);
 
     //==============================================================================
@@ -48,9 +55,14 @@ public:
 
     //==============================================================================
 
+    /// drag scene
     void mouseDown(const MouseEvent& e);
     void mouseDrag(const MouseEvent& e);
+
+    /// reset dragging offset and zoom
     void mouseDoubleClick(const MouseEvent& e);
+    
+    /// zoom in and out by scrolling
     void mouseWheelMove(const MouseEvent& e, const MouseWheelDetails& wheel);
 
     //==============================================================================

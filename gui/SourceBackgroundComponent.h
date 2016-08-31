@@ -19,6 +19,7 @@
  * Shows plane waves which direction can be set via updatePlaneWave().
  * For correct drawing results this component should be set exactly double the width 
  * and height of the source node component.
+ * Plane wave designed according to SSR's plane wave.
  */
 class SourceBackgroundComponent    : public Component
 {

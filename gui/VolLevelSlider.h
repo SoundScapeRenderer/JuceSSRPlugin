@@ -18,6 +18,7 @@
  * Bar slider that draws its internal volume level. Currently used by calling 
  * refreshVolLevel() from a timerCallback().
  * Uses an arrow thumb to show the current slider value.
+ * Designed according to SSR's source volume slider.
  */
 class VolLevelSlider    : public Slider
 {
@@ -67,6 +68,7 @@ public:
 
     /**
      * Set current volume level and repaint this component with updated values.
+     * @param level new level to draw
      */
     void refreshVolLevel(float level)
     {

@@ -20,6 +20,7 @@
  * Draggable component on right-click which can not be dragged outside of the plugin window.
  * Used as reference listener which can be rotated by vertical left-click dragging.
  * Has a reference pointer to its background component to update shadow orientation.
+ * Designed according to SSR's reference listener.
  */
 class ListenerComponent    : public ImageComponent
 {
@@ -44,7 +45,9 @@ public:
 
     /**
     * Let this component know the size in pixel of the scene in which it is,
-    * so that the pixel to meter can be done correctly.
+    * so that the pixel to meter conversion can be done correctly.
+    * @param w scene width in pixel
+    * @param h scene height in pixel
     */
     void setSceneSize(int w, int h)
     {
@@ -72,6 +75,11 @@ public:
     
     //==============================================================================
 
+    /**
+     * Handle mouse down event.
+     * Drag on right-click to move this component.
+     * Drag on left-click to rotate.
+     */
     void mouseDown (const MouseEvent& e)
     {
         if (e.mods == ModifierKeys::rightButtonModifier)
@@ -87,16 +95,16 @@ public:
         }
     }
     
+    /// handle mouse dragging and calculating new position in meter or angle after rotation
     void mouseDrag (const MouseEvent& e)
     {
         if (e.mods == ModifierKeys::rightButtonModifier)
         {
             dragger.dragComponent(this, e, bounds);
 
-            // parent must be scene UI
             int middleX = getX() + getWidth() / 2;
             int middleY = getY() + getHeight() / 2;
-            juce::Point<float> pos = params.pix2pos(middleX, middleY, getParentWidth(), getParentHeight());
+            juce::Point<float> pos = params.pix2pos(middleX, middleY, sceneWidth, sceneHeight);
             params.referenceX.setUI(pos.x);
             params.referenceY.setUI(pos.y);
         }
