@@ -22,7 +22,6 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include "JuceHeader.h"
-#include "SynthParams.h"
 #include "panels/PanelBase.h"
 #include "panels/ScenePanel.h"
 #include "CustomLookAndFeel.h"
@@ -69,11 +68,10 @@ private:
     //==============================================================================
     ScopedPointer<ScenePanel> scene;
     ScopedPointer<Label> debugText;
-    ScopedPointer<Slider> levelMeterRight;
-    ScopedPointer<Slider> levelMeterLeft;
+    ScopedPointer<OutputLevelComponent> outputLevel;
     ScopedPointer<ZoomSlider> zoomSlider;
-    ScopedPointer<TextButton> saveButton;
     ScopedPointer<TextButton> loadButton;
+    ScopedPointer<TextButton> saveButton;
 
 
     //==============================================================================

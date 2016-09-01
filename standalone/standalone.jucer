@@ -255,6 +255,8 @@
             resource="0" file="../gui/ListenerBackgroundComponent.h"/>
       <FILE id="JKj2RB" name="ListenerComponent.h" compile="0" resource="0"
             file="../gui/ListenerComponent.h"/>
+      <FILE id="QOPBU8" name="OutputLevelComponent.h" compile="0" resource="0"
+            file="../gui/OutputLevelComponent.h"/>
       <FILE id="eGCmM0" name="PluginEditor.cpp" compile="1" resource="0"
             file="../gui/PluginEditor.cpp"/>
       <FILE id="EWfpfp" name="PluginEditor.h" compile="0" resource="0" file="../gui/PluginEditor.h"/>

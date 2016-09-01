@@ -50,6 +50,8 @@ ScenePanel::ScenePanel(SynthParams &p)
     sourceVolSlider->setTextBoxStyle(Slider::NoTextBox, false, 80, 20);
     sourceVolSlider->addListener(this);
     sourceVolSlider->setSkewFactor(3);
+    sourceVolSlider->setColour(Slider::backgroundColourId, SynthParams::sourceLevelColour);
+    sourceVolSlider->setColour(Slider::textBoxOutlineColourId, SynthParams::sourceColourBlue);
 
     addAndMakeVisible(sourceBackground = new SourceBackgroundComponent());
     sourceBackground->setName("source background");
@@ -62,6 +64,7 @@ ScenePanel::ScenePanel(SynthParams &p)
 
     addAndMakeVisible(sourceNode = new SourceNodeComponent(params, sourceVolSlider, sourceBackground, sourceMenu));
     sourceNode->setName("source node");
+    sourceNode->setNodeColour(SynthParams::sourceColourBlue);
 
     // NOTE: must be called after both sourceNode and sourceMenu has been created!
     sourceMenu->setContentOwned(new SourceMenuPanel(params, sourceNode), true);
@@ -71,11 +74,11 @@ ScenePanel::ScenePanel(SynthParams &p)
     refPoint->setInterceptsMouseClicks(false, false);
     refPoint->setImage(plusImg);
 
+    setSize(920, 590);
+    
     // reset scene drag offset to default
     params.sceneOffsetX.setUI(params.sceneOffsetX.getDefaultUI());
     params.sceneOffsetY.setUI(params.sceneOffsetY.getDefaultUI());
-
-    setSize(920, 590);
 
     // register listener and source for host changes etc.
     registerListener(listener, &params.referenceX, &params.referenceY, &params.referenceOrientation, getWidth(), getHeight());

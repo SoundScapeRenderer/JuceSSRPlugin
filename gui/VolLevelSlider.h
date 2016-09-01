@@ -49,11 +49,11 @@ public:
         g.fillRect(0.0f, 0.0f, boxWidth, boxHeight);
 
         // fill up volume level bar up to current level
-        g.setColour(SynthParams::sourceLevelColour);
-        g.fillRect(0.0f, 0.0f, thumbPosition * volLevel, boxHeight);
+        g.setColour(currentLevel >= maxLevel? Colours::red: findColour(backgroundColourId));
+        g.fillRect(0.0f, 0.0f, thumbPosition * currentLevel, boxHeight);
 
         // draw bar slider outline
-        g.setColour(SynthParams::sourceColourBlue);
+        g.setColour(findColour(textBoxOutlineColourId));
         g.drawRect(0.0f, 0.0f, boxWidth, boxHeight, outlineThickness);
 
         // draw arrow thumb at current position
@@ -68,19 +68,36 @@ public:
 
     /**
      * Set current volume level and repaint this component with updated values.
+     * If new level is smaller then current currentLevel then draw smooth decaying instead.
      * @param level new level to draw
      */
     void refreshVolLevel(float level)
     {
-        volLevel = level;
+        if (level > currentLevel)
+        {
+            currentLevel = level;
+        }
+        else
+        {
+            currentLevel *= decaySpeed;
+            if (currentLevel < minLevelThreshold)
+            {
+                currentLevel = minLevel;
+            }
+        }
+
         repaint();
     }
 
     //==============================================================================
 
 private:
-    float volLevel = 0.0f;
+    float currentLevel = 0.0f;
 
+    const float minLevel = 0.0f;
+    const float maxLevel = 1.0f;
+    const float minLevelThreshold = 0.00001f;
+    const float decaySpeed = 0.9f;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VolLevelSlider)
 };
 

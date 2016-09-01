@@ -44,19 +44,8 @@ PlugUI::PlugUI (SynthParams &p)
     debugText->setColour (TextEditor::textColourId, Colours::black);
     debugText->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (levelMeterRight = new Slider ("level right"));
-    levelMeterRight->setRange (0, 1, 0);
-    levelMeterRight->setSliderStyle (Slider::LinearBar);
-    levelMeterRight->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
-    levelMeterRight->setColour (Slider::thumbColourId, Colour (0xff60ff60));
-    levelMeterRight->addListener (this);
-
-    addAndMakeVisible (levelMeterLeft = new Slider ("level left"));
-    levelMeterLeft->setRange (0, 1, 0);
-    levelMeterLeft->setSliderStyle (Slider::LinearBar);
-    levelMeterLeft->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
-    levelMeterLeft->setColour (Slider::thumbColourId, Colour (0xff60ff60));
-    levelMeterLeft->addListener (this);
+    addAndMakeVisible (outputLevel = new OutputLevelComponent());
+    outputLevel->setName ("output level");
 
     addAndMakeVisible (zoomSlider = new ZoomSlider ("zoom slider"));
     zoomSlider->setRange (25, 200, 1);
@@ -65,23 +54,19 @@ PlugUI::PlugUI (SynthParams &p)
     zoomSlider->setColour (Slider::textBoxOutlineColourId, Colour (0x00000000));
     zoomSlider->addListener (this);
 
-    addAndMakeVisible (saveButton = new TextButton ("save button"));
-    saveButton->setButtonText (TRANS("save"));
-    saveButton->addListener (this);
-
     addAndMakeVisible (loadButton = new TextButton ("load button"));
     loadButton->setButtonText (TRANS("load"));
     loadButton->addListener (this);
 
+    addAndMakeVisible (saveButton = new TextButton ("save button"));
+    saveButton->setButtonText (TRANS("save"));
+    saveButton->addListener (this);
+
 
     //[UserPreSize]
     registerSlider(zoomSlider, &params.zoomFactor);
-    registerSlider(levelMeterLeft, &params.outputLevelLeft);
-    registerSlider(levelMeterRight, &params.outputLevelRight);
+    registerOutputLevel(outputLevel, &params.outputLevelLeft, &params.outputLevelRight);
 
-    /// \todo create actual output vol level component
-    levelMeterLeft->setInterceptsMouseClicks(false, false);
-    levelMeterRight->setInterceptsMouseClicks(false, false);
     debugText->setInterceptsMouseClicks(false, false);
     //[/UserPreSize]
 
@@ -102,11 +87,10 @@ PlugUI::~PlugUI()
 
     scene = nullptr;
     debugText = nullptr;
-    levelMeterRight = nullptr;
-    levelMeterLeft = nullptr;
+    outputLevel = nullptr;
     zoomSlider = nullptr;
-    saveButton = nullptr;
     loadButton = nullptr;
+    saveButton = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -132,11 +116,10 @@ void PlugUI::resized()
 
     scene->setBounds (15, 12, 920, 590);
     debugText->setBounds (685, 15, 255, 625);
-    levelMeterRight->setBounds (597, 625, 150, 12);
-    levelMeterLeft->setBounds (597, 614, 150, 12);
+    outputLevel->setBounds (570, 613, 150, 24);
     zoomSlider->setBounds (812, 613, 80, 24);
-    saveButton->setBounds (340, 613, 80, 24);
-    loadButton->setBounds (420, 613, 80, 24);
+    loadButton->setBounds (190, 613, 80, 24);
+    saveButton->setBounds (110, 613, 80, 24);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -146,17 +129,7 @@ void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
     //[UsersliderValueChanged_Pre]
     //[/UsersliderValueChanged_Pre]
 
-    if (sliderThatWasMoved == levelMeterRight)
-    {
-        //[UserSliderCode_levelMeterRight] -- add your slider handling code here..
-        //[/UserSliderCode_levelMeterRight]
-    }
-    else if (sliderThatWasMoved == levelMeterLeft)
-    {
-        //[UserSliderCode_levelMeterLeft] -- add your slider handling code here..
-        //[/UserSliderCode_levelMeterLeft]
-    }
-    else if (sliderThatWasMoved == zoomSlider)
+    if (sliderThatWasMoved == zoomSlider)
     {
         //[UserSliderCode_zoomSlider] -- add your slider handling code here..
         float val = static_cast<float>(sliderThatWasMoved->getValue());
@@ -174,17 +147,17 @@ void PlugUI::buttonClicked (Button* buttonThatWasClicked)
     //[UserbuttonClicked_Pre]
     //[/UserbuttonClicked_Pre]
 
-    if (buttonThatWasClicked == saveButton)
-    {
-        //[UserButtonCode_saveButton] -- add your button handler code here..
-        params.writeXMLPatchStandalone();
-        //[/UserButtonCode_saveButton]
-    }
-    else if (buttonThatWasClicked == loadButton)
+    if (buttonThatWasClicked == loadButton)
     {
         //[UserButtonCode_loadButton] -- add your button handler code here..
         params.readXMLPatchStandalone();
         //[/UserButtonCode_loadButton]
+    }
+    else if (buttonThatWasClicked == saveButton)
+    {
+        //[UserButtonCode_saveButton] -- add your button handler code here..
+        params.writeXMLPatchStandalone();
+        //[/UserButtonCode_saveButton]
     }
 
     //[UserbuttonClicked_Post]
@@ -250,24 +223,19 @@ BEGIN_JUCER_METADATA
          edBkgCol="0" labelText="" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="9"/>
-  <SLIDER name="level right" id="a744d1a2c21ea6d8" memberName="levelMeterRight"
-          virtualName="" explicitFocusOrder="0" pos="597 625 150 12" thumbcol="ff60ff60"
-          min="0" max="1" int="0" style="LinearBar" textBoxPos="NoTextBox"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <SLIDER name="level left" id="13e0962dc81dca1" memberName="levelMeterLeft"
-          virtualName="" explicitFocusOrder="0" pos="597 614 150 12" thumbcol="ff60ff60"
-          min="0" max="1" int="0" style="LinearBar" textBoxPos="NoTextBox"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+  <GENERICCOMPONENT name="output level" id="18d306cbb6aed73e" memberName="outputLevel"
+                    virtualName="" explicitFocusOrder="0" pos="570 613 150 24" class="OutputLevelComponent"
+                    params=""/>
   <SLIDER name="zoom slider" id="c8e0b018d0c69bbf" memberName="zoomSlider"
           virtualName="ZoomSlider" explicitFocusOrder="0" pos="812 613 80 24"
           textboxoutline="0" min="25" max="200" int="1" style="LinearBar"
           textBoxPos="TextBoxBelow" textBoxEditable="1" textBoxWidth="80"
           textBoxHeight="24" skewFactor="1"/>
-  <TEXTBUTTON name="save button" id="b25b544b7310227e" memberName="saveButton"
-              virtualName="" explicitFocusOrder="0" pos="340 613 80 24" buttonText="save"
-              connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <TEXTBUTTON name="load button" id="7a6f9aa471624d92" memberName="loadButton"
-              virtualName="" explicitFocusOrder="0" pos="420 613 80 24" buttonText="load"
+              virtualName="" explicitFocusOrder="0" pos="190 613 80 24" buttonText="load"
+              connectedEdges="0" needsCallback="1" radioGroupId="0"/>
+  <TEXTBUTTON name="save button" id="b25b544b7310227e" memberName="saveButton"
+              virtualName="" explicitFocusOrder="0" pos="110 613 80 24" buttonText="save"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
 </JUCER_COMPONENT>
 

@@ -26,6 +26,8 @@ PluginAudioProcessor::PluginAudioProcessor()
     hrirFilePath = tempFile->getFile().getFullPathName();
 
     // add automation params for host
+    // NOTE: make sure automation in host is not interpolated for more precision
+    // e.g. in Cubase by setting reduction level to 0%
     addParameter(new HostParam<Param>(sourceX));
     addParameter(new HostParam<Param>(sourceY));
     addParameter(new HostParam<Param>(sourceVol));
@@ -163,6 +165,11 @@ void PluginAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
+
+    //// reset level on UI if playback stopped
+    //sourceLevel.set(sourceLevel.getDefaultUI(), true);
+    //outputLevelLeft.set(outputLevelLeft.getDefaultUI(), true);
+    //outputLevelRight.set(outputLevelRight.getDefaultUI(), true);
 }
 
 void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)

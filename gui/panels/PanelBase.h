@@ -7,6 +7,7 @@
 #include "JuceHeader.h"
 #include "SynthParams.h"
 #include "ListenerComponent.h"
+#include "OutputLevelComponent.h"
 #include "SourceNodeComponent.h"
 
 /**
@@ -104,7 +105,6 @@ protected:
         int sceneWidth, int sceneHeight, const tHookFn hook = tHookFn())
     {
         s->setSceneSize(sceneWidth, sceneHeight);
-        s->setNodeColour(SynthParams::sourceColourBlue);
 
         s->getVolSlider()->setValue(static_cast<double>(vol->get()), dontSendNotification);
 
@@ -145,6 +145,48 @@ protected:
             }
 
             auto itHook = postUpdateHook.find(s2p.first);
+            if (itHook != postUpdateHook.end())
+            {
+                itHook->second();
+            }
+        }
+    }
+
+    //==============================================================================
+
+    /**
+     * Register output level component with affiliated parameter that needs to be checked.
+     * @param o OutputLevelComponent to register
+     * @param l left channel level parameter to register and handle if dirty
+     * @param r right channel level parameter to register and handle if dirty
+     * @param hook callback function
+     */
+    void registerOutputLevel(OutputLevelComponent *o, Param* l, Param* r, const tHookFn hook = tHookFn())
+    {
+        o->setLeveLColour(SynthParams::sourceLevelColour);
+        o->refreshOutputLevel(l->getDefaultUI(), r->getDefaultUI());
+
+        outputLevelReg[o] = { l, r };
+        if (hook)
+        {
+            postUpdateHook[o] = hook;
+            hook();
+        }
+    }
+
+    /**
+    * Check whether registered parameters of OutputLevelComponent have changed and handle these correctly.
+    */
+    void updateDirtyOutputLevel()
+    {
+        for (auto o2p : outputLevelReg)
+        {
+            if (o2p.second[0]->isUIDirty() || o2p.second[1]->isUIDirty())
+            {
+                o2p.first->refreshOutputLevel(o2p.second[0]->getUI(), o2p.second[1]->getUI());
+            }
+
+            auto itHook = postUpdateHook.find(o2p.first);
             if (itHook != postUpdateHook.end())
             {
                 itHook->second();
@@ -240,6 +282,8 @@ protected:
     {
         updateDirtyListener();
         updateDirtySource();
+        updateDirtyOutputLevel();
+
         updateDirtySlider();
         updateDirtyButton();
     }
@@ -248,6 +292,7 @@ protected:
     std::map<Component*, tHookFn> postUpdateHook;
     std::map<ListenerComponent*, std::array<Param*, 3>> listenerReg;
     std::map<SourceNodeComponent*, std::array<Param*, 5>> sourceReg;
+    std::map<OutputLevelComponent*, std::array<Param*, 2>> outputLevelReg;
     std::map<Slider*, Param*> sliderReg;
     std::map<Button*, ParamStepped<eOnOffState>*> buttonReg;
 };

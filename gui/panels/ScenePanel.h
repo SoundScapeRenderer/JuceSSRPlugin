@@ -12,13 +12,7 @@
 #define SCENEPANEL_H_INCLUDED
 
 #include "JuceHeader.h"
-#include "SynthParams.h"
 #include "panels/PanelBase.h"
-#include "ListenerComponent.h"
-#include "ListenerBackgroundComponent.h"
-#include "SourceNodeComponent.h"
-#include "SourceBackgroundComponent.h"
-#include "VolLevelSlider.h"
 
 //==============================================================================
 /**
