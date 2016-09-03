@@ -53,7 +53,7 @@ public:
         return param.getNumSteps();
     }
 
-    //! \todo implement this
+    /// \todo implement this
     virtual float getValueForText(const String& text) const override {
         return text.getFloatValue();
     }

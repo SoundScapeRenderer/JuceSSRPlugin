@@ -149,12 +149,15 @@ void PluginAudioProcessor::prepareToPlay (double sRate, int samplesPerBlock)
     conf.renderer_params.set<int>("in_channels", getNumInputChannels());
     conf.renderer_params.set<int>("out_channels", getNumOutputChannels());
 
+    /// \todo resample LagrangeInterpolator process()
     // set hrir_file source to temporary file
     conf.renderer_params.set("hrir_size", 0); // "0" means use all that are there
     conf.renderer_params.set("hrir_file", hrirFilePath);
 
     renderer.reset(new ssr::BinauralRenderer(conf.renderer_params));
     renderer->load_reproduction_setup();
+
+    /// \todo getCPUUsage() einbauen
 
     // add input source
     apf::parameter_map sourceParam;
@@ -165,11 +168,6 @@ void PluginAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
-
-    //// reset level on UI if playback stopped
-    //sourceLevel.set(sourceLevel.getDefaultUI(), true);
-    //outputLevelLeft.set(outputLevelLeft.getDefaultUI(), true);
-    //outputLevelRight.set(outputLevelRight.getDefaultUI(), true);
 }
 
 void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
@@ -214,21 +212,19 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     // choose between left or right channel for stereo input
     int channelIndex = static_cast<int>(inputChannel.getStep());
 
-    /// \todo correct level
     // get source input level
     float inputLevel;
     source->mute ? inputLevel = 0.0f : inputLevel = buffer.getRMSLevel(channelIndex, 0, buffer.getNumSamples());
-    sourceLevel.set(inputLevel, true);
+    sourceLevel.set(Param::toDb(inputLevel), true);
 
     // call internal ssr process function of renderer
     renderer->audio_callback(getBlockSize()
         , buffer.getArrayOfWritePointers() + channelIndex // NOTE: write = read pointer (same address), read is just const
         , buffer.getArrayOfWritePointers());
 
-    /// \todo correct level
     // get ssr output level
-    outputLevelLeft.set(buffer.getRMSLevel(0, 0, buffer.getNumSamples()), true);
-    outputLevelRight.set(buffer.getRMSLevel(1, 0, buffer.getNumSamples()), true);
+    outputLevelLeft.set(Param::toDb(buffer.getRMSLevel(0, 0, buffer.getNumSamples())), true);
+    outputLevelRight.set(Param::toDb(buffer.getRMSLevel(1, 0, buffer.getNumSamples())), true);
 }
 
 //==============================================================================

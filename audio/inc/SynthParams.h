@@ -33,7 +33,7 @@ public:
     Param sourceY; //!< source y position in range [-50.0f ... 50.0f]m
     Param sourceOrientation; //!< source orientation in range [-180.0f ... 180.0f]degs
     Param sourceVol; //!< source vol in range [-96.0f ... 12.0f]dB
-    Param sourceLevel; //!< source level in range [0.0f ... 1.0f]
+    Param sourceLevel; //!< source level in range [-96.0f ... 12.0f]dB
     ParamStepped<eOnOffState> sourceMute; //!< source muted {eOff, eOn}
     ParamStepped<eSourceType> sourceType; //!< source type {ePoint, ePlane}
     ParamStepped<eOnOffState> sourcePositionLock; //!< source position locked {eOff, eOn}
@@ -46,8 +46,8 @@ public:
 
     /// routing and output level parameter
     ParamStepped<eInputChannel> inputChannel; //!< host track input channel {eLeftChannel/mono, eRightChannel}
-    Param outputLevelLeft; //!< left output level in range [0.0f ... 1.0f]
-    Param outputLevelRight; //!< right output level in range [0.0f ... 1.0f]
+    Param outputLevelLeft; //!< left output level in range [-96.0f ... 12.0f]dB
+    Param outputLevelRight; //!< right output level in range [-96.0f ... 12.0f]dB
 
     /// GUI scaling and dragging parameter
     Param zoomFactor; //!< scene zoom factor in range [25.0f ... 200.0f]%

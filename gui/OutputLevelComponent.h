@@ -24,7 +24,7 @@ class OutputLevelComponent    : public Component
 public:
     OutputLevelComponent()
     {
-        setInterceptsMouseClicks(false, false);
+        //setInterceptsMouseClicks(false, false);
     }
 
     ~OutputLevelComponent()
@@ -41,13 +41,19 @@ public:
 
         g.fillAll (Colours::white);
 
-        // fill up volume level bar up to current level
-        Colour c = currentLevelLeft >= maxLevel || currentLevelRight >= maxLevel ? Colours::red : levelColour;
-        g.setColour(c);
-        g.fillRect(0.0f, 0.0f, currentLevelLeft * boxWidth, boxHeight / 2.0f);
-        g.fillRect(0.0f, boxHeight / 2.0f, currentLevelRight * boxWidth, boxHeight / 2.0f);
+        // fill level bars up to current levels
+        float levelLeftProportion = static_cast<float>(pow((currentLevelLeft - minLevel) / (maxLevel - minLevel), skewFactor));
+        float levelLeftPosition = outlineThickness + levelLeftProportion * (boxWidth - 2 * outlineThickness);
 
-        // draw component outline
+        float levelRightProportion = static_cast<float>(pow((currentLevelRight - minLevel) / (maxLevel - minLevel), skewFactor));
+        float levelRightPosition = outlineThickness + levelRightProportion * (boxWidth - 2 * outlineThickness);
+
+        Colour c = currentLevelLeft > clipLevel || currentLevelRight > clipLevel ? Colours::red : levelColour;
+        g.setColour(c);
+        g.fillRect(0.0f, 0.0f, levelLeftPosition, boxHeight / 2.0f);
+        g.fillRect(0.0f, boxHeight / 2.0f, levelRightPosition, boxHeight / 2.0f);
+
+        // draw component outline and separating line
         g.setColour(Colours::lightgrey.brighter());
         Path line;
         line.startNewSubPath(0.0f, boxHeight / 2.0f - outlineThickness / 2.0f);
@@ -73,11 +79,8 @@ public:
         }
         else
         {
-            currentLevelLeft *= decaySpeed;
-            if (currentLevelLeft < minLevelThreshold)
-            {
-                currentLevelLeft = minLevel;
-            }
+            currentLevelLeft -= decaySpeed;
+            currentLevelLeft = jmax(minLevel, currentLevelLeft);
         }
 
         // right level
@@ -87,32 +90,35 @@ public:
         }
         else
         {
-            currentLevelRight *= decaySpeed;
-            if (currentLevelRight < minLevelThreshold)
-            {
-                currentLevelRight = minLevel;
-            }
+            currentLevelRight -= decaySpeed;
+            currentLevelRight = jmax(minLevel, currentLevelRight);
         }
 
         repaint();
     }
 
-    void setLeveLColour (Colour c)
+    void setLeveLColour(Colour c)
     {
         levelColour = c;
+    }
+
+    void setSkewFactor(float skew)
+    {
+        skewFactor = skew;
     }
 
     //==============================================================================
 
 private:
     Colour levelColour = Colours::green;
-    float currentLevelLeft = 0.0f;
-    float currentLevelRight = 0.0f;
+    float skewFactor = 1.0f;
+    float currentLevelLeft = -96.0f;
+    float currentLevelRight = -96.0f;
 
-    const float minLevel = 0.0f;
-    const float maxLevel = 1.0f;
-    const float minLevelThreshold = 0.00001f;
-    const float decaySpeed = 0.9f;
+    const float minLevel = -96.0f;
+    const float maxLevel = 12.0f;
+    const float clipLevel = 0.0f;
+    const float decaySpeed = 1.0f;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OutputLevelComponent)
 };
 

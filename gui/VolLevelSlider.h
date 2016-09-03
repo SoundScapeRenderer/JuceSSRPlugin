@@ -40,23 +40,27 @@ public:
         float boxWidth = static_cast<float>(getWidth());
         float boxHeight = static_cast<float>(getHeight() * heightScale);
         float outlineThickness = boxHeight * 0.22f;
-        
-        float thumbProportion = static_cast<float>(pow((getValue() - getMinimum()) / (getMaximum() - getMinimum()), getSkewFactor()));
-        float thumbPosition = outlineThickness + thumbProportion * (boxWidth - 2 * outlineThickness);
 
         // use white background for volume level bar
         g.setColour(Colours::white);
         g.fillRect(0.0f, 0.0f, boxWidth, boxHeight);
 
         // fill up volume level bar up to current level
-        g.setColour(currentLevel >= maxLevel? Colours::red: findColour(backgroundColourId));
-        g.fillRect(0.0f, 0.0f, thumbPosition * currentLevel, boxHeight);
+        float postFaderLevel = currentLevel + static_cast<float>(getValue());
+        float levelProportion = static_cast<float>(pow((postFaderLevel - minLevel) / (maxLevel - minLevel), getSkewFactor()));
+        float levelPosition = outlineThickness + levelProportion * (boxWidth - 2 * outlineThickness);
+
+        g.setColour(postFaderLevel > clipLevel? Colours::red : findColour(backgroundColourId));
+        g.fillRect(0.0f, 0.0f, levelPosition, boxHeight);
 
         // draw bar slider outline
         g.setColour(findColour(textBoxOutlineColourId));
         g.drawRect(0.0f, 0.0f, boxWidth, boxHeight, outlineThickness);
 
         // draw arrow thumb at current position
+        float thumbProportion = static_cast<float>(pow((getValue() - minLevel) / (maxLevel - minLevel), getSkewFactor()));
+        float thumbPosition = outlineThickness + thumbProportion * (boxWidth - 2 * outlineThickness);
+
         Path triangle;
         triangle.addTriangle(thumbPosition, boxHeight + 2,
                              thumbPosition - outlineThickness, boxHeight * (1.0f / heightScale),
@@ -79,11 +83,8 @@ public:
         }
         else
         {
-            currentLevel *= decaySpeed;
-            if (currentLevel < minLevelThreshold)
-            {
-                currentLevel = minLevel;
-            }
+            currentLevel -= decaySpeed;
+            currentLevel = jmax(minLevel, currentLevel);
         }
 
         repaint();
@@ -92,12 +93,12 @@ public:
     //==============================================================================
 
 private:
-    float currentLevel = 0.0f;
+    float currentLevel = -96.0f;
 
-    const float minLevel = 0.0f;
-    const float maxLevel = 1.0f;
-    const float minLevelThreshold = 0.00001f;
-    const float decaySpeed = 0.9f;
+    const float minLevel = -96.0f;
+    const float maxLevel = 12.0f;
+    const float clipLevel = 0.0f;
+    const float decaySpeed = 1.0f;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VolLevelSlider)
 };
 

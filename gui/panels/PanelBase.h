@@ -47,7 +47,7 @@ protected:
         int sceneWidth, int sceneHeight, const tHookFn hook = tHookFn())
     {
         l->setSceneSize(sceneWidth, sceneHeight);
-        l->updateBackgroundAngle(ori->getUI());
+        l->updateBackgroundAngle(ori->getDefaultUI());
 
         listenerReg[l] = { posX, posY, ori };
         if (hook) 
@@ -106,7 +106,8 @@ protected:
     {
         s->setSceneSize(sceneWidth, sceneHeight);
 
-        s->getVolSlider()->setValue(static_cast<double>(vol->get()), dontSendNotification);
+        s->getVolSlider()->setValue(static_cast<double>(vol->getDefaultUI()), dontSendNotification);
+        s->getVolSlider()->refreshVolLevel(level->getDefaultUI());
 
         sourceReg[s] = { posX, posY , vol, level };
         if (hook)
@@ -164,6 +165,7 @@ protected:
     void registerOutputLevel(OutputLevelComponent *o, Param* l, Param* r, const tHookFn hook = tHookFn())
     {
         o->setLeveLColour(SynthParams::sourceLevelColour);
+        o->setSkewFactor(3.0f);
         o->refreshOutputLevel(l->getDefaultUI(), r->getDefaultUI());
 
         outputLevelReg[o] = { l, r };
