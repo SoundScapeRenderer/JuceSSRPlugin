@@ -119,6 +119,7 @@ private:
     const float maxLevel = 12.0f;
     const float clipLevel = 0.0f;
     const float decaySpeed = 1.0f;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OutputLevelComponent)
 };
 

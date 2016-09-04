@@ -41,7 +41,8 @@ public:
     /// reference listener parameter
     Param referenceX; //!< reference listener x position in range [-50.0f ... 50.0f]m
     Param referenceY; //!< reference listener y position in range [-50.0f ... 50.0f]m
-    Param referenceOrientation; //!< reference listener orientation in range [0.0f ... 360.0f]degs
+    Param referenceOrientation; //!< reference listener orientation in range [-180.0f ... 180.0f]degs
+    const float refOrientationOffset; //!< offset due to reference listener image's default orientation
     Param amplitudeReferenceDistance; //!< SSR's amplitude reference distance in range [0.0f ... 50.0f]m
 
     /// routing and output level parameter

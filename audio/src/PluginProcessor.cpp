@@ -186,7 +186,7 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     // set listener parameter
     Position listenerPos = Position(referenceX.get(), referenceY.get());
     renderer->state.reference_position.setRT(listenerPos);
-    renderer->state.reference_orientation.setRT(Orientation(referenceOrientation.get()));
+    renderer->state.reference_orientation.setRT(Orientation(referenceOrientation.get() + refOrientationOffset));
     renderer->state.amplitude_reference_distance.setRT(amplitudeReferenceDistance.get());
 
     // set source parameter
@@ -202,10 +202,16 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
 
     // calculate angle from which the source is seen
     // and confine angle to interval ]-180, 180], see qsourceproperties.cpp
-    float ang = source->orientation.get().azimuth - referenceOrientation.get() + 180.0f;
+    float ang = source->orientation.get().azimuth - referenceOrientation.get() + refOrientationOffset;
     ang = std::fmod(ang, 360.0f);
-    if (ang > 180.0f) ang -= 360.0f;
-    else if (ang <= -180.0f) ang += 360.0f;
+    if (ang > 180.0f)
+    {
+        ang -= 360.0f;
+    }
+    else if (ang <= -180.0f)
+    {
+        ang += 360.0f;
+    }
     sourceOrientation.setUI(ang);
 
     /// \todo how to handle mono input from host correctly?

@@ -36,8 +36,8 @@ SynthParams::SynthParams()
 
     , referenceX("reference x", "referenceX", "referenceX", "m", -50.0f, 50.0f, 0.0f)
     , referenceY("reference y", "referenceY", "referenceY", "m", -50.0f, 50.0f, 0.0f)
-    /// \todo scasle -180 ... 180
-    , referenceOrientation("reference orientation", "referenceOrientation", "referenceOrientation", "degs", 0.0f, 360.0f, 90.0f)
+    , referenceOrientation("reference orientation", "referenceOrientation", "referenceOrientation", "degs", -180.0f, 180.0f, 0.0f)
+    , refOrientationOffset(90.0f)
     , amplitudeReferenceDistance("amplitude reference distance", "amplitudeReferenceDistance", "amplitudeReferenceDistance", "m", 0.0f, 50.0f, 3.0f)
 
     , inputChannel("input channel", "inputChannel", "inputChannel", eInputChannel::eLeftChannel, InputChannelNames)

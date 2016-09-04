@@ -30,8 +30,6 @@ public:
         , listenerBackground(bg)
     {
         listenerImg = ImageCache::getFromMemory(BinaryData::listener_png, BinaryData::listener_pngSize);
-        listenerBackgroundImg = ImageCache::getFromMemory(BinaryData::listener_background_png, BinaryData::listener_background_pngSize);
-        listenerShadowImg = ImageCache::getFromMemory(BinaryData::listener_shadow_png, BinaryData::listener_shadow_pngSize);
 
         bounds = new ComponentBoundsConstrainer();
     }
@@ -61,7 +59,7 @@ public:
     {
         float wHalf = static_cast<float>(getWidth() * 0.5f);
         float hHalf = static_cast<float>(getHeight() * 0.5f);
-        float currAngleInRadians = degreesToRadians(-params.referenceOrientation.get());
+        float currAngleInRadians = degreesToRadians(-(params.referenceOrientation.get() + params.refOrientationOffset));
         
         AffineTransform trans(AffineTransform::rotation(currAngleInRadians, wHalf, hHalf));
         g.addTransform(trans);
@@ -98,6 +96,7 @@ public:
     /// handle mouse dragging and calculating new position in meter or angle after rotation
     void mouseDrag (const MouseEvent& e)
     {
+        // move reference listener
         if (e.mods == ModifierKeys::rightButtonModifier)
         {
             dragger.dragComponent(this, e, bounds);
@@ -110,13 +109,18 @@ public:
         }
         else
         {
+            // rotate reference listener
             if (e.mods == ModifierKeys::leftButtonModifier)
             {
                 mouseStartY = static_cast<float>(e.getDistanceFromDragStartY());
                 float newAngle = fmod(angleOnStartDrag + mouseStartY, 360.0f);
-                if (newAngle < 0.0f)
+                if (newAngle > 180.0f)
                 {
-                    newAngle = 360.0f + newAngle;
+                    newAngle -= 360.0f;
+                }
+                else if (newAngle <= -180.0f)
+                {
+                    newAngle += 360.0f;
                 }
                 params.referenceOrientation.setUI(newAngle);
                 updateBackgroundAngle(newAngle);
@@ -142,7 +146,7 @@ public:
      */
     void updateBackgroundAngle(float newAngle)
     {
-        listenerBackground->updateShadowAngle(newAngle);
+        listenerBackground->updateShadowAngle(newAngle + params.refOrientationOffset);
     }
 
     //==============================================================================
@@ -154,7 +158,7 @@ private:
     int sceneWidth;
     int sceneHeight;
 
-    Image listenerImg, listenerBackgroundImg, listenerShadowImg;
+    Image listenerImg;
     ListenerBackgroundComponent *listenerBackground;
 
     float mouseStartY = 0.0f;
