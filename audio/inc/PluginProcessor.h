@@ -78,9 +78,11 @@ private:
     std::unique_ptr<ssr::BinauralRenderer> renderer; //!< SSR renderer
     int sourceID = 0; //!< ID of created SSR source for accessing parameters
 
-    ScopedPointer<TemporaryFile> tempFile; //!< temporary hrir file to be created from binary
-    String hrirFilePath; //!< temporary hrir file path
-    //==============================================================================
+    ScopedPointer<TemporaryFile> tempHrirFile; //!< temporary hrir file to be created from memory
+    String tempHrirFilePath = ""; //!< temporary hrir file path
+    const double hrirFileSampleRate = 44100.0; //!< sample rate of default hrir file from memory
+    bool setupSuccessful = false;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginAudioProcessor)
 };
 

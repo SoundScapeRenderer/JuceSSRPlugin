@@ -17,13 +17,15 @@
 //==============================================================================
 PluginAudioProcessor::PluginAudioProcessor()
 {
+#if 0
     // write default_hrir_wav binary into temporary file
-    tempFile = new TemporaryFile(".wav");
-    ScopedPointer<FileOutputStream> out = tempFile->getFile().createOutputStream();
+    tempHrirFile = new TemporaryFile(".wav");
+    ScopedPointer<FileOutputStream> out = tempHrirFile->getFile().createOutputStream();
     out->write(BinaryData::default_hrirs_wav, BinaryData::default_hrirs_wavSize);
 
     // save path of randomly named tempFile
-    hrirFilePath = tempFile->getFile().getFullPathName();
+    tempHrirFilePath = tempHrirFile->getFile().getFullPathName();
+#endif
 
     // add automation params for host
     // NOTE: make sure automation in host is not interpolated for more precision
@@ -40,8 +42,7 @@ PluginAudioProcessor::PluginAudioProcessor()
 
 PluginAudioProcessor::~PluginAudioProcessor()
 {
-    tempFile->deleteTemporaryFile();
-    tempFile = nullptr;
+    tempHrirFile = nullptr;
 }
 
 //==============================================================================
@@ -54,23 +55,23 @@ const String PluginAudioProcessor::getName() const
 #endif
 }
 
-const String PluginAudioProcessor::getInputChannelName (int channelIndex) const
+const String PluginAudioProcessor::getInputChannelName(int channelIndex) const
 {
-    return String (channelIndex + 1);
+    return String(channelIndex + 1);
 }
 
-const String PluginAudioProcessor::getOutputChannelName (int channelIndex) const
+const String PluginAudioProcessor::getOutputChannelName(int channelIndex) const
 {
-    return String (channelIndex + 1);
+    return String(channelIndex + 1);
 }
 
-bool PluginAudioProcessor::isInputChannelStereoPair (int index) const
+bool PluginAudioProcessor::isInputChannelStereoPair(int index) const
 {
     ignoreUnused(index);
     return true;
 }
 
-bool PluginAudioProcessor::isOutputChannelStereoPair (int index) const
+bool PluginAudioProcessor::isOutputChannelStereoPair(int index) const
 {
     ignoreUnused(index);
     return true;
@@ -78,20 +79,20 @@ bool PluginAudioProcessor::isOutputChannelStereoPair (int index) const
 
 bool PluginAudioProcessor::acceptsMidi() const
 {
-   #if JucePlugin_WantsMidiInput
+#if JucePlugin_WantsMidiInput
     return true;
-   #else
+#else
     return false;
-   #endif
+#endif
 }
 
 bool PluginAudioProcessor::producesMidi() const
 {
-   #if JucePlugin_ProducesMidiOutput
+#if JucePlugin_ProducesMidiOutput
     return true;
-   #else
+#else
     return false;
-   #endif
+#endif
 }
 
 bool PluginAudioProcessor::silenceInProducesSilenceOut() const
@@ -117,20 +118,20 @@ int PluginAudioProcessor::getCurrentProgram()
     return 0;
 }
 
-void PluginAudioProcessor::setCurrentProgram (int index)
+void PluginAudioProcessor::setCurrentProgram(int index)
 {
     ignoreUnused(index);
 }
 
-const String PluginAudioProcessor::getProgramName (int index)
+const String PluginAudioProcessor::getProgramName(int index)
 {
     ignoreUnused(index);
     return String();
 }
 
-void PluginAudioProcessor::changeProgramName (int index, const String& newName)
+void PluginAudioProcessor::changeProgramName(int index, const String& newName)
 {
-    ignoreUnused(index,newName);
+    ignoreUnused(index, newName);
 }
 
 //==============================================================================
@@ -138,30 +139,118 @@ void PluginAudioProcessor::changeProgramName (int index, const String& newName)
 // SSR configuration args stuff
 namespace {
     char* ssr_argv[] = { "ssr_juce", "--binaural", "--no-ip-server", "--no-gui", "--no-tracker", "--verbose" };
-    int ssr_argc = sizeof(ssr_argv)/sizeof(ssr_argv[0]);
+    int ssr_argc = sizeof(ssr_argv) / sizeof(ssr_argv[0]);
 }
 
-void PluginAudioProcessor::prepareToPlay (double sRate, int samplesPerBlock)
+void PluginAudioProcessor::prepareToPlay(double sRate, int samplesPerBlock)
 {
+    // delete previous created tempHrirFile with incompatible sample rate if necessary
+    if (sRate != hrirFileSampleRate && tempHrirFile != nullptr)
+    {
+        tempHrirFile->deleteTemporaryFile();
+        tempHrirFile = nullptr;
+    }
+
+    // if no tempHrirFile is available then create new tempHrirFile
+    if (tempHrirFile == nullptr)
+    {
+        // read default_hrirs_wav from memory and put into an AudioSampleBuffer
+        MemoryInputStream *in = new MemoryInputStream(BinaryData::default_hrirs_wav, BinaryData::default_hrirs_wavSize, false);
+        ScopedPointer<AudioFormatReader> reader = WavAudioFormat().createReaderFor(in, true);
+
+        AudioSampleBuffer hrirSampleBuffer(reader->numChannels, reader->lengthInSamples);
+        reader->read(&hrirSampleBuffer, 0, reader->lengthInSamples, 0, true, true);
+
+        /// \todo write via libsndfile
+        // create temporary file
+        tempHrirFile = new TemporaryFile(".wav");
+        ScopedPointer<FileOutputStream> out = tempHrirFile->getFile().createOutputStream();
+        out->write(BinaryData::default_hrirs_wav, BinaryData::default_hrirs_wavSize);
+
+        //AudioFormatWriter *writer = WavAudioFormat().createWriterFor(out, sRate, reader->numChannels, reader->bitsPerSample, NULL, 0);
+        if (sRate == hrirFileSampleRate)
+        {
+#if 0
+            // write not resampled hrir file
+            writer->writeFromAudioSampleBuffer(hrirSampleBuffer, 0, hrirSampleBuffer.getNumSamples());
+#else
+            // test write via libsndfile
+            const char* path = "C:/Users/Nutty/Desktop/sndFileHrir.wav";
+            SF_INFO sfinfo;
+            sfinfo.channels = 256; //!< same problem as juce
+            sfinfo.samplerate = reader->sampleRate;
+            sfinfo.format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
+            //SNDFILE *hrirFile = sf_open(path, SFM_WRITE, &sfinfo);
+
+            // Create interleaved audio data
+            float *interleavedBuffer;
+            int numFrames = sfinfo.channels * hrirSampleBuffer.getNumSamples();
+            interleavedBuffer = (float*)malloc(numFrames * sizeof(float));
+            long k = 0;
+            for (long i = 0; i < hrirSampleBuffer.getNumSamples(); i++)
+            {
+                for (int j = 0; j < sfinfo.channels; j++)
+                {
+                    interleavedBuffer[k + j] = hrirSampleBuffer.getSample(j, i);
+                }
+                k += sfinfo.channels;
+            }
+
+            SndfileHandle sndFile = SndfileHandle(path, SFM_WRITE, sfinfo.format, sfinfo.channels, sfinfo.samplerate);
+            sndFile.write(interleavedBuffer, numFrames);
+#endif
+        }
+        else
+        {
+            // resample hrir buffer
+            double resampleRatio = hrirFileSampleRate / sRate;
+            AudioSampleBuffer resampledHrirBuffer = AudioSampleBuffer(hrirSampleBuffer.getNumChannels(), hrirSampleBuffer.getNumSamples() / resampleRatio);
+            const float **readBuffer = hrirSampleBuffer.getArrayOfReadPointers();
+            float **writeBuffer = resampledHrirBuffer.getArrayOfWritePointers();
+
+            ScopedPointer<LagrangeInterpolator> resampler = new LagrangeInterpolator();
+            for (int i = 0; i < hrirSampleBuffer.getNumChannels(); ++i)
+            {
+                resampler->process(resampleRatio, readBuffer[i], writeBuffer[i], resampledHrirBuffer.getNumSamples());
+            }
+#if 0
+            // write resampled hrir file
+            writer->writeFromAudioSampleBuffer(resampledHrirBuffer, 0, resampledHrirBuffer.getNumSamples());
+#endif
+        }
+        //out.release();
+        //delete writer;
+
+        // save path of randomly named tempFile
+        tempHrirFilePath = tempHrirFile->getFile().getFullPathName();
+    }
+
+    // configurate SSR
     auto conf = ssr::configuration(ssr_argc, ssr_argv);
     conf.renderer_params.set<int>("sample_rate", static_cast<int>(sRate));
     conf.renderer_params.set<int>("block_size", samplesPerBlock);
     conf.renderer_params.set<int>("in_channels", getNumInputChannels());
     conf.renderer_params.set<int>("out_channels", getNumOutputChannels());
 
-    /// \todo resample LagrangeInterpolator process()
-    // set hrir_file source to temporary file
     conf.renderer_params.set("hrir_size", 0); // "0" means use all that are there
-    conf.renderer_params.set("hrir_file", hrirFilePath);
+    conf.renderer_params.set("hrir_file", tempHrirFilePath);
 
-    renderer.reset(new ssr::BinauralRenderer(conf.renderer_params));
-    renderer->load_reproduction_setup();
+    try
+    {
+        // create renderer
+        renderer.reset(new ssr::BinauralRenderer(conf.renderer_params));
+        renderer->load_reproduction_setup();
 
-    /// \todo getCPUUsage() einbauen
+        // add mono input source
+        apf::parameter_map sourceParam;
+        sourceID = renderer->add_source(sourceParam);
 
-    // add input source
-    apf::parameter_map sourceParam;
-    sourceID = renderer->add_source(sourceParam);
+        setupSuccessful = true;
+    }
+    catch (...)
+    {
+        setupSuccessful = false;
+    }
 }
 
 void PluginAudioProcessor::releaseResources()
@@ -170,7 +259,7 @@ void PluginAudioProcessor::releaseResources()
     // spare memory, etc.
 }
 
-void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
+void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
     ignoreUnused(midiMessages);
 
@@ -181,38 +270,7 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     // when they first compile the plugin, but obviously you don't need to
     // this code if your algorithm already fills all the output channels.
     for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
-
-    // set listener parameter
-    Position listenerPos = Position(referenceX.get(), referenceY.get());
-    renderer->state.reference_position.setRT(listenerPos);
-    renderer->state.reference_orientation.setRT(Orientation(referenceOrientation.get() + refOrientationOffset));
-    renderer->state.amplitude_reference_distance.setRT(amplitudeReferenceDistance.get());
-
-    // set source parameter
-    ssr::RendererBase<ssr::BinauralRenderer>::Source *source = renderer->get_source(sourceID);
-    Position sourcePos = Position(sourceX.get(), sourceY.get());
-    source->position.setRT(sourcePos);
-    source->orientation.setRT((listenerPos - sourcePos).orientation()); // quserinterface.cpp
-    Source::model_t type;
-    sourceType.getStep() == eSourceType::ePlane ? type = Source::model_t::plane : type = Source::model_t::point;
-    source->model.setRT(type);
-    source->mute.setRT(sourceMute.getStep() == eOnOffState::eOn);
-    source->gain.setRT(Param::fromDb(sourceVol.get()));
-
-    // calculate angle from which the source is seen
-    // and confine angle to interval ]-180, 180], see qsourceproperties.cpp
-    float ang = source->orientation.get().azimuth - referenceOrientation.get() + refOrientationOffset;
-    ang = std::fmod(ang, 360.0f);
-    if (ang > 180.0f)
-    {
-        ang -= 360.0f;
-    }
-    else if (ang <= -180.0f)
-    {
-        ang += 360.0f;
-    }
-    sourceOrientation.setUI(ang);
+        buffer.clear(i, 0, buffer.getNumSamples());
 
     /// \todo how to handle mono input from host correctly?
     // choose between left or right channel for stereo input
@@ -220,17 +278,53 @@ void PluginAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
 
     // get source input level
     float inputLevel;
-    source->mute ? inputLevel = 0.0f : inputLevel = buffer.getRMSLevel(channelIndex, 0, buffer.getNumSamples());
+    sourceMute.getStep() == eOnOffState::eOn ? inputLevel = 0.0f : inputLevel = buffer.getRMSLevel(channelIndex, 0, buffer.getNumSamples());
     sourceLevel.set(Param::toDb(inputLevel), true);
 
-    // call internal ssr process function of renderer
-    renderer->audio_callback(getBlockSize()
-        , buffer.getArrayOfWritePointers() + channelIndex // NOTE: write = read pointer (same address), read is just const
-        , buffer.getArrayOfWritePointers());
+    if (setupSuccessful)
+    {
+        // set listener parameter
+        Position listenerPos = Position(referenceX.get(), referenceY.get());
+        renderer->state.reference_position.setRT(listenerPos);
+        renderer->state.reference_orientation.setRT(Orientation(referenceOrientation.get() + refOrientationOffset));
+        renderer->state.amplitude_reference_distance.setRT(amplitudeReferenceDistance.get());
+
+        // set source parameter
+        ssr::RendererBase<ssr::BinauralRenderer>::Source *source = renderer->get_source(sourceID);
+        Position sourcePos = Position(sourceX.get(), sourceY.get());
+        source->position.setRT(sourcePos);
+        source->orientation.setRT((listenerPos - sourcePos).orientation()); // quserinterface.cpp
+        Source::model_t type;
+        sourceType.getStep() == eSourceType::ePlane ? type = Source::model_t::plane : type = Source::model_t::point;
+        source->model.setRT(type);
+        source->mute.setRT(sourceMute.getStep() == eOnOffState::eOn);
+        source->gain.setRT(Param::fromDb(sourceVol.get()));
+
+        // calculate angle from which the source is seen
+        // and confine angle to interval ]-180, 180], see qsourceproperties.cpp
+        float ang = source->orientation.get().azimuth - referenceOrientation.get() + refOrientationOffset;
+        ang = std::fmod(ang, 360.0f);
+        if (ang > 180.0f)
+        {
+            ang -= 360.0f;
+        }
+        else if (ang <= -180.0f)
+        {
+            ang += 360.0f;
+        }
+        sourceOrientation.setUI(ang);
+
+        // call internal ssr process function of renderer
+        renderer->audio_callback(getBlockSize()
+            , buffer.getArrayOfWritePointers() + channelIndex // NOTE: write = read pointer (same address), read is just const
+            , buffer.getArrayOfWritePointers());
+    }
 
     // get ssr output level
     outputLevelLeft.set(Param::toDb(buffer.getRMSLevel(0, 0, buffer.getNumSamples())), true);
     outputLevelRight.set(Param::toDb(buffer.getRMSLevel(1, 0, buffer.getNumSamples())), true);
+
+    /// \todo getCPUUsage() einbauen
 }
 
 //==============================================================================
@@ -242,17 +336,17 @@ bool PluginAudioProcessor::hasEditor() const
 
 AudioProcessorEditor* PluginAudioProcessor::createEditor()
 {
-    return new PluginAudioProcessorEditor (*this);
+    return new PluginAudioProcessorEditor(*this);
 }
 
 //==============================================================================
 
-void PluginAudioProcessor::getStateInformation (MemoryBlock& destData)
+void PluginAudioProcessor::getStateInformation(MemoryBlock& destData)
 {
     SynthParams::writeXMLPatchHost(destData);
 }
 
-void PluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void PluginAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 {
     SynthParams::readXMLPatchHost(data, sizeInBytes);
 }
