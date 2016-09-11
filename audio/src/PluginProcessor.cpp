@@ -17,16 +17,6 @@
 //==============================================================================
 PluginAudioProcessor::PluginAudioProcessor()
 {
-#if 0
-    // write default_hrir_wav binary into temporary file
-    tempHrirFile = new TemporaryFile(".wav");
-    ScopedPointer<FileOutputStream> out = tempHrirFile->getFile().createOutputStream();
-    out->write(BinaryData::default_hrirs_wav, BinaryData::default_hrirs_wavSize);
-
-    // save path of randomly named tempFile
-    tempHrirFilePath = tempHrirFile->getFile().getFullPathName();
-#endif
-
     // add automation params for host
     // NOTE: make sure automation in host is not interpolated for more precision
     // e.g. in Cubase by setting reduction level to 0%
@@ -144,88 +134,59 @@ namespace {
 
 void PluginAudioProcessor::prepareToPlay(double sRate, int samplesPerBlock)
 {
-    // delete previous created tempHrirFile with incompatible sample rate if necessary
-    if (sRate != hrirFileSampleRate && tempHrirFile != nullptr)
+    // read default_hrirs_wav from memory into hrirFileBuffer
+    MemoryInputStream *in = new MemoryInputStream(BinaryData::default_hrirs_wav, BinaryData::default_hrirs_wavSize, false);
+    ScopedPointer<AudioFormatReader> hrirFileReader = WavAudioFormat().createReaderFor(in, true);
+    double hrirFileSampleRate = hrirFileReader->sampleRate;
+    int numHrirFileChannels = static_cast<int>(hrirFileReader->numChannels);
+    int hrirFileLengthInSamples = static_cast<int>(hrirFileReader->lengthInSamples);
+
+    AudioSampleBuffer hrirFileBuffer(numHrirFileChannels, hrirFileLengthInSamples);
+    hrirFileReader->read(&hrirFileBuffer, 0, hrirFileLengthInSamples, 0, true, true);
+
+    // resample default hrir buffer if necessary
+    AudioSampleBuffer resampledHrirFileBuffer;
+    if (sRate != hrirFileSampleRate)
     {
-        tempHrirFile->deleteTemporaryFile();
-        tempHrirFile = nullptr;
+        ScopedPointer<LagrangeInterpolator> resampler = new LagrangeInterpolator();
+        double speedRatio = hrirFileSampleRate / sRate;
+        int resampledLengthInSamples = static_cast<int>(hrirFileLengthInSamples / speedRatio);
+        resampledHrirFileBuffer = AudioSampleBuffer(numHrirFileChannels, resampledLengthInSamples);
+
+        const float **readBuffer = hrirFileBuffer.getArrayOfReadPointers();
+        float **writeBuffer = resampledHrirFileBuffer.getArrayOfWritePointers();
+        for (int i = 0; i < numHrirFileChannels; ++i)
+        {
+            resampler->process(speedRatio, readBuffer[i], writeBuffer[i], resampledLengthInSamples);
+        }
     }
 
-    // if no tempHrirFile is available then create new tempHrirFile
-    if (tempHrirFile == nullptr)
+    // create interleaved audio data buffer for writing multi channel wav with libsndfile
+    AudioSampleBuffer *bufferToUse = sRate == hrirFileSampleRate ? &hrirFileBuffer : &resampledHrirFileBuffer;
+    int numFrames = numHrirFileChannels * bufferToUse->getNumSamples();
+    float *interleavedBuffer = (float*)malloc(numFrames * sizeof(float));
+    long k = 0;
+
+    for (long i = 0; i < bufferToUse->getNumSamples(); i++)
     {
-        // read default_hrirs_wav from memory and put into an AudioSampleBuffer
-        MemoryInputStream *in = new MemoryInputStream(BinaryData::default_hrirs_wav, BinaryData::default_hrirs_wavSize, false);
-        ScopedPointer<AudioFormatReader> reader = WavAudioFormat().createReaderFor(in, true);
-
-        AudioSampleBuffer hrirSampleBuffer(reader->numChannels, reader->lengthInSamples);
-        reader->read(&hrirSampleBuffer, 0, reader->lengthInSamples, 0, true, true);
-
-        /// \todo write via libsndfile
-        // create temporary file
-        tempHrirFile = new TemporaryFile(".wav");
-        ScopedPointer<FileOutputStream> out = tempHrirFile->getFile().createOutputStream();
-        out->write(BinaryData::default_hrirs_wav, BinaryData::default_hrirs_wavSize);
-
-        //AudioFormatWriter *writer = WavAudioFormat().createWriterFor(out, sRate, reader->numChannels, reader->bitsPerSample, NULL, 0);
-        if (sRate == hrirFileSampleRate)
+        for (int j = 0; j < numHrirFileChannels; j++)
         {
-#if 0
-            // write not resampled hrir file
-            writer->writeFromAudioSampleBuffer(hrirSampleBuffer, 0, hrirSampleBuffer.getNumSamples());
-#else
-            // test write via libsndfile
-            const char* path = "C:/Users/Nutty/Desktop/sndFileHrir.wav";
-            SF_INFO sfinfo;
-            sfinfo.channels = 256; //!< same problem as juce
-            sfinfo.samplerate = reader->sampleRate;
-            sfinfo.format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
-            //SNDFILE *hrirFile = sf_open(path, SFM_WRITE, &sfinfo);
-
-            // Create interleaved audio data
-            float *interleavedBuffer;
-            int numFrames = sfinfo.channels * hrirSampleBuffer.getNumSamples();
-            interleavedBuffer = (float*)malloc(numFrames * sizeof(float));
-            long k = 0;
-            for (long i = 0; i < hrirSampleBuffer.getNumSamples(); i++)
-            {
-                for (int j = 0; j < sfinfo.channels; j++)
-                {
-                    interleavedBuffer[k + j] = hrirSampleBuffer.getSample(j, i);
-                }
-                k += sfinfo.channels;
-            }
-
-            SndfileHandle sndFile = SndfileHandle(path, SFM_WRITE, sfinfo.format, sfinfo.channels, sfinfo.samplerate);
-            sndFile.write(interleavedBuffer, numFrames);
-#endif
+            interleavedBuffer[k + j] = bufferToUse->getSample(j, i);
         }
-        else
-        {
-            // resample hrir buffer
-            double resampleRatio = hrirFileSampleRate / sRate;
-            AudioSampleBuffer resampledHrirBuffer = AudioSampleBuffer(hrirSampleBuffer.getNumChannels(), hrirSampleBuffer.getNumSamples() / resampleRatio);
-            const float **readBuffer = hrirSampleBuffer.getArrayOfReadPointers();
-            float **writeBuffer = resampledHrirBuffer.getArrayOfWritePointers();
-
-            ScopedPointer<LagrangeInterpolator> resampler = new LagrangeInterpolator();
-            for (int i = 0; i < hrirSampleBuffer.getNumChannels(); ++i)
-            {
-                resampler->process(resampleRatio, readBuffer[i], writeBuffer[i], resampledHrirBuffer.getNumSamples());
-            }
-#if 0
-            // write resampled hrir file
-            writer->writeFromAudioSampleBuffer(resampledHrirBuffer, 0, resampledHrirBuffer.getNumSamples());
-#endif
-        }
-        //out.release();
-        //delete writer;
-
-        // save path of randomly named tempFile
-        tempHrirFilePath = tempHrirFile->getFile().getFullPathName();
+        k += numHrirFileChannels;
     }
 
-    // configurate SSR
+    // create temporary file and save path of randomly named tempFile
+    tempHrirFile = new TemporaryFile(".wav");
+    String tempHrirFilePath = tempHrirFile->getFile().getFullPathName();
+
+    // write wav into TemporaryFile
+    const char *path = tempHrirFilePath.getCharPointer();
+    auto format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
+    SndfileHandle sndFile = SndfileHandle(path, SFM_WRITE, format, numHrirFileChannels, static_cast<int>(sRate));
+    sndFile.write(interleavedBuffer, numFrames);
+
+    // configure SSR
     auto conf = ssr::configuration(ssr_argc, ssr_argv);
     conf.renderer_params.set<int>("sample_rate", static_cast<int>(sRate));
     conf.renderer_params.set<int>("block_size", samplesPerBlock);
@@ -272,17 +233,18 @@ void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& m
     for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
         buffer.clear(i, 0, buffer.getNumSamples());
 
-    /// \todo how to handle mono input from host correctly?
-    // choose between left or right channel for stereo input
-    int channelIndex = static_cast<int>(inputChannel.getStep());
-
-    // get source input level
-    float inputLevel;
-    sourceMute.getStep() == eOnOffState::eOn ? inputLevel = 0.0f : inputLevel = buffer.getRMSLevel(channelIndex, 0, buffer.getNumSamples());
-    sourceLevel.set(Param::toDb(inputLevel), true);
-
     if (setupSuccessful)
     {
+        /// \todo how to handle mono input from host correctly?
+        // choose between left or right channel for stereo input
+        int channelIndex = static_cast<int>(inputChannel.getStep());
+
+        // get source input level
+        float inputLevel;
+        bool isInputMuted = sourceMute.getStep() == eOnOffState::eOn;
+        isInputMuted ? inputLevel = 0.0f : inputLevel = buffer.getRMSLevel(channelIndex, 0, buffer.getNumSamples());
+        sourceLevel.set(Param::toDb(inputLevel), true);
+
         // set listener parameter
         Position listenerPos = Position(referenceX.get(), referenceY.get());
         renderer->state.reference_position.setRT(listenerPos);
@@ -297,7 +259,7 @@ void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& m
         Source::model_t type;
         sourceType.getStep() == eSourceType::ePlane ? type = Source::model_t::plane : type = Source::model_t::point;
         source->model.setRT(type);
-        source->mute.setRT(sourceMute.getStep() == eOnOffState::eOn);
+        source->mute.setRT(isInputMuted);
         source->gain.setRT(Param::fromDb(sourceVol.get()));
 
         // calculate angle from which the source is seen
@@ -316,14 +278,17 @@ void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& m
 
         // call internal ssr process function of renderer
         renderer->audio_callback(getBlockSize()
-            , buffer.getArrayOfWritePointers() + channelIndex // NOTE: write = read pointer (same address), read is just const
+            , buffer.getArrayOfWritePointers() + channelIndex // NOTE: write = read pointer, read is just const
             , buffer.getArrayOfWritePointers());
+
+        // get ssr output level
+        outputLevelLeft.set(Param::toDb(buffer.getRMSLevel(0, 0, buffer.getNumSamples())), true);
+        outputLevelRight.set(Param::toDb(buffer.getRMSLevel(1, 0, buffer.getNumSamples())), true);
     }
-
-    // get ssr output level
-    outputLevelLeft.set(Param::toDb(buffer.getRMSLevel(0, 0, buffer.getNumSamples())), true);
-    outputLevelRight.set(Param::toDb(buffer.getRMSLevel(1, 0, buffer.getNumSamples())), true);
-
+    else
+    {
+        buffer.clear();
+    }
     /// \todo getCPUUsage() einbauen
 }
 

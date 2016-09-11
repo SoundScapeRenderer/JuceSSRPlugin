@@ -22,35 +22,35 @@
  * Common JUCE PluginProcessor. Derived from SynthParams for communication with UI.
  * The SSR is incorporated in this class.
  */
-class PluginAudioProcessor  : public AudioProcessor, public SynthParams
+class PluginAudioProcessor : public AudioProcessor, public SynthParams
 {
 public:
     PluginAudioProcessor();
     ~PluginAudioProcessor();
 
     //==============================================================================
-    
+
     /// plugin audio processing callbacks
-    void prepareToPlay (double sampleRate, int samplesPerBlock) override;
+    void prepareToPlay(double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
 
-    void processBlock (AudioSampleBuffer&, MidiBuffer&) override;
+    void processBlock(AudioSampleBuffer&, MidiBuffer&) override;
 
     //==============================================================================
-    
+
     /// audio processor editor stuff
     AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override;
 
     //==============================================================================
-    
+
     /// plugin information about name, routing and midi
     const String getName() const override;
 
-    const String getInputChannelName (int channelIndex) const override;
-    const String getOutputChannelName (int channelIndex) const override;
-    bool isInputChannelStereoPair (int index) const override;
-    bool isOutputChannelStereoPair (int index) const override;
+    const String getInputChannelName(int channelIndex) const override;
+    const String getOutputChannelName(int channelIndex) const override;
+    bool isInputChannelStereoPair(int index) const override;
+    bool isOutputChannelStereoPair(int index) const override;
 
     bool acceptsMidi() const override;
     bool producesMidi() const override;
@@ -58,19 +58,19 @@ public:
     double getTailLengthSeconds() const override;
 
     //==============================================================================
-    
+
     /// plugin programm getter and setter
     int getNumPrograms() override;
     int getCurrentProgram() override;
-    void setCurrentProgram (int index) override;
-    const String getProgramName (int index) override;
-    void changeProgramName (int index, const String& newName) override;
+    void setCurrentProgram(int index) override;
+    const String getProgramName(int index) override;
+    void changeProgramName(int index, const String& newName) override;
 
     //==============================================================================
-    
+
     /// host serializiation functions to read and write patches
-    void getStateInformation (MemoryBlock& destData) override;
-    void setStateInformation (const void* data, int sizeInBytes) override;
+    void getStateInformation(MemoryBlock& destData) override;
+    void setStateInformation(const void* data, int sizeInBytes) override;
 
     //==============================================================================
 
@@ -79,11 +79,9 @@ private:
     int sourceID = 0; //!< ID of created SSR source for accessing parameters
 
     ScopedPointer<TemporaryFile> tempHrirFile; //!< temporary hrir file to be created from memory
-    String tempHrirFilePath = ""; //!< temporary hrir file path
-    const double hrirFileSampleRate = 44100.0; //!< sample rate of default hrir file from memory
-    bool setupSuccessful = false;
+    bool setupSuccessful = false; //!< only create and use SSR renderer if loading hrir file was successful
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginAudioProcessor)
 };
 
 
