@@ -18,8 +18,7 @@ class PanelBase : public Component, protected Timer
 {
 public:
 
-    PanelBase(SynthParams &p)
-        : params(p)
+    PanelBase(SynthParams &p) : params(p)
     {
         startTimerHz(60);
     }
@@ -38,19 +37,19 @@ protected:
      * Register reference listener component with affiliated parameters that needs to be checked.
      * @param posX x position of reference listener
      * @param posY y position of reference listener
-     * @param ori reference listener orientation 
+     * @param ori reference listener orientation
      * @param sceneWidth width of the scene component in px
      * @param sceneHeight height of the scene component in px
      * @param hook callback function
      */
     void registerListener(ListenerComponent *l, Param *posX, Param *posY, Param *ori,
-        int sceneWidth, int sceneHeight, const tHookFn hook = tHookFn())
+                          int sceneWidth, int sceneHeight, const tHookFn hook = tHookFn())
     {
         l->setSceneSize(sceneWidth, sceneHeight);
         l->updateBackgroundAngle(ori->getDefaultUI());
 
         listenerReg[l] = { posX, posY, ori };
-        if (hook) 
+        if (hook)
         {
             postUpdateHook[l] = hook;
             hook();
@@ -81,7 +80,7 @@ protected:
             }
 
             auto itHook = postUpdateHook.find(l2p.first);
-            if (itHook != postUpdateHook.end()) 
+            if (itHook != postUpdateHook.end())
             {
                 itHook->second();
             }
@@ -102,7 +101,7 @@ protected:
      * @param hook callback function
      */
     void registerSource(SourceNodeComponent *s, Param *posX, Param *posY, Param *vol, Param *level,
-        int sceneWidth, int sceneHeight, const tHookFn hook = tHookFn())
+                        int sceneWidth, int sceneHeight, const tHookFn hook = tHookFn())
     {
         s->setSceneSize(sceneWidth, sceneHeight);
 
@@ -120,7 +119,7 @@ protected:
     /**
      * Check whether registered Params of source have been changed and handle these correctly.
      */
-    void updateDirtySource()
+    void updateDirtySources()
     {
         for (auto s2p : sourceReg)
         {
@@ -137,12 +136,6 @@ protected:
             if (s2p.second[2]->isUIDirty())
             {
                 s2p.first->getVolSlider()->setValue(s2p.second[2]->getUI(), dontSendNotification);
-            }
-
-            // level
-            if (s2p.second[3]->isUIDirty())
-            {
-                s2p.first->getVolSlider()->refreshVolLevel(s2p.second[3]->getUI());
             }
 
             auto itHook = postUpdateHook.find(s2p.first);
@@ -177,22 +170,27 @@ protected:
     }
 
     /**
-    * Check whether registered parameters of OutputLevelComponent have changed and handle these correctly.
+    * Update all level components independently from audio buffer size,
+    * Depends only from set timer frequency.
     */
-    void updateDirtyOutputLevel()
+    void updateAllLevelComponents()
     {
+        // refresh outputLevel component
         for (auto o2p : outputLevelReg)
         {
-            if (o2p.second[0]->isUIDirty() || o2p.second[1]->isUIDirty())
-            {
-                o2p.first->refreshOutputLevel(o2p.second[0]->getUI(), o2p.second[1]->getUI());
-            }
+            o2p.first->refreshOutputLevel(o2p.second[0]->getUI(), o2p.second[1]->getUI());
 
             auto itHook = postUpdateHook.find(o2p.first);
             if (itHook != postUpdateHook.end())
             {
                 itHook->second();
             }
+        }
+
+        // refresh source levels
+        for (auto s2p : sourceReg)
+        {
+            s2p.first->getVolSlider()->refreshVolLevel(s2p.second[3]->getUI());
         }
     }
 
@@ -220,7 +218,7 @@ protected:
     /**
      * Check whether registered parameters of slider have changed and handle these correctly.
      */
-    void updateDirtySlider()
+    void updateDirtySliders()
     {
         for (auto s2p : sliderReg)
         {
@@ -261,7 +259,7 @@ protected:
     /**
      * Check whether registered parameters of buttons have changed and handle these correctly.
      */
-    void updateDirtyButton()
+    void updateDirtyButtons()
     {
         for (auto b2p : buttonReg)
         {
@@ -283,11 +281,12 @@ protected:
     virtual void timerCallback() override
     {
         updateDirtyListener();
-        updateDirtySource();
-        updateDirtyOutputLevel();
+        updateDirtySources();
 
-        updateDirtySlider();
-        updateDirtyButton();
+        updateDirtySliders();
+        updateDirtyButtons();
+
+        updateAllLevelComponents();
     }
 
     SynthParams &params;

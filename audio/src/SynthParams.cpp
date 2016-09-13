@@ -84,14 +84,16 @@ float SynthParams::roundNearest(float val)
 
 //==============================================================================
 
-void SynthParams::writeXMLPatchHost(MemoryBlock& destData) {
+void SynthParams::writeXMLPatchHost(MemoryBlock& destData)
+{
     // create an outer node of the patch
     ScopedPointer<XmlElement> patch = new XmlElement("patch");
     writeXMLPatchTree(patch);
     AudioProcessor::copyXmlToBinary(*patch, destData);
 }
 
-void SynthParams::writeXMLPatchStandalone() {
+void SynthParams::writeXMLPatchStandalone()
+{
     // create an outer node of the patch
     ScopedPointer<XmlElement> patch = new XmlElement("patch");
     writeXMLPatchTree(patch);
@@ -112,57 +114,67 @@ void SynthParams::writeXMLPatchStandalone() {
     }
 }
 
-void SynthParams::readXMLPatchHost(const void* data, int sizeInBytes) {
+void SynthParams::readXMLPatchHost(const void* data, int sizeInBytes)
+{
     ScopedPointer<XmlElement> patch = AudioProcessor::getXmlFromBinary(data, sizeInBytes);
     fillValues(patch);
 }
 
-void SynthParams::readXMLPatchStandalone() {
+void SynthParams::readXMLPatchStandalone()
+{
     // read the xml params into the synth params
     FileChooser openFileChooser("Please select the patch you want to read!",
         File::getSpecialLocation(File::commonDocumentsDirectory).getChildFile(appName), "*.xml");
 
-    if (openFileChooser.browseForFileToOpen()) {
+    if (openFileChooser.browseForFileToOpen())
+    {
         File openedFile(openFileChooser.getResult());
         ScopedPointer<XmlElement> patch = XmlDocument::parse(openedFile);
         fillValues(patch);
     }
 }
 
-void SynthParams::addElement(XmlElement* patch, String name, float value) {
+void SynthParams::addElement(XmlElement* patch, String name, float value)
+{
     XmlElement* node = new XmlElement(name);
     node->setAttribute("value", value);
     patch->addChildElement(node);
 }
 
-void SynthParams::writeXMLPatchTree(XmlElement* patch) {
+void SynthParams::writeXMLPatchTree(XmlElement* patch)
+{
     // set name and  version of the patch
     patch->setAttribute("version", appVersion);
 
     // iterate over all parameter to be serialized and insert them into the XML tree
     std::vector<Param*> parameters = serializeParams;
-    for (auto &param : parameters) {
+    for (auto &param : parameters)
+    {
         float value = param->getUI();
-        if (param->serializationTag() != "") {
+        if (param->serializationTag() != "")
+        {
             String prefixedName = (param->prefix() + param->serializationTag()).replace(" ", "");
             addElement(patch, prefixedName, value);
         }
     }
 }
 
-void SynthParams::fillValueIfExists(XmlElement* patch, String paramName, Param& param) {
+void SynthParams::fillValueIfExists(XmlElement* patch, String paramName, Param& param)
+{
     String prefixedName = (param.prefix() + param.serializationTag()).replace(" ", "");
-    if (patch->getChildByName(prefixedName) != NULL) {
+    if (patch->getChildByName(prefixedName) != NULL)
+    {
         param.setUI(static_cast<float>(patch->getChildByName(prefixedName)->getDoubleAttribute("value")));
-        /// \todo dirty flag needs to be set! This is a bad hack, please use get/set instead of getUI/setUI
         param.set(param.get(), true);
     }
 }
 
-void SynthParams::fillValues(XmlElement* patch) {
+void SynthParams::fillValues(XmlElement* patch)
+{
     // if the versions don't align, inform the user
-    if (patch == NULL) return;
-    if (patch->getTagName() != "patch" || patch->getStringAttribute("version").compare(appVersion) > 0) {
+    if (patch == NULL) { return; }
+    if (patch->getTagName() != "patch" || patch->getStringAttribute("version").compare(appVersion) > 0)
+    {
         AlertWindow::showMessageBoxAsync(AlertWindow::WarningIcon, "Version Conflict",
             "The file was created by a newer version of the software, some settings may be ignored.",
             "OK");
@@ -173,8 +185,10 @@ void SynthParams::fillValues(XmlElement* patch) {
     patchNameDirty = true;
 
     // iterate over all params and set the values if they exist in the xml
-    for (auto &param : parameters) {
-        if (param->serializationTag() != "") {
+    for (auto &param : parameters)
+    {
+        if (param->serializationTag() != "")
+        {
             fillValueIfExists(patch, param->serializationTag(), *param);
         }
     }

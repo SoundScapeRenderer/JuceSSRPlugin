@@ -243,7 +243,7 @@ void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& m
         float inputLevel;
         bool isInputMuted = sourceMute.getStep() == eOnOffState::eOn;
         isInputMuted ? inputLevel = 0.0f : inputLevel = buffer.getRMSLevel(channelIndex, 0, buffer.getNumSamples());
-        sourceLevel.set(Param::toDb(inputLevel), true);
+        sourceLevel.setUI(Param::toDb(inputLevel));
 
         // set listener parameter
         Position listenerPos = Position(referenceX.get(), referenceY.get());
@@ -282,8 +282,8 @@ void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& m
             , buffer.getArrayOfWritePointers());
 
         // get ssr output level
-        outputLevelLeft.set(Param::toDb(buffer.getRMSLevel(0, 0, buffer.getNumSamples())), true);
-        outputLevelRight.set(Param::toDb(buffer.getRMSLevel(1, 0, buffer.getNumSamples())), true);
+        outputLevelLeft.setUI(Param::toDb(buffer.getRMSLevel(0, 0, buffer.getNumSamples())));
+        outputLevelRight.setUI(Param::toDb(buffer.getRMSLevel(1, 0, buffer.getNumSamples())));
     }
     else
     {
