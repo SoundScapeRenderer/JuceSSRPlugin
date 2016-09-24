@@ -48,6 +48,10 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
+    /**
+     * Resize scene UI, use this function after zoomFactor has been changed.
+     */
+    void sceneZoomFactorChanged();
     //[/UserMethods]
 
     void paint (Graphics& g);

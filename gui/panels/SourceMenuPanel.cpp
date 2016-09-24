@@ -98,7 +98,7 @@ SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceNodeComponent *s)
     modelLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (inputLabel = new Label ("input label",
-                                               TRANS("input channel")));
+                                               TRANS("stereo input")));
     inputLabel->setFont (Font (13.00f, Font::plain));
     inputLabel->setJustificationType (Justification::centredLeft);
     inputLabel->setEditable (false, false, false);
@@ -111,8 +111,8 @@ SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceNodeComponent *s)
     inputBox->setJustificationType (Justification::centredLeft);
     inputBox->setTextWhenNothingSelected (TRANS("input channel"));
     inputBox->setTextWhenNoChoicesAvailable (String::empty);
-    inputBox->addItem (TRANS("left / mono"), 1);
-    inputBox->addItem (TRANS("right"), 2);
+    inputBox->addItem (TRANS("left channel"), 1);
+    inputBox->addItem (TRANS("right channel"), 2);
     inputBox->addListener (this);
 
     addAndMakeVisible (modelBox = new ComboBox ("model box"));
@@ -166,8 +166,8 @@ SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceNodeComponent *s)
 
 
     //[UserPreSize]
-    registerButton(muteToggle, &params.sourceMute);
-    registerButton(fixToggle, &params.sourcePositionLock);
+    registerButton(muteToggle, &params.sourceMute, std::bind(&SourceMenuPanel::sourceNodeFixedOrMuted, this));
+    registerButton(fixToggle, &params.sourcePositionLock, std::bind(&SourceMenuPanel::sourceNodeFixedOrMuted, this));
 
     modelBox->setSelectedItemIndex(static_cast<int>(params.sourceType.getStep()), dontSendNotification);
     inputBox->setSelectedItemIndex(static_cast<int>(params.inputChannel.getStep()), dontSendNotification);
@@ -241,8 +241,6 @@ void SourceMenuPanel::resized()
     distanceLabel2->setBounds (96, 40, 144, 16);
     positionLabel2->setBounds (96, 16, 144, 16);
     //[UserResized] Add your own custom resize handling here..
-    modelBox->setSelectedItemIndex(static_cast<int>(params.sourceType.getStep()), dontSendNotification);
-    inputBox->setSelectedItemIndex(static_cast<int>(params.inputChannel.getStep()), dontSendNotification);
     //[/UserResized]
 }
 
@@ -257,7 +255,7 @@ void SourceMenuPanel::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
         //[UserComboBoxCode_inputBox] -- add your combo box handling code here..
         eInputChannel channel;
         selectedId == 0 ? channel = eInputChannel::eLeftChannel : channel = eInputChannel::eRightChannel;
-        params.inputChannel.setStepUI(channel);
+        params.inputChannel.setUI(static_cast<float>(channel));
         //[/UserComboBoxCode_inputBox]
     }
     else if (comboBoxThatHasChanged == modelBox)
@@ -265,7 +263,7 @@ void SourceMenuPanel::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
         //[UserComboBoxCode_modelBox] -- add your combo box handling code here..
         eSourceType type;
         selectedId == 0 ? type = eSourceType::ePoint : type = eSourceType::ePlane;
-        params.sourceType.setStepUI(type);
+        params.sourceType.setUI(static_cast<float>(type));
         sourceNode->updatePlaneWave(sourceNode->getPlaneWaveAngle(), type == eSourceType::ePlane, sourceNode->getNodeColour());
         //[/UserComboBoxCode_modelBox]
     }
@@ -277,32 +275,32 @@ void SourceMenuPanel::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 void SourceMenuPanel::buttonClicked (Button* buttonThatWasClicked)
 {
     //[UserbuttonClicked_Pre]
-    bool isOn = buttonThatWasClicked->getToggleState();
-    eOnOffState state;
-    isOn ? state = eOnOffState::eOn : state = eOnOffState::eOff;
+    handleButton(buttonThatWasClicked);
     //[/UserbuttonClicked_Pre]
 
     if (buttonThatWasClicked == muteToggle)
     {
         //[UserButtonCode_muteToggle] -- add your button handler code here..
-        params.sourceMute.setStepUI(state);
         //[/UserButtonCode_muteToggle]
     }
     else if (buttonThatWasClicked == fixToggle)
     {
         //[UserButtonCode_fixToggle] -- add your button handler code here..
-        params.sourcePositionLock.setStepUI(state);
         //[/UserButtonCode_fixToggle]
     }
 
     //[UserbuttonClicked_Post]
-    sourceNode->repaint();
     //[/UserbuttonClicked_Post]
 }
 
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
+void SourceMenuPanel::sourceNodeFixedOrMuted()
+{
+    sourceNode->repaint();
+}
+
 void SourceMenuPanel::timerCallback()
 {
     PanelBase::timerCallback();
@@ -372,12 +370,12 @@ BEGIN_JUCER_METADATA
          fontsize="13" bold="0" italic="0" justification="33"/>
   <LABEL name="input label" id="1764e9ebbbf45408" memberName="inputLabel"
          virtualName="" explicitFocusOrder="0" pos="8 184 80 16" textCol="ff808080"
-         edTextCol="ff000000" edBkgCol="0" labelText="input channel" editableSingleClick="0"
+         edTextCol="ff000000" edBkgCol="0" labelText="stereo input" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="13" bold="0" italic="0" justification="33"/>
   <COMBOBOX name="input box" id="976271ca70d23dca" memberName="inputBox"
             virtualName="" explicitFocusOrder="0" pos="96 184 144 16" editable="0"
-            layout="33" items="left / mono&#10;right" textWhenNonSelected="input channel"
+            layout="33" items="left channel&#10;right channel" textWhenNonSelected="input channel"
             textWhenNoItems=""/>
   <COMBOBOX name="model box" id="6589084621656a22" memberName="modelBox"
             virtualName="" explicitFocusOrder="0" pos="96 160 144 16" editable="0"

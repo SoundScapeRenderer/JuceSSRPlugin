@@ -45,7 +45,7 @@ public:
         float h = static_cast<float>(getHeight());
 
         // draw listener background
-        Image bg = listenerBackgroundImg.rescaled(getWidth(), getHeight(), Graphics::highResamplingQuality);
+        Image bg = listenerBackgroundImg.rescaled(getWidth(), getHeight());
         g.setTiledImageFill(bg, 0, 0, 1.0f);
         g.fillEllipse(0.0f, 0.0f, w, h);
 
@@ -60,7 +60,6 @@ public:
         AffineTransform trans(AffineTransform::rotation(currAngleInRadians, static_cast<float>(shadowMidX), static_cast<float>(shadowMidY)));
         g.addTransform(trans);
         g.drawImageWithin(listenerShadowImg, shadowMidX - shadowW / 2, shadowMidY - shadowH / 2, shadowW, shadowH, RectanglePlacement::centred);
-
     }
 
     //==============================================================================

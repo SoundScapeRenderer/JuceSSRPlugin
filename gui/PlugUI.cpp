@@ -64,8 +64,10 @@ PlugUI::PlugUI (SynthParams &p)
 
 
     //[UserPreSize]
-    registerSlider(zoomSlider, &params.zoomFactor);
-    registerOutputLevel(outputLevel, &params.outputLevelLeft, &params.outputLevelRight);
+    registerSlider(zoomSlider, &params.zoomFactor, std::bind(&PlugUI::sceneZoomFactorChanged, this));
+
+    outputLevel->setLeveLColour(SynthParams::sourceLevelColour);
+    outputLevel->setSkewFactor(3.0f);
 
     debugText->setInterceptsMouseClicks(false, false);
     //[/UserPreSize]
@@ -127,14 +129,12 @@ void PlugUI::resized()
 void PlugUI::sliderValueChanged (Slider* sliderThatWasMoved)
 {
     //[UsersliderValueChanged_Pre]
+    handleSlider(sliderThatWasMoved);
     //[/UsersliderValueChanged_Pre]
 
     if (sliderThatWasMoved == zoomSlider)
     {
         //[UserSliderCode_zoomSlider] -- add your slider handling code here..
-        float val = static_cast<float>(sliderThatWasMoved->getValue());
-        params.zoomFactor.setUI(val);
-        scene->resized();
         //[/UserSliderCode_zoomSlider]
     }
 
@@ -167,9 +167,15 @@ void PlugUI::buttonClicked (Button* buttonThatWasClicked)
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
+void PlugUI::sceneZoomFactorChanged()
+{
+    scene->resized();
+}
+
 void PlugUI::timerCallback()
 {
     PanelBase::timerCallback();
+    outputLevel->refreshOutputLevel(params.outputLevelLeft.getUI(), params.outputLevelRight.getUI());
 
 #if 0
     debugText->setText(

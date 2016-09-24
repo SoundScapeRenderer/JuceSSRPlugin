@@ -4,7 +4,7 @@
 #include <array>
 #include "JuceHeader.h"
 
-
+/// \todo clean class and document
 class Param {
 public:
     Param(const String &name, const String &serializationTag, const String &hostTag, const String &unit, float minval, float maxval, float defaultval, int numSteps = 0)
@@ -35,10 +35,10 @@ public:
     int getNumSteps() const { return numSteps_; }
 
     void set(float f) { val_.store(f); }
-    void set(float f, bool)
+    void set(float f, bool setDirty)
     {
         val_.store(f);
-        uiDirty.exchange(true);
+        uiDirty.exchange(setDirty);
     }
     float get() const { return val_.load(); }
 
@@ -93,7 +93,7 @@ public:
     {
     public:
         virtual ~Listener() {}
-        /// @brief only to be called it the param has been changed in the UI
+        /// @brief only to be called if the param has been changed in the UI
         virtual void paramUIChanged() {}
     };
 
@@ -166,13 +166,6 @@ public:
         step_.store(v);
         set(static_cast<float>(v));
     }
-
-    void setStepUI(_enum v)
-    {
-        step_.store(v);
-        setUI(static_cast<float>(v));
-    }
-
     virtual void setUI(float f, bool notifyHost = true) override
     {
         set(f);
@@ -181,6 +174,7 @@ public:
         step_.store(static_cast<_enum>(ival));
         if (notifyHost) { listener.call(&Listener::paramUIChanged); }
     }
+
     virtual String getUIString() const override { return labels_[static_cast<size_t>(getStep())]; }
     virtual String getUIString(float v) const override
     {

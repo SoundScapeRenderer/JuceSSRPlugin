@@ -11,8 +11,8 @@
 #include "SourceNodeComponent.h"
 
 /**
- * Parent class for all components that make use of the dirtyFlag of SynthParams (e.g. for automation).
- * The child components in these have to be registered with their corresponding Param.
+ * Parent class for all panel components that make use of the dirtyFlag of SynthParams (e.g. for automation).
+ * The child components in these panels have to be registered with their corresponding parameter.
  */
 class PanelBase : public Component, protected Timer
 {
@@ -34,7 +34,8 @@ protected:
     //==============================================================================
 
     /**
-     * Register reference listener component with affiliated parameters that needs to be checked.
+     * Register reference listener component with corresponding parameters that needs to be checked.
+     * @param l listener component
      * @param posX x position of reference listener
      * @param posY y position of reference listener
      * @param ori reference listener orientation
@@ -57,18 +58,27 @@ protected:
     }
 
     /**
-     * Check whether registered Params of listener have been changed and handle these correctly.
+     * Check whether registered parameters of listener have been changed and synchronize its
+     * position and orientation on UI.
+     * Registered callback function is called whenever listener position or orientation is dirty.
      */
     void updateDirtyListener()
     {
         for (auto l2p : listenerReg)
         {
-            //position
+            auto itHook = postUpdateHook.find(l2p.first);
+
+            // position
             for (int i = 0; i < 2; ++i)
             {
                 if (l2p.second[i]->isUIDirty())
                 {
                     l2p.first->relocate();
+
+                    if (itHook != postUpdateHook.end())
+                    {
+                        itHook->second();
+                    }
                 }
             }
 
@@ -77,12 +87,11 @@ protected:
             {
                 l2p.first->repaint();
                 l2p.first->updateBackgroundAngle(l2p.second[2]->getUI());
-            }
 
-            auto itHook = postUpdateHook.find(l2p.first);
-            if (itHook != postUpdateHook.end())
-            {
-                itHook->second();
+                if (itHook != postUpdateHook.end())
+                {
+                    itHook->second();
+                }
             }
         }
     }
@@ -90,7 +99,9 @@ protected:
     //==============================================================================
 
     /**
-     * Register source component with affiliated parameters that needs to be checked.
+     * Register source component with corresponding parameters that needs to be checked.
+     * This function also registers source's volume slider and volume parameter.
+     * @param s source component
      * @param posX x position of source
      * @param posY y position of source
      * @param vol source input volume
@@ -105,7 +116,7 @@ protected:
     {
         s->setSceneSize(sceneWidth, sceneHeight);
 
-        s->getVolSlider()->setValue(static_cast<double>(vol->getDefaultUI()), dontSendNotification);
+        registerSlider(s->getVolSlider(), vol);
         s->getVolSlider()->refreshVolLevel(level->getDefaultUI());
 
         sourceReg[s] = { posX, posY , vol, level };
@@ -117,7 +128,8 @@ protected:
     }
 
     /**
-     * Check whether registered Params of source have been changed and handle these correctly.
+     * Check whether registered parameters of sources have been changed and synchronize its position on UI.
+     * Registered callback function is called whenever source position is dirty.
      */
     void updateDirtySources()
     {
@@ -129,65 +141,24 @@ protected:
                 if (s2p.second[i]->isUIDirty())
                 {
                     s2p.first->relocate();
+
+                    auto itHook = postUpdateHook.find(s2p.first);
+                    if (itHook != postUpdateHook.end())
+                    {
+                        itHook->second();
+                    }
                 }
             }
-
-            // volume
-            if (s2p.second[2]->isUIDirty())
-            {
-                s2p.first->getVolSlider()->setValue(s2p.second[2]->getUI(), dontSendNotification);
-            }
-
-            auto itHook = postUpdateHook.find(s2p.first);
-            if (itHook != postUpdateHook.end())
-            {
-                itHook->second();
-            }
         }
     }
 
-    //==============================================================================
-
     /**
-     * Register output level component with affiliated parameter that needs to be checked.
-     * @param o OutputLevelComponent to register
-     * @param l left channel level parameter to register and handle if dirty
-     * @param r right channel level parameter to register and handle if dirty
-     * @param hook callback function
+     * Update all source levels independently from audio buffer size.
+     * Depends only on set timer frequency.
      */
-    void registerOutputLevel(OutputLevelComponent *o, Param* l, Param* r, const tHookFn hook = tHookFn())
+    void updateSourceLevels()
     {
-        o->setLeveLColour(SynthParams::sourceLevelColour);
-        o->setSkewFactor(3.0f);
-        o->refreshOutputLevel(l->getDefaultUI(), r->getDefaultUI());
-
-        outputLevelReg[o] = { l, r };
-        if (hook)
-        {
-            postUpdateHook[o] = hook;
-            hook();
-        }
-    }
-
-    /**
-    * Update all level components independently from audio buffer size,
-    * Depends only from set timer frequency.
-    */
-    void updateAllLevelComponents()
-    {
-        // refresh outputLevel component
-        for (auto o2p : outputLevelReg)
-        {
-            o2p.first->refreshOutputLevel(o2p.second[0]->getUI(), o2p.second[1]->getUI());
-
-            auto itHook = postUpdateHook.find(o2p.first);
-            if (itHook != postUpdateHook.end())
-            {
-                itHook->second();
-            }
-        }
-
-        // refresh source levels
+        // refresh all source levels
         for (auto s2p : sourceReg)
         {
             s2p.first->getVolSlider()->refreshVolLevel(s2p.second[3]->getUI());
@@ -197,14 +168,14 @@ protected:
     //==============================================================================
 
     /**
-     * Register slider component with affiliated parameter that needs to be checked.
-     * @param s slider to register
-     * @param p parameter to register and handle if dirty
+     * Register slider component with corresponding parameter that needs to be checked.
+     * @param s slider to handle changes and synchronize UI if parameter is dirty
+     * @param p parameter to register
      * @param hook callback function
      */
     void registerSlider(Slider *s, Param* p, const tHookFn hook = tHookFn())
     {
-        s->setValue(p->getDefaultUI());
+        s->setValue(p->getDefaultUI(), dontSendNotification);
         s->setTextValueSuffix(p->getUnit());
 
         sliderReg[s] = { p };
@@ -216,7 +187,30 @@ protected:
     }
 
     /**
-     * Check whether registered parameters of slider have changed and handle these correctly.
+     * Handle slider that was moved and set registered parameter.
+     * @sliderThatWasMoved slider in the UI that was moved
+     * @return true if slider is registered and could be handled
+     */
+    bool handleSlider(Slider* sliderThatWasMoved)
+    {
+        auto it = sliderReg.find(sliderThatWasMoved);
+        if (it != sliderReg.end()) 
+        {
+            float val = static_cast<float>(sliderThatWasMoved->getValue());
+            it->second->setUI(val);
+
+            auto itHook = postUpdateHook.find(it->first);
+            if (itHook != postUpdateHook.end())
+            {
+                itHook->second();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check whether registered parameters of sliders have changed and synchronize its set value on UI.
      */
     void updateDirtySliders()
     {
@@ -224,13 +218,13 @@ protected:
         {
             if (s2p.second->isUIDirty())
             {
-                s2p.first->setValue(s2p.second->getUI(), sendNotificationAsync);
-            }
+                s2p.first->setValue(s2p.second->getUI(), dontSendNotification);
 
-            auto itHook = postUpdateHook.find(s2p.first);
-            if (itHook != postUpdateHook.end())
-            {
-                itHook->second();
+                auto itHook = postUpdateHook.find(s2p.first);
+                if (itHook != postUpdateHook.end())
+                {
+                    itHook->second();
+                }
             }
         }
     }
@@ -238,9 +232,10 @@ protected:
     //==============================================================================
 
     /**
-     * Register button component with affiliated parameter that needs to be checked.
-     * @param b button to register
-     * @param state ParamStepped to register and handle if dirty
+     * Register button component with corresponding parameter that needs to be checked.
+     * Use this to display and synchronize its button state on UI correctly.
+     * @param b button to handle clicks and synchronize UI if parameter is dirty
+     * @param state parameter to register
      * @param hook callback function
      */
     void registerButton(Button *b, ParamStepped<eOnOffState> *state, const tHookFn hook = tHookFn())
@@ -257,7 +252,32 @@ protected:
     }
 
     /**
-     * Check whether registered parameters of buttons have changed and handle these correctly.
+     * Handle button that was clicked and set registered parameter.
+     * @buttonThatWasClicked button in the UI that was clicked
+     * @return true if button is registered and could be handled
+     */
+    bool handleButton(Button* buttonThatWasClicked)
+    {
+        auto it = buttonReg.find(buttonThatWasClicked);
+        if (it != buttonReg.end())
+        {
+            bool isOn = buttonThatWasClicked->getToggleState();
+            eOnOffState state;
+            isOn ? state = eOnOffState::eOn : state = eOnOffState::eOff;
+            it->second->setUI(static_cast<float>(state));
+
+            auto itHook = postUpdateHook.find(it->first);
+            if (itHook != postUpdateHook.end())
+            {
+                itHook->second();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check whether registered parameters of buttons have changed and synchronize its button state on UI.
      */
     void updateDirtyButtons()
     {
@@ -265,13 +285,13 @@ protected:
         {
             if (b2p.second->isUIDirty())
             {
-                b2p.first->setToggleState(b2p.second->getStep() == eOnOffState::eOn, sendNotificationAsync);
-            }
+                b2p.first->setToggleState(b2p.second->getStep() == eOnOffState::eOn, dontSendNotification);
 
-            auto itHook = postUpdateHook.find(b2p.first);
-            if (itHook != postUpdateHook.end())
-            {
-                itHook->second();
+                auto itHook = postUpdateHook.find(b2p.first);
+                if (itHook != postUpdateHook.end())
+                {
+                    itHook->second();
+                }
             }
         }
     }
@@ -282,18 +302,16 @@ protected:
     {
         updateDirtyListener();
         updateDirtySources();
+        updateSourceLevels();
 
         updateDirtySliders();
         updateDirtyButtons();
-
-        updateAllLevelComponents();
     }
 
     SynthParams &params;
     std::map<Component*, tHookFn> postUpdateHook;
     std::map<ListenerComponent*, std::array<Param*, 3>> listenerReg;
     std::map<SourceNodeComponent*, std::array<Param*, 5>> sourceReg;
-    std::map<OutputLevelComponent*, std::array<Param*, 2>> outputLevelReg;
     std::map<Slider*, Param*> sliderReg;
     std::map<Button*, ParamStepped<eOnOffState>*> buttonReg;
 };

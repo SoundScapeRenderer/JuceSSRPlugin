@@ -45,7 +45,7 @@ ScenePanel::ScenePanel(SynthParams &p)
     listener->setName("listener");
 
     addAndMakeVisible(sourceVolSlider = new VolLevelSlider("source vol slider"));
-    sourceVolSlider->setRange(-96, 12, 0);
+    sourceVolSlider->setRange(-96, 12, 0.01);
     sourceVolSlider->setSliderStyle(Slider::LinearBar);
     sourceVolSlider->setTextBoxStyle(Slider::NoTextBox, false, 80, 20);
     sourceVolSlider->addListener(this);
@@ -107,6 +107,7 @@ void ScenePanel::paint(Graphics& g)
 
 void ScenePanel::resized()
 {
+    /// \todo move logo and infowindow to plugUI, above scene layer
     logoButton->setBounds(20, getHeight() - 78, 70, 70);
     infoWindow->setBounds(55, 40, 280, 470);
 
@@ -115,6 +116,7 @@ void ScenePanel::resized()
     int listenerH = static_cast<int>(listenerHeight * params.zoomFactor.get() / 100.0f);
     juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), getWidth(), getHeight());
     listener->setBounds(pixPosRef.x - listenerW / 2, pixPosRef.y - listenerH / 2, listenerW, listenerH);
+    listener->updateBackgroundAngle(params.referenceOrientation.getUI());
 
     int sourceNodeSize = static_cast<int>(sourceSize * params.zoomFactor.get() / 100.0f);
     juce::Point<int> pixPosSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
@@ -153,6 +155,8 @@ void ScenePanel::childBoundsChanged(Component *child)
         }
         else if (child == listener)
         {
+            /// \todo too much zoom leads to host ui stuttering, scene resized() too much cpu?
+            /// \todo especially this part here
             // make sure listenerBackground follows listener
             // listenerBackground must be double the size of source
             paddingL = listener->getX() - listener->getWidth() / 2;
@@ -172,11 +176,7 @@ void ScenePanel::childBoundsChanged(Component *child)
 
 void ScenePanel::sliderValueChanged(Slider* sliderThatWasMoved)
 {
-    float val = static_cast<float>(sliderThatWasMoved->getValue());
-    if (sliderThatWasMoved == sourceVolSlider)
-    {
-        params.sourceVol.setUI(val);
-    }
+    handleSlider(sliderThatWasMoved);
 }
 
 void ScenePanel::buttonClicked(Button* buttonThatWasClicked)
@@ -211,7 +211,6 @@ void ScenePanel::mouseDoubleClick(const MouseEvent& e)
     params.sceneOffsetX.setUI(params.sceneOffsetX.getDefaultUI());
     params.sceneOffsetY.setUI(params.sceneOffsetY.getDefaultUI());
     params.zoomFactor.set(params.zoomFactor.getDefaultUI(), true);
-    resized();
 }
 
 void ScenePanel::mouseWheelMove(const MouseEvent& e, const MouseWheelDetails& wheel)

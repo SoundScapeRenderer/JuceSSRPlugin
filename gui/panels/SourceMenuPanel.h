@@ -46,6 +46,10 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
+    /**
+     * Repaint source, use this function after enabling mute or fix position.
+     */
+    void sourceNodeFixedOrMuted();
     //[/UserMethods]
 
     void paint (Graphics& g);
