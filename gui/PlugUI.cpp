@@ -49,7 +49,7 @@ PlugUI::PlugUI (SynthParams &p)
 
     addAndMakeVisible (zoomSlider = new ZoomSlider ("zoom slider"));
     zoomSlider->setRange (25, 200, 1);
-    zoomSlider->setSliderStyle (Slider::LinearBar);
+    zoomSlider->setSliderStyle (Slider::LinearHorizontal);
     zoomSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 24);
     zoomSlider->setColour (Slider::textBoxOutlineColourId, Colour (0x00000000));
     zoomSlider->addListener (this);
@@ -64,10 +64,16 @@ PlugUI::PlugUI (SynthParams &p)
 
 
     //[UserPreSize]
-    registerSlider(zoomSlider, &params.zoomFactor, std::bind(&PlugUI::sceneZoomFactorChanged, this));
-
     outputLevel->setLeveLColour(SynthParams::sourceLevelColour);
     outputLevel->setSkewFactor(3.0f);
+
+    // register zoomSlider and reset zoomFactor to 100%
+    registerSlider(zoomSlider, &params.zoomFactor, std::bind(&PlugUI::resizeScenePanel, this));
+    zoomSlider->setValue(params.zoomFactor.getDefaultUI());
+
+    // create some custom component designs to use as default
+    lnf = new CustomLookAndFeel();
+    LookAndFeel::setDefaultLookAndFeel(lnf);
 
     debugText->setInterceptsMouseClicks(false, false);
     //[/UserPreSize]
@@ -76,8 +82,6 @@ PlugUI::PlugUI (SynthParams &p)
 
 
     //[Constructor] You can add your own custom stuff here..
-    lnf = new CustomLookAndFeel();
-    LookAndFeel::setDefaultLookAndFeel(lnf);
     //[/Constructor]
 }
 
@@ -167,7 +171,7 @@ void PlugUI::buttonClicked (Button* buttonThatWasClicked)
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
-void PlugUI::sceneZoomFactorChanged()
+void PlugUI::resizeScenePanel()
 {
     scene->resized();
 }
@@ -234,7 +238,7 @@ BEGIN_JUCER_METADATA
                     params=""/>
   <SLIDER name="zoom slider" id="c8e0b018d0c69bbf" memberName="zoomSlider"
           virtualName="ZoomSlider" explicitFocusOrder="0" pos="812 613 80 24"
-          textboxoutline="0" min="25" max="200" int="1" style="LinearBar"
+          textboxoutline="0" min="25" max="200" int="1" style="LinearHorizontal"
           textBoxPos="TextBoxBelow" textBoxEditable="1" textBoxWidth="80"
           textBoxHeight="24" skewFactor="1"/>
   <TEXTBUTTON name="load button" id="7a6f9aa471624d92" memberName="loadButton"

@@ -53,6 +53,9 @@
     <Filter Include="ssr\gui">
       <UniqueIdentifier>{C00320DF-E6BB-AE68-8129-DCA557828726}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ssr\gui\components">
+      <UniqueIdentifier>{54FF51EA-E390-7FE1-183B-E440FE2E2ACF}</UniqueIdentifier>
+    </Filter>
     <Filter Include="ssr\gui\panels">
       <UniqueIdentifier>{4BEC0963-51EE-D964-D1FE-28196B497EEE}</UniqueIdentifier>
     </Filter>
@@ -1923,6 +1926,27 @@
     <ClInclude Include="..\..\..\audio\inc\SynthParams.h">
       <Filter>ssr\audio\inc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\gui\components\ListenerBackgroundComponent.h">
+      <Filter>ssr\gui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gui\components\ListenerComponent.h">
+      <Filter>ssr\gui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gui\components\OutputLevelComponent.h">
+      <Filter>ssr\gui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gui\components\SourceBackgroundComponent.h">
+      <Filter>ssr\gui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gui\components\SourceNodeComponent.h">
+      <Filter>ssr\gui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gui\components\VolLevelSlider.h">
+      <Filter>ssr\gui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gui\components\ZoomSlider.h">
+      <Filter>ssr\gui\components</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\gui\panels\ScenePanel.h">
       <Filter>ssr\gui\panels</Filter>
     </ClInclude>
@@ -1938,31 +1962,10 @@
     <ClInclude Include="..\..\..\gui\CustomLookAndFeel.h">
       <Filter>ssr\gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\gui\ListenerBackgroundComponent.h">
-      <Filter>ssr\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gui\ListenerComponent.h">
-      <Filter>ssr\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gui\OutputLevelComponent.h">
-      <Filter>ssr\gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\gui\PluginEditor.h">
       <Filter>ssr\gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\gui\PlugUI.h">
-      <Filter>ssr\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gui\SourceBackgroundComponent.h">
-      <Filter>ssr\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gui\SourceNodeComponent.h">
-      <Filter>ssr\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gui\VolLevelSlider.h">
-      <Filter>ssr\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gui\ZoomSlider.h">
       <Filter>ssr\gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\juce\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h">

@@ -16,7 +16,7 @@
 //==============================================================================
 /**
  * Source background component class.
- * Shows plane waves which direction can be set via updatePlaneWave().
+ * Shows plane waves which direction can be set via setPlaneWaveAngle().
  * For correct drawing results this component should be set exactly double the width 
  * and height of the source node component.
  * Plane wave designed according to SSR's plane wave.
@@ -86,22 +86,34 @@ public:
 
     //==============================================================================
 
-    float getPlaneWaveAngle()
+    /**
+     * Set plane wave colour.
+     * @param c new plane wave colour to use
+     */
+    void setPlaneWaveColour(Colour c)
     {
-        return angle;
+        planeWaveColour = c;
+        repaint();
     }
 
     /**
-     * Update angle of the plane wave direction and repaint.
-     * @param newAngle new angle in degrees
-     * @param planeWaveVisible false do not show plane wave, true show it
-     * @param c colour of plane wave
+     * Set plane wave visibility.
+     * @param isVisible true for displaying plane waves
      */
-    void updatePlaneWave(float newAngle, bool planeWaveVisible, Colour c)
+    void setPlaneWaveVisible(bool isVisible)
+    {
+        drawPlaneWave = isVisible;
+        repaint();
+    }
+
+    /**
+     * Set plane wave direction angle.
+     * 0.0f for top and +-180.0f for bottom, 90.0f for left and -90.0f for right.
+     * @param newAngle new direction angle of plane waves
+     */
+    void setPlaneWaveAngle(float newAngle)
     {
         angle = newAngle;
-        drawPlaneWave = planeWaveVisible;
-        planeWaveColour = c;
         repaint();
     }
 
@@ -109,8 +121,8 @@ public:
 
 private:
     Image shadowImg;
-    Colour planeWaveColour;
 
+    Colour planeWaveColour = Colours::blue;
     bool drawPlaneWave = false;
     float angle = 0.0f;
 

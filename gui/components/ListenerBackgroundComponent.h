@@ -51,7 +51,7 @@ public:
 
         // draw listener shadow
         float currAngleInRadians = degreesToRadians(-angle);
-        float offset = 0.025f * getWidth();
+        float offset = 0.02f * getWidth();
         int shadowW = static_cast<int>(w * 0.6f);
         int shadowH = static_cast<int>(h * 0.6f);
         int shadowMidX = static_cast<int>(w * 0.5f + offset);

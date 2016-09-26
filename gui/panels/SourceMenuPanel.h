@@ -30,8 +30,9 @@
 //==============================================================================
 /**
                                                                     //[Comments]
-    Source menu panel which can be used to do some settings as mute source or
-    cahnging source model. Further source position, orientation etc. are shown.
+    Source menu panel which can be used to do some settings like mute source or
+    changing source model. Further, current values of source position,
+    orientation etc. are displayed.
     Designed according to SSR's source menu with minor changes.
                                                                     //[/Comments]
 */
@@ -47,9 +48,16 @@ public:
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
     /**
-     * Repaint source, use this function after enabling mute or fix position.
+     * Repaint source node, use this function whenever mute source or fix
+     * source position is enabled or disabled.
      */
-    void sourceNodeFixedOrMuted();
+    void repaintSourceNode();
+
+    /**
+     * Update visibility of source plane wave, use this whenever source type has
+     * been changed.
+     */
+    void updatePlaneWaveVisibility();
     //[/UserMethods]
 
     void paint (Graphics& g);
@@ -75,9 +83,7 @@ private:
     ScopedPointer<Label> volLabel;
     ScopedPointer<Label> muteLabel;
     ScopedPointer<Label> modelLabel;
-    ScopedPointer<Label> inputLabel;
-    ScopedPointer<ComboBox> inputBox;
-    ScopedPointer<ComboBox> modelBox;
+    ScopedPointer<ComboBox> sourceModelBox;
     ScopedPointer<ToggleButton> muteToggle;
     ScopedPointer<ToggleButton> fixToggle;
     ScopedPointer<Label> volLabel2;

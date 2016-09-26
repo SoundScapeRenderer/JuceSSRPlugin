@@ -238,6 +238,21 @@
       </GROUP>
     </GROUP>
     <GROUP id="{F6382FEF-D578-65A9-AE2B-732BBA4674EA}" name="gui">
+      <GROUP id="{AC96C688-C775-C0D5-9C18-BF4B4143B837}" name="components">
+        <FILE id="Ra2mPu" name="ListenerBackgroundComponent.h" compile="0"
+              resource="0" file="../gui/components/ListenerBackgroundComponent.h"/>
+        <FILE id="ahcko6" name="ListenerComponent.h" compile="0" resource="0"
+              file="../gui/components/ListenerComponent.h"/>
+        <FILE id="K6b5Ri" name="OutputLevelComponent.h" compile="0" resource="0"
+              file="../gui/components/OutputLevelComponent.h"/>
+        <FILE id="OLcpK3" name="SourceBackgroundComponent.h" compile="0" resource="0"
+              file="../gui/components/SourceBackgroundComponent.h"/>
+        <FILE id="uUtoOO" name="SourceNodeComponent.h" compile="0" resource="0"
+              file="../gui/components/SourceNodeComponent.h"/>
+        <FILE id="MDAqkm" name="VolLevelSlider.h" compile="0" resource="0"
+              file="../gui/components/VolLevelSlider.h"/>
+        <FILE id="A2SWsN" name="ZoomSlider.h" compile="0" resource="0" file="../gui/components/ZoomSlider.h"/>
+      </GROUP>
       <GROUP id="{97002C86-853A-E142-A502-E0F82A3882D2}" name="panels">
         <FILE id="CSjbtc" name="ScenePanel.cpp" compile="1" resource="0" file="../gui/panels/ScenePanel.cpp"/>
         <FILE id="WrCX58" name="ScenePanel.h" compile="0" resource="0" file="../gui/panels/ScenePanel.h"/>
@@ -251,24 +266,11 @@
       </GROUP>
       <FILE id="Ld6QRe" name="CustomLookAndFeel.h" compile="0" resource="0"
             file="../gui/CustomLookAndFeel.h"/>
-      <FILE id="T3KFbG" name="ListenerBackgroundComponent.h" compile="0"
-            resource="0" file="../gui/ListenerBackgroundComponent.h"/>
-      <FILE id="JKj2RB" name="ListenerComponent.h" compile="0" resource="0"
-            file="../gui/ListenerComponent.h"/>
-      <FILE id="QOPBU8" name="OutputLevelComponent.h" compile="0" resource="0"
-            file="../gui/OutputLevelComponent.h"/>
       <FILE id="eGCmM0" name="PluginEditor.cpp" compile="1" resource="0"
             file="../gui/PluginEditor.cpp"/>
       <FILE id="EWfpfp" name="PluginEditor.h" compile="0" resource="0" file="../gui/PluginEditor.h"/>
       <FILE id="uQCqo9" name="PlugUI.cpp" compile="1" resource="0" file="../gui/PlugUI.cpp"/>
       <FILE id="SuUk13" name="PlugUI.h" compile="0" resource="0" file="../gui/PlugUI.h"/>
-      <FILE id="J8L0Qr" name="SourceBackgroundComponent.h" compile="0" resource="0"
-            file="../gui/SourceBackgroundComponent.h"/>
-      <FILE id="CwrTa6" name="SourceNodeComponent.h" compile="0" resource="0"
-            file="../gui/SourceNodeComponent.h"/>
-      <FILE id="WynvZ2" name="VolLevelSlider.h" compile="0" resource="0"
-            file="../gui/VolLevelSlider.h"/>
-      <FILE id="woiDNT" name="ZoomSlider.h" compile="0" resource="0" file="../gui/ZoomSlider.h"/>
     </GROUP>
     <GROUP id="{2F300B23-92D5-3B2C-E37F-EAD1E0B25A60}" name="Source">
       <FILE id="Sj0bU7" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>

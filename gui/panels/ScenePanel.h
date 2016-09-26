@@ -63,26 +63,23 @@ public:
 
 private:
     SynthParams &params;
-    Image plusImg; //< http://iconmonstr.com/
-    Image logoImg;
 
-    const int listenerWidth = 90;
-    const int listenerHeight = 90;
-    const int sourceSize = 90;
-    const int refPointSize = 8;
+    const int refListenerSize = 90;
+    const int sourceNodeSize = 90;
+    const int centerPointSize = 8;
     Point<float> dragStartOffset = Point<float>(0.0f, 0.0f);
 
     //==============================================================================
 
     ScopedPointer<ListenerBackgroundComponent> listenerBackground;
-    ScopedPointer<ListenerComponent> listener;
+    ScopedPointer<ListenerComponent> refListener;
     ScopedPointer<VolLevelSlider> sourceVolSlider;
     ScopedPointer<SourceBackgroundComponent> sourceBackground;
-    ScopedPointer<DocumentWindow> sourceMenu;
+    ScopedPointer<ResizableWindow> sourceMenu;
     ScopedPointer<SourceNodeComponent> sourceNode;
-    ScopedPointer<ImageComponent> refPoint;
+    ScopedPointer<ImageComponent> sceneCenter;
     ScopedPointer<ImageButton> logoButton;
-    ScopedPointer<DocumentWindow> infoWindow;
+    ScopedPointer<ResizableWindow> infoWindow;
 
     //==============================================================================
 

@@ -235,14 +235,10 @@ void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& m
 
     if (setupSuccessful)
     {
-        /// \todo how to handle mono input from host correctly?
-        // choose between left or right channel for stereo input
-        int channelIndex = static_cast<int>(inputChannel.getStep());
-
         // get source input level
         float inputLevel;
         bool isInputMuted = sourceMute.getStep() == eOnOffState::eOn;
-        isInputMuted ? inputLevel = 0.0f : inputLevel = buffer.getRMSLevel(channelIndex, 0, buffer.getNumSamples());
+        isInputMuted ? inputLevel = 0.0f : inputLevel = buffer.getRMSLevel(0, 0, buffer.getNumSamples());
         sourceLevel.setUI(Param::toDb(inputLevel));
 
         // set listener parameter
@@ -278,7 +274,7 @@ void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& m
 
         // call internal ssr process function of renderer
         renderer->audio_callback(getBlockSize()
-            , buffer.getArrayOfWritePointers() + channelIndex // NOTE: write = read pointer, read is just const
+            , buffer.getArrayOfWritePointers() // NOTE: write = read pointer, read is just const
             , buffer.getArrayOfWritePointers());
 
         // get ssr output level

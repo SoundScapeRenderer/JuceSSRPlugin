@@ -2,15 +2,15 @@
 
 namespace {
     static const char *OnOffStateNames[] = {
-        "Disabled", "Enabled", nullptr
+        "disabled", "enabled", nullptr
     };
 
     static const char *SourceTypeNames[] = {
-        "Point Source", "Plane Source", nullptr
+        "point source", "plane source", nullptr
     };
 
     static const char *InputChannelNames[] = {
-        "Left Channel", "Right Channel", nullptr
+        "left channel", "right channel", nullptr
     };
 }
 
@@ -25,8 +25,8 @@ const Colour SynthParams::sourceLevelColour(58, 239, 58);
 //==============================================================================
 
 SynthParams::SynthParams()
-    : sourceX("source x", "sourceX", "sourceX", "m", -50.0f, 50.0f, 0.0f)
-    , sourceY("source y", "sourceY", "sourceY", "m", -50.0f, 50.0f, 2.0f)
+    : sourceX("source x", "sourceX", "sourceX", "m", -100.0f, 100.0f, 0.0f)
+    , sourceY("source y", "sourceY", "sourceY", "m", -100.0f, 100.0f, 2.0f)
     , sourceOrientation("source orientation", "sourceOrientation", "sourceOrientation", "degs", -180.0f, 180.0f, 0.0f)
     , sourceVol("source vol", "sourceVol", "sourceVol", "dB", -96.0f, 12.0f, -6.0f)
     , sourceLevel("sourceLevel", "sourceLevel", "sourceLevel", "dB", -96.0f, 12.0f, -96.0f)
@@ -40,18 +40,17 @@ SynthParams::SynthParams()
     , refOrientationOffset(90.0f)
     , amplitudeReferenceDistance("amplitude reference distance", "amplitudeReferenceDistance", "amplitudeReferenceDistance", "m", 0.0f, 50.0f, 3.0f)
 
-    , inputChannel("input channel", "inputChannel", "inputChannel", eInputChannel::eLeftChannel, InputChannelNames)
     , outputLevelLeft("output level left", "outputLevelLeft", "outputLevelLeft", "dB", -96.0f, 12.0f, -96.0f)
     , outputLevelRight("outputlevel right", "outputLevelRight", "outputLevelRight", "dB", -96.0f, 12.0f, -96.0f)
 
     , zoomFactor("zoom factor", "zoomFactor", "zoomFactor", "%", 25.0f, 200.0f, 100.0f)
     , pixelPerMeter(125)
-    , sceneOffsetX("scene offset x", "sceneOffsetX", "sceneOffsetX", "px", -2500.0f, 2500.0f, 0.0f)
-    , sceneOffsetY("scene offset y", "sceneOffsetY", "sceneOffsetY", "px", -2500.0f, 2500.0f, 125.0f)
+    , sceneOffsetX("scene offset x", "sceneOffsetX", "sceneOffsetX", "px", -2500.0f, 2500.0f, 0.0f) /// \todo in metern
+    , sceneOffsetY("scene offset y", "sceneOffsetY", "sceneOffsetY", "px", -2500.0f, 2500.0f, 125.0f) /// \todo in metern
 
     , serializeParams{ &sourceX, &sourceY, &sourceOrientation, &sourceVol, &sourceMute, &sourceType, &sourcePositionLock,
                        &referenceX, &referenceY, &referenceOrientation, &amplitudeReferenceDistance,
-                       &inputChannel, &zoomFactor, &sceneOffsetX, &sceneOffsetY }
+                       &zoomFactor, &sceneOffsetX, &sceneOffsetY }
 {
 }
 
@@ -77,9 +76,9 @@ juce::Point<float> SynthParams::pix2pos(int pixCenterX, int pixCenterY, int scen
     return juce::Point<float>(x, -y);
 }
 
-float SynthParams::roundNearest(float val)
+const char* SynthParams::getSourceTypeNames(int index)
 {
-    return roundf(val * 100) / 100;
+    return SourceTypeNames[jmin(jmax(0, index), static_cast<int>(eSourceType::nSteps))];
 }
 
 //==============================================================================

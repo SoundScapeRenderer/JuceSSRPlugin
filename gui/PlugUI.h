@@ -25,7 +25,8 @@
 #include "panels/PanelBase.h"
 #include "panels/ScenePanel.h"
 #include "CustomLookAndFeel.h"
-#include "ZoomSlider.h"
+#include "components/OutputLevelComponent.h"
+#include "components/ZoomSlider.h"
 //[/Headers]
 
 
@@ -49,9 +50,9 @@ public:
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
     /**
-     * Resize scene UI, use this function after zoomFactor has been changed.
+     * Resize scene UI panel, use this function whenever zoomFactor has been changed.
      */
-    void sceneZoomFactorChanged();
+    void resizeScenePanel();
     //[/UserMethods]
 
     void paint (Graphics& g);

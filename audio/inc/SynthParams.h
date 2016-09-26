@@ -15,12 +15,6 @@ enum class eSourceType : int {
     nSteps = 2
 };
 
-enum class eInputChannel : int {
-    eLeftChannel = 0,
-    eRightChannel = 1,
-    nSteps = 2
-};
-
 class SynthParams {
 public:
     SynthParams();
@@ -45,8 +39,7 @@ public:
     const float refOrientationOffset; //!< offset due to reference listener image's default orientation
     Param amplitudeReferenceDistance; //!< SSR's amplitude reference distance in range [0.0f ... 50.0f]m
 
-    /// routing and output level parameter
-    ParamStepped<eInputChannel> inputChannel; //!< host track input channel {eLeftChannel/mono, eRightChannel}
+    /// output level parameter
     Param outputLevelLeft; //!< left output level in range [-96.0f ... 12.0f]dB
     Param outputLevelRight; //!< right output level in range [-96.0f ... 12.0f]dB
 
@@ -96,9 +89,11 @@ public:
     juce::Point<float> pix2pos(int pixCenterX, int pixCenterY, int sceneWidth, int sceneHeight);
 
     /**
-     * Round float value to not more than 2 numbers after comma.
+     * Get name of source type.
+     * @param index eSourceType index
+     * @return name of eSourceType index
      */
-    float roundNearest(float val);
+    static const char* getSourceTypeNames(int index);
 
     //==============================================================================
 

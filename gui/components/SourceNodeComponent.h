@@ -26,7 +26,7 @@
 class SourceNodeComponent    : public Component
 {
 public:
-    SourceNodeComponent(SynthParams &p, VolLevelSlider *v, SourceBackgroundComponent *bg, DocumentWindow *m)
+    SourceNodeComponent(SynthParams &p, VolLevelSlider *v, SourceBackgroundComponent *bg, ResizableWindow *m)
         : params(p)
         , volSlider(v)
         , sourceBackground(bg)
@@ -60,6 +60,7 @@ public:
     void setNodeColour(Colour c)
     {
         nodeColour = c;
+        sourceBackground->setPlaneWaveColour(c);
     }
 
     Colour getNodeColour()
@@ -168,28 +169,28 @@ public:
     void relocate()
     {
         juce::Point<int> pixPosRef = params.pos2pix(params.sourceX.get(), params.sourceY.get(), sceneWidth, sceneHeight);
-        setBounds(pixPosRef.x - getWidth() / 2, pixPosRef.y - getHeight() / 2, getWidth(), getHeight());
+        setTopLeftPosition(pixPosRef.x - getWidth() / 2, pixPosRef.y - getHeight() / 2);
     }
 
     //==============================================================================
 
     /**
-     * Get angle of the plane wave direction of sourceBackground.
+     * Set plane wave visibility of sourceBackground component.
+     * @param isVisible true for displaying plane waves
      */
-    float getPlaneWaveAngle()
+    void setPlaneWaveVisible(bool isVisible)
     {
-        return sourceBackground->getPlaneWaveAngle();
+        sourceBackground->setPlaneWaveVisible(isVisible);
     }
 
     /**
-     * Update angle of the plane wave direction of sourceBackground.
-     * @param newAngle new angle in degrees
-     * @param planeWaveVisible false do not show plane wave, true show it
-     * @param c colour of plane wave
+     * Set plane wave direction angle of sourceBackground component.
+     * 0.0f for top and +-180.0f for bottom, 90.0f for left and -90.0f for right.
+     * @param newAngle new direction angle of plane waves
      */
-    void updatePlaneWave(float newAngle, bool planeWaveVisible, Colour c)
+    void setPlaneWaveAngle(float newAngle)
     {
-        sourceBackground->updatePlaneWave(newAngle, planeWaveVisible, c);
+        sourceBackground->setPlaneWaveAngle(newAngle);
     }
 
     //==============================================================================
@@ -202,7 +203,7 @@ private:
     int sceneHeight;
 
     Image lockImg, muteImg; //!< from http://iconmonstr.com/
-    DocumentWindow *menu;
+    ResizableWindow *menu;
     VolLevelSlider *volSlider;
     SourceBackgroundComponent *sourceBackground;
 

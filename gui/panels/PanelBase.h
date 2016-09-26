@@ -6,9 +6,8 @@
 
 #include "JuceHeader.h"
 #include "SynthParams.h"
-#include "ListenerComponent.h"
-#include "OutputLevelComponent.h"
-#include "SourceNodeComponent.h"
+#include "components/ListenerComponent.h"
+#include "components/SourceNodeComponent.h"
 
 /**
  * Parent class for all panel components that make use of the dirtyFlag of SynthParams (e.g. for automation).
@@ -35,6 +34,7 @@ protected:
 
     /**
      * Register reference listener component with corresponding parameters that needs to be checked.
+     * Needs to know about the size of the scene component that it is in.
      * @param l listener component
      * @param posX x position of reference listener
      * @param posY y position of reference listener
@@ -47,7 +47,7 @@ protected:
                           int sceneWidth, int sceneHeight, const tHookFn hook = tHookFn())
     {
         l->setSceneSize(sceneWidth, sceneHeight);
-        l->updateBackgroundAngle(ori->getDefaultUI());
+        l->updateBackgroundAngle(ori->getUI());
 
         listenerReg[l] = { posX, posY, ori };
         if (hook)
@@ -101,6 +101,7 @@ protected:
     /**
      * Register source component with corresponding parameters that needs to be checked.
      * This function also registers source's volume slider and volume parameter.
+     * Needs to know about the size of the scene component that it is in.
      * @param s source component
      * @param posX x position of source
      * @param posY y position of source
@@ -117,7 +118,6 @@ protected:
         s->setSceneSize(sceneWidth, sceneHeight);
 
         registerSlider(s->getVolSlider(), vol);
-        s->getVolSlider()->refreshVolLevel(level->getDefaultUI());
 
         sourceReg[s] = { posX, posY , vol, level };
         if (hook)
@@ -175,7 +175,7 @@ protected:
      */
     void registerSlider(Slider *s, Param* p, const tHookFn hook = tHookFn())
     {
-        s->setValue(p->getDefaultUI(), dontSendNotification);
+        s->setValue(p->getUI(), dontSendNotification);
         s->setTextValueSuffix(p->getUnit());
 
         sliderReg[s] = { p };
@@ -298,6 +298,75 @@ protected:
 
     //==============================================================================
 
+    /**
+     * Register source type ComboBox with corresponding ParamStepped<eSourceType> that needs to be checked.
+     * Use this to display and synchronize selected items of ComboBox on UI correctly.
+     * @param c ComboBox to handle and synchronize UI if ParamStepped<eSourceType> is dirty
+     * @param type ParamStepped<eSourceType> to register
+     * @param hook callback function
+     */
+    void registerSourceTypeBox(ComboBox *c, ParamStepped<eSourceType> *type, const tHookFn hook = tHookFn())
+    {        
+        // fill combo box items
+        for (int i = 0; i < static_cast<int>(eSourceType::nSteps); ++i)
+        {
+            c->addItem(TRANS(params.getSourceTypeNames(i)), i + 1);
+        }
+        c->setSelectedItemIndex(static_cast<int>(type->getStep()), dontSendNotification);
+
+        sourceTypeReg[c] = { type };
+        if (hook)
+        {
+            postUpdateHook[c] = hook;
+            hook();
+        }
+    }
+
+    /**
+     * Handle ComboBox that has changed and set registered parameter.
+     * @comboBoxThatHasChanged box in the UI that has changed
+     * @return true if ComboBox is registered and could be handled
+     */
+    bool handleSourceTypeBox(ComboBox* comboBoxThatHasChanged)
+    {
+        auto it = sourceTypeReg.find(comboBoxThatHasChanged);
+        if (it != sourceTypeReg.end())
+        {
+            int selectedId = comboBoxThatHasChanged->getSelectedItemIndex();
+            it->second->setUI(static_cast<float>(selectedId));
+
+            auto itHook = postUpdateHook.find(it->first);
+            if (itHook != postUpdateHook.end())
+            {
+                itHook->second();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check whether registered parameters of ComboBoxes have changed and synchronize its selected item on UI.
+     */
+    void updateDirtySourceTypeBoxes()
+    {
+        for (auto c2p : sourceTypeReg)
+        {
+            if (c2p.second->isUIDirty())
+            {
+                c2p.first->setSelectedItemIndex(static_cast<int>(c2p.second->getStep()), dontSendNotification);
+
+                auto itHook = postUpdateHook.find(c2p.first);
+                if (itHook != postUpdateHook.end())
+                {
+                    itHook->second();
+                }
+            }
+        }
+    }
+
+    //==============================================================================
+
     virtual void timerCallback() override
     {
         updateDirtyListener();
@@ -306,6 +375,7 @@ protected:
 
         updateDirtySliders();
         updateDirtyButtons();
+        updateDirtySourceTypeBoxes();
     }
 
     SynthParams &params;
@@ -314,4 +384,5 @@ protected:
     std::map<SourceNodeComponent*, std::array<Param*, 5>> sourceReg;
     std::map<Slider*, Param*> sliderReg;
     std::map<Button*, ParamStepped<eOnOffState>*> buttonReg;
+    std::map<ComboBox*, ParamStepped<eSourceType>*> sourceTypeReg;
 };

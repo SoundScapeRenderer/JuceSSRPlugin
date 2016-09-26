@@ -17,36 +17,29 @@
 ScenePanel::ScenePanel(SynthParams &p)
     : PanelBase(p), params(p)
 {
-    // load images from binaries
-    plusImg = ImageCache::getFromMemory(BinaryData::plus_icon_png, BinaryData::plus_icon_pngSize);
-    logoImg = ImageCache::getFromMemory(BinaryData::ssr_logo_png, BinaryData::ssr_logo_pngSize);
-
-    // create all necessary child components
+    // create clickable button and info window
     addAndMakeVisible(logoButton = new ImageButton("logoButton"));
     logoButton->setButtonText(String::empty);
     logoButton->addListener(this);
     logoButton->setImages(false, true, true,
-                          logoImg, 1.0f, Colours::transparentWhite,
-                          logoImg, 1.0f, Colours::transparentWhite,
-                          logoImg, 1.0f, Colours::transparentWhite);
+                          ImageCache::getFromMemory(BinaryData::ssr_logo_png, BinaryData::ssr_logo_pngSize), 1.0f, Colours::transparentWhite,
+                          ImageCache::getFromMemory(BinaryData::ssr_logo_png, BinaryData::ssr_logo_pngSize), 1.0f, Colours::transparentWhite,
+                          ImageCache::getFromMemory(BinaryData::ssr_logo_png, BinaryData::ssr_logo_pngSize), 1.0f, Colours::transparentWhite);
 
-    addAndMakeVisible(infoWindow = new DocumentWindow("info window", Colours::white, DocumentWindow::closeButton));
-    infoWindow->setName("info window");
-    infoWindow->setTitleBarHeight(0);
-    infoWindow->setDraggable(false);
-    infoWindow->setVisible(false);
+    addChildComponent(infoWindow = new ResizableWindow("info window", Colours::white, false));
     infoWindow->setAlwaysOnTop(true);
     infoWindow->setContentOwned(new InfoPanel(), true);
 
+    // create listener components
     addAndMakeVisible(listenerBackground = new ListenerBackgroundComponent());
     listenerBackground->setName("listener background");
 
-    addAndMakeVisible(listener = new ListenerComponent(params, listenerBackground));
-    listener->setName("listener");
+    addAndMakeVisible(refListener = new ListenerComponent(params, listenerBackground));
+    refListener->setName("listener");
 
+    // create source components
     addAndMakeVisible(sourceVolSlider = new VolLevelSlider("source vol slider"));
     sourceVolSlider->setRange(-96, 12, 0.01);
-    sourceVolSlider->setSliderStyle(Slider::LinearBar);
     sourceVolSlider->setTextBoxStyle(Slider::NoTextBox, false, 80, 20);
     sourceVolSlider->addListener(this);
     sourceVolSlider->setSkewFactor(3);
@@ -56,11 +49,7 @@ ScenePanel::ScenePanel(SynthParams &p)
     addAndMakeVisible(sourceBackground = new SourceBackgroundComponent());
     sourceBackground->setName("source background");
 
-    addAndMakeVisible(sourceMenu = new DocumentWindow("source menu", Colours::white, DocumentWindow::closeButton));
-    sourceMenu->setName("source menu");
-    sourceMenu->setTitleBarHeight(0);
-    sourceMenu->setDraggable(false);
-    sourceMenu->setVisible(false);
+    addChildComponent(sourceMenu = new ResizableWindow("source menu", Colours::white, false));
 
     addAndMakeVisible(sourceNode = new SourceNodeComponent(params, sourceVolSlider, sourceBackground, sourceMenu));
     sourceNode->setName("source node");
@@ -69,31 +58,33 @@ ScenePanel::ScenePanel(SynthParams &p)
     // NOTE: must be called after both sourceNode and sourceMenu has been created!
     sourceMenu->setContentOwned(new SourceMenuPanel(params, sourceNode), true);
 
-    addAndMakeVisible(refPoint = new ImageComponent());
-    refPoint->setName("reference point");
-    refPoint->setInterceptsMouseClicks(false, false);
-    refPoint->setImage(plusImg);
-
-    setSize(920, 590);
+    // create component for scene center point
+    addAndMakeVisible(sceneCenter = new ImageComponent());
+    sceneCenter->setName("scene center point");
+    sceneCenter->setInterceptsMouseClicks(false, false);
+    sceneCenter->setImage(ImageCache::getFromMemory(BinaryData::plus_icon_png, BinaryData::plus_icon_pngSize)); //< http://iconmonstr.com/
     
     // reset scene drag offset to default
     params.sceneOffsetX.setUI(params.sceneOffsetX.getDefaultUI());
     params.sceneOffsetY.setUI(params.sceneOffsetY.getDefaultUI());
 
-    // register listener and source for host changes etc.
-    registerListener(listener, &params.referenceX, &params.referenceY, &params.referenceOrientation, getWidth(), getHeight());
+    // set size of scene component
+    setSize(920, 590);
+
+    // register listener and source, must be called after size of scene has been set
+    registerListener(refListener, &params.referenceX, &params.referenceY, &params.referenceOrientation, getWidth(), getHeight());
     registerSource(sourceNode, &params.sourceX, &params.sourceY, &params.sourceVol, &params.sourceLevel, getWidth(), getHeight());
 }
 
 ScenePanel::~ScenePanel()
 {
     listenerBackground = nullptr;
-    listener = nullptr;
+    refListener = nullptr;
     sourceVolSlider = nullptr;
     sourceBackground = nullptr;
     sourceMenu = nullptr;
     sourceNode = nullptr;
-    refPoint = nullptr;
+    sceneCenter = nullptr;
     logoButton = nullptr;
     infoWindow = nullptr;
 }
@@ -107,68 +98,66 @@ void ScenePanel::paint(Graphics& g)
 
 void ScenePanel::resized()
 {
-    /// \todo move logo and infowindow to plugUI, above scene layer
-    logoButton->setBounds(20, getHeight() - 78, 70, 70);
-    infoWindow->setBounds(55, 40, 280, 470);
+    logoButton->setBounds(20, 510, 70, 70);
+    infoWindow->setBounds(20, 20, 280, 490);
 
+    /// \todo initial size and scaling into own classes? relocate into panelbase?
     // set source and listener position according to their position parameters and scene drag offset
-    int listenerW = static_cast<int>(listenerWidth * params.zoomFactor.get() / 100.0f);
-    int listenerH = static_cast<int>(listenerHeight * params.zoomFactor.get() / 100.0f);
-    juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), getWidth(), getHeight());
-    listener->setBounds(pixPosRef.x - listenerW / 2, pixPosRef.y - listenerH / 2, listenerW, listenerH);
-    listener->updateBackgroundAngle(params.referenceOrientation.getUI());
+    int listenerSizeScaled = static_cast<int>(refListenerSize * params.zoomFactor.get() / 100.0f);
+    refListener->setSize(listenerSizeScaled, listenerSizeScaled);
+    refListener->relocate();
 
-    int sourceNodeSize = static_cast<int>(sourceSize * params.zoomFactor.get() / 100.0f);
-    juce::Point<int> pixPosSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
-    sourceNode->setBounds(pixPosSource.x - sourceNodeSize / 2, pixPosSource.y - sourceNodeSize / 2, sourceNodeSize, sourceNodeSize);
+    int sourceSizeScaled = static_cast<int>(sourceNodeSize * params.zoomFactor.get() / 100.0f);
+    sourceNode->setSize(sourceSizeScaled, sourceSizeScaled);
+    sourceNode->relocate();
 
     // set refPoint position from scene center plus scene drag offset
-    int refPointSizeScaled = static_cast<int>(refPointSize * jmax(63.0f, params.zoomFactor.get()) / 100.0f);
+    int refPointSizeScaled = static_cast<int>(centerPointSize * jmax(63.0f, params.zoomFactor.get()) / 100.0f);
     int paddingL = static_cast<int>(getWidth() / 2 - refPointSizeScaled / 2 + params.sceneOffsetX.get());
     int paddingT = static_cast<int>(getHeight() / 2 - refPointSizeScaled / 2 + params.sceneOffsetY.get());
-    refPoint->setBounds(paddingL, paddingT, refPointSizeScaled, refPointSizeScaled);
+    sceneCenter->setBounds(paddingL, paddingT, refPointSizeScaled, refPointSizeScaled);
 }
 
 void ScenePanel::childBoundsChanged(Component *child)
 {
-    if (child == listener || child == sourceNode)
+    if (child == refListener || child == sourceNode)
     {
         int paddingL, paddingT;
         if (child == sourceNode)
         {
-            int sourceNodeSize = static_cast<int>(sourceNode->getWidth());
+            int sourceSizeScaled = static_cast<int>(sourceNode->getWidth());
 
             // make sure sourceMenu, sourceVolSlider and sourceBackground always follow sourceNode
-            paddingL = sourceNode->getX() + sourceNodeSize + 25;
-            paddingT = sourceNode->getY() + sourceNodeSize / 2;
+            paddingL = sourceNode->getX() + sourceSizeScaled + 25;
+            paddingT = sourceNode->getY();
             sourceMenu->setBounds(paddingL, paddingT, 250, 225);
 
-            sourceVolSlider->setSize(sourceNodeSize * 3 / 4, sourceNodeSize / 3);
-            paddingL = sourceNode->getX() + (sourceNodeSize - sourceVolSlider->getWidth()) / 2;
-            paddingT = sourceNode->getY() + static_cast<int>(sourceNodeSize * 1.1625f);
+            sourceVolSlider->setSize(sourceSizeScaled * 3 / 4, sourceSizeScaled / 3);
+            paddingL = sourceNode->getX() + (sourceSizeScaled - sourceVolSlider->getWidth()) / 2;
+            paddingT = sourceNode->getY() + static_cast<int>(sourceSizeScaled * 1.1625f);
             sourceVolSlider->setTopLeftPosition(paddingL, paddingT);
 
             // sourceBackground must be double the size of source
-            paddingL = sourceNode->getX() - sourceNodeSize / 2;
-            paddingT = sourceNode->getY() - sourceNodeSize / 2;
-            sourceBackground->setBounds(paddingL, paddingT, sourceNodeSize * 2, sourceNodeSize * 2);
+            paddingL = sourceNode->getX() - sourceSizeScaled / 2;
+            paddingT = sourceNode->getY() - sourceSizeScaled / 2;
+            sourceBackground->setBounds(paddingL, paddingT, sourceSizeScaled * 2, sourceSizeScaled * 2);
         }
-        else if (child == listener)
+        else if (child == refListener)
         {
             /// \todo too much zoom leads to host ui stuttering, scene resized() too much cpu?
             /// \todo especially this part here
             // make sure listenerBackground follows listener
             // listenerBackground must be double the size of source
-            paddingL = listener->getX() - listener->getWidth() / 2;
-            paddingT = listener->getY() - listener->getHeight() / 2;
-            listenerBackground->setBounds(paddingL, paddingT, listener->getWidth() * 2, listener->getHeight() * 2);
+            paddingL = refListener->getX() - refListener->getWidth() / 2;
+            paddingT = refListener->getY() - refListener->getHeight() / 2;
+            listenerBackground->setBounds(paddingL, paddingT, refListener->getWidth() * 2, refListener->getHeight() * 2);
         }
 
         // refresh plane wave of source background so that always points at reference listener
         juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), getWidth(), getHeight());
         juce::Point<int> pixPosSource = params.pos2pix(params.sourceX.get(), params.sourceY.get(), getWidth(), getHeight());
         float angle = pixPosRef.getAngleToPoint(pixPosSource);
-        sourceBackground->updatePlaneWave(radiansToDegrees(angle), params.sourceType.getStep() == eSourceType::ePlane, sourceNode->getNodeColour());
+        sourceBackground->setPlaneWaveAngle(radiansToDegrees(angle));
     }
 }
 

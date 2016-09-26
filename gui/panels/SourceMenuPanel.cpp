@@ -97,32 +97,12 @@ SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceNodeComponent *s)
     modelLabel->setColour (TextEditor::textColourId, Colours::black);
     modelLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (inputLabel = new Label ("input label",
-                                               TRANS("stereo input")));
-    inputLabel->setFont (Font (13.00f, Font::plain));
-    inputLabel->setJustificationType (Justification::centredLeft);
-    inputLabel->setEditable (false, false, false);
-    inputLabel->setColour (Label::textColourId, Colours::grey);
-    inputLabel->setColour (TextEditor::textColourId, Colours::black);
-    inputLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
-    addAndMakeVisible (inputBox = new ComboBox ("input box"));
-    inputBox->setEditableText (false);
-    inputBox->setJustificationType (Justification::centredLeft);
-    inputBox->setTextWhenNothingSelected (TRANS("input channel"));
-    inputBox->setTextWhenNoChoicesAvailable (String::empty);
-    inputBox->addItem (TRANS("left channel"), 1);
-    inputBox->addItem (TRANS("right channel"), 2);
-    inputBox->addListener (this);
-
-    addAndMakeVisible (modelBox = new ComboBox ("model box"));
-    modelBox->setEditableText (false);
-    modelBox->setJustificationType (Justification::centredLeft);
-    modelBox->setTextWhenNothingSelected (TRANS("source model"));
-    modelBox->setTextWhenNoChoicesAvailable (String::empty);
-    modelBox->addItem (TRANS("point souce"), 1);
-    modelBox->addItem (TRANS("plane wave"), 2);
-    modelBox->addListener (this);
+    addAndMakeVisible (sourceModelBox = new ComboBox ("source model box"));
+    sourceModelBox->setEditableText (false);
+    sourceModelBox->setJustificationType (Justification::centredLeft);
+    sourceModelBox->setTextWhenNothingSelected (TRANS("source model"));
+    sourceModelBox->setTextWhenNoChoicesAvailable (String::empty);
+    sourceModelBox->addListener (this);
 
     addAndMakeVisible (muteToggle = new ToggleButton ("mute toggle"));
     muteToggle->setButtonText (String::empty);
@@ -166,11 +146,10 @@ SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceNodeComponent *s)
 
 
     //[UserPreSize]
-    registerButton(muteToggle, &params.sourceMute, std::bind(&SourceMenuPanel::sourceNodeFixedOrMuted, this));
-    registerButton(fixToggle, &params.sourcePositionLock, std::bind(&SourceMenuPanel::sourceNodeFixedOrMuted, this));
+    registerButton(muteToggle, &params.sourceMute, std::bind(&SourceMenuPanel::repaintSourceNode, this));
+    registerButton(fixToggle, &params.sourcePositionLock, std::bind(&SourceMenuPanel::repaintSourceNode, this));
 
-    modelBox->setSelectedItemIndex(static_cast<int>(params.sourceType.getStep()), dontSendNotification);
-    inputBox->setSelectedItemIndex(static_cast<int>(params.inputChannel.getStep()), dontSendNotification);
+    registerSourceTypeBox(sourceModelBox, &params.sourceType, std::bind(&SourceMenuPanel::updatePlaneWaveVisibility, this));
     //[/UserPreSize]
 
     setSize (250, 225);
@@ -192,9 +171,7 @@ SourceMenuPanel::~SourceMenuPanel()
     volLabel = nullptr;
     muteLabel = nullptr;
     modelLabel = nullptr;
-    inputLabel = nullptr;
-    inputBox = nullptr;
-    modelBox = nullptr;
+    sourceModelBox = nullptr;
     muteToggle = nullptr;
     fixToggle = nullptr;
     volLabel2 = nullptr;
@@ -224,22 +201,20 @@ void SourceMenuPanel::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    positionLabel->setBounds (8, 16, 80, 16);
-    distanceLabel->setBounds (8, 40, 80, 16);
-    azimuthLabel->setBounds (8, 64, 80, 16);
-    fixLabel->setBounds (8, 88, 80, 16);
-    volLabel->setBounds (8, 112, 80, 16);
-    muteLabel->setBounds (8, 136, 80, 16);
-    modelLabel->setBounds (8, 160, 80, 16);
-    inputLabel->setBounds (8, 184, 80, 16);
-    inputBox->setBounds (96, 184, 144, 16);
-    modelBox->setBounds (96, 160, 144, 16);
-    muteToggle->setBounds (200, 136, 20, 16);
-    fixToggle->setBounds (200, 88, 20, 16);
-    volLabel2->setBounds (96, 112, 144, 16);
-    azimuthLabel2->setBounds (96, 64, 144, 16);
-    distanceLabel2->setBounds (96, 40, 144, 16);
-    positionLabel2->setBounds (96, 16, 144, 16);
+    positionLabel->setBounds (8, 17, 80, 16);
+    distanceLabel->setBounds (8, 46, 80, 16);
+    azimuthLabel->setBounds (8, 75, 80, 16);
+    fixLabel->setBounds (8, 104, 80, 16);
+    volLabel->setBounds (8, 133, 80, 16);
+    muteLabel->setBounds (8, 162, 80, 16);
+    modelLabel->setBounds (8, 191, 80, 16);
+    sourceModelBox->setBounds (96, 191, 144, 16);
+    muteToggle->setBounds (200, 162, 20, 16);
+    fixToggle->setBounds (200, 104, 20, 16);
+    volLabel2->setBounds (96, 133, 144, 16);
+    azimuthLabel2->setBounds (96, 75, 144, 16);
+    distanceLabel2->setBounds (96, 46, 144, 16);
+    positionLabel2->setBounds (96, 17, 144, 16);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -247,25 +222,13 @@ void SourceMenuPanel::resized()
 void SourceMenuPanel::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 {
     //[UsercomboBoxChanged_Pre]
-    int selectedId = comboBoxThatHasChanged->getSelectedItemIndex();
+    handleSourceTypeBox(comboBoxThatHasChanged);
     //[/UsercomboBoxChanged_Pre]
 
-    if (comboBoxThatHasChanged == inputBox)
+    if (comboBoxThatHasChanged == sourceModelBox)
     {
-        //[UserComboBoxCode_inputBox] -- add your combo box handling code here..
-        eInputChannel channel;
-        selectedId == 0 ? channel = eInputChannel::eLeftChannel : channel = eInputChannel::eRightChannel;
-        params.inputChannel.setUI(static_cast<float>(channel));
-        //[/UserComboBoxCode_inputBox]
-    }
-    else if (comboBoxThatHasChanged == modelBox)
-    {
-        //[UserComboBoxCode_modelBox] -- add your combo box handling code here..
-        eSourceType type;
-        selectedId == 0 ? type = eSourceType::ePoint : type = eSourceType::ePlane;
-        params.sourceType.setUI(static_cast<float>(type));
-        sourceNode->updatePlaneWave(sourceNode->getPlaneWaveAngle(), type == eSourceType::ePlane, sourceNode->getNodeColour());
-        //[/UserComboBoxCode_modelBox]
+        //[UserComboBoxCode_sourceModelBox] -- add your combo box handling code here..
+        //[/UserComboBoxCode_sourceModelBox]
     }
 
     //[UsercomboBoxChanged_Post]
@@ -296,24 +259,29 @@ void SourceMenuPanel::buttonClicked (Button* buttonThatWasClicked)
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
-void SourceMenuPanel::sourceNodeFixedOrMuted()
+void SourceMenuPanel::repaintSourceNode()
 {
     sourceNode->repaint();
+}
+
+void SourceMenuPanel::updatePlaneWaveVisibility()
+{
+    sourceNode->setPlaneWaveVisible(params.sourceType.getStep() == eSourceType::ePlane);
 }
 
 void SourceMenuPanel::timerCallback()
 {
     PanelBase::timerCallback();
 
-    positionLabel2->setText(String(params.roundNearest(params.sourceX.get()), 2) + " mtrs, "
-        + String(params.roundNearest(params.sourceY.get()), 2) + " mtrs", dontSendNotification);
+    // update source information to display
+    positionLabel2->setText(String(params.sourceX.get(), 2) + " mtrs, " + String(params.sourceY.get(), 2) + " mtrs", dontSendNotification);
 
     float dist = sqrtf(pow(params.referenceX.get() - params.sourceX.get(), 2.0f) + pow(params.referenceY.get() - params.sourceY.get(), 2.0f));
-    distanceLabel2->setText(String(params.roundNearest(dist), 2) + " mtrs", dontSendNotification);
+    distanceLabel2->setText(String(dist, 2) + " mtrs", dontSendNotification);
 
-    azimuthLabel2->setText(String(params.roundNearest(params.sourceOrientation.get()), 2) + " degs", dontSendNotification);
+    azimuthLabel2->setText(String(params.sourceOrientation.get(), 2) + " degs", dontSendNotification);
 
-    volLabel2->setText(String(params.roundNearest(params.sourceVol.get()), 2) + " dB", dontSendNotification);
+    volLabel2->setText(String(params.sourceVol.get(), 2) + " dB", dontSendNotification);
 }
 //[/MiscUserCode]
 
@@ -334,76 +302,66 @@ BEGIN_JUCER_METADATA
                  fixedSize="1" initialWidth="250" initialHeight="225">
   <BACKGROUND backgroundColour="ffffffff"/>
   <LABEL name="position label" id="4fb7b389efd80fef" memberName="positionLabel"
-         virtualName="" explicitFocusOrder="0" pos="8 16 80 16" textCol="ff808080"
+         virtualName="" explicitFocusOrder="0" pos="8 17 80 16" textCol="ff808080"
          edTextCol="ff000000" edBkgCol="0" labelText="x, y" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="13" bold="0" italic="0" justification="33"/>
   <LABEL name="distance label" id="335b9a0960751dc9" memberName="distanceLabel"
-         virtualName="" explicitFocusOrder="0" pos="8 40 80 16" textCol="ff808080"
+         virtualName="" explicitFocusOrder="0" pos="8 46 80 16" textCol="ff808080"
          edTextCol="ff000000" edBkgCol="0" labelText="distance" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="13" bold="0" italic="0" justification="33"/>
   <LABEL name="azimuth label" id="cf62efff78460b63" memberName="azimuthLabel"
-         virtualName="" explicitFocusOrder="0" pos="8 64 80 16" textCol="ff808080"
+         virtualName="" explicitFocusOrder="0" pos="8 75 80 16" textCol="ff808080"
          edTextCol="ff000000" edBkgCol="0" labelText="azimuth" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="13" bold="0" italic="0" justification="33"/>
   <LABEL name="fix label" id="c5f578c99816c429" memberName="fixLabel"
-         virtualName="" explicitFocusOrder="0" pos="8 88 80 16" textCol="ff808080"
+         virtualName="" explicitFocusOrder="0" pos="8 104 80 16" textCol="ff808080"
          edTextCol="ff000000" edBkgCol="0" labelText="fixed position"
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
          fontname="Default font" fontsize="13" bold="0" italic="0" justification="33"/>
   <LABEL name="vol label" id="6ae36f4c98da6877" memberName="volLabel"
-         virtualName="" explicitFocusOrder="0" pos="8 112 80 16" textCol="ff808080"
+         virtualName="" explicitFocusOrder="0" pos="8 133 80 16" textCol="ff808080"
          edTextCol="ff000000" edBkgCol="0" labelText="volume" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="13" bold="0" italic="0" justification="33"/>
   <LABEL name="mute label" id="7adfed4f61cec45c" memberName="muteLabel"
-         virtualName="" explicitFocusOrder="0" pos="8 136 80 16" textCol="ff808080"
+         virtualName="" explicitFocusOrder="0" pos="8 162 80 16" textCol="ff808080"
          edTextCol="ff000000" edBkgCol="0" labelText="muted" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="13" bold="0" italic="0" justification="33"/>
   <LABEL name="model label" id="c129f4058f99eea0" memberName="modelLabel"
-         virtualName="" explicitFocusOrder="0" pos="8 160 80 16" textCol="ff808080"
+         virtualName="" explicitFocusOrder="0" pos="8 191 80 16" textCol="ff808080"
          edTextCol="ff000000" edBkgCol="0" labelText="model" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="13" bold="0" italic="0" justification="33"/>
-  <LABEL name="input label" id="1764e9ebbbf45408" memberName="inputLabel"
-         virtualName="" explicitFocusOrder="0" pos="8 184 80 16" textCol="ff808080"
-         edTextCol="ff000000" edBkgCol="0" labelText="stereo input" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="13" bold="0" italic="0" justification="33"/>
-  <COMBOBOX name="input box" id="976271ca70d23dca" memberName="inputBox"
-            virtualName="" explicitFocusOrder="0" pos="96 184 144 16" editable="0"
-            layout="33" items="left channel&#10;right channel" textWhenNonSelected="input channel"
-            textWhenNoItems=""/>
-  <COMBOBOX name="model box" id="6589084621656a22" memberName="modelBox"
-            virtualName="" explicitFocusOrder="0" pos="96 160 144 16" editable="0"
-            layout="33" items="point souce&#10;plane wave" textWhenNonSelected="source model"
-            textWhenNoItems=""/>
+  <COMBOBOX name="source model box" id="6589084621656a22" memberName="sourceModelBox"
+            virtualName="" explicitFocusOrder="0" pos="96 191 144 16" editable="0"
+            layout="33" items="" textWhenNonSelected="source model" textWhenNoItems=""/>
   <TOGGLEBUTTON name="mute toggle" id="a2a2af1b5eb5e970" memberName="muteToggle"
-                virtualName="" explicitFocusOrder="0" pos="200 136 20 16" buttonText=""
+                virtualName="" explicitFocusOrder="0" pos="200 162 20 16" buttonText=""
                 connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
   <TOGGLEBUTTON name="fix toggle" id="85e366cc1aa64435" memberName="fixToggle"
-                virtualName="" explicitFocusOrder="0" pos="200 88 20 16" buttonText=""
+                virtualName="" explicitFocusOrder="0" pos="200 104 20 16" buttonText=""
                 connectedEdges="0" needsCallback="1" radioGroupId="0" state="0"/>
   <LABEL name="vol label" id="49197c2d125ed02d" memberName="volLabel2"
-         virtualName="" explicitFocusOrder="0" pos="96 112 144 16" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="96 133 144 16" edTextCol="ff000000"
          edBkgCol="0" labelText="volume" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="13"
          bold="0" italic="0" justification="34"/>
   <LABEL name="azimuth label" id="f913124fca9fcf65" memberName="azimuthLabel2"
-         virtualName="" explicitFocusOrder="0" pos="96 64 144 16" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="96 75 144 16" edTextCol="ff000000"
          edBkgCol="0" labelText="azimuth" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="13"
          bold="0" italic="0" justification="34"/>
   <LABEL name="distance label" id="716e3f41281fca98" memberName="distanceLabel2"
-         virtualName="" explicitFocusOrder="0" pos="96 40 144 16" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="96 46 144 16" edTextCol="ff000000"
          edBkgCol="0" labelText="distance" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="13"
          bold="0" italic="0" justification="34"/>
   <LABEL name="position label" id="79cacb44cd301191" memberName="positionLabel2"
-         virtualName="" explicitFocusOrder="0" pos="96 16 144 16" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="96 17 144 16" edTextCol="ff000000"
          edBkgCol="0" labelText="x, y" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="13"
          bold="0" italic="0" justification="34"/>

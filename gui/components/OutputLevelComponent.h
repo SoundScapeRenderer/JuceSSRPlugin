@@ -24,7 +24,6 @@ class OutputLevelComponent    : public Component
 public:
     OutputLevelComponent()
     {
-        //setInterceptsMouseClicks(false, false);
     }
 
     ~OutputLevelComponent()
@@ -65,11 +64,11 @@ public:
     //==============================================================================
 
     /**
-    * Set current output level and repaint this component with updated values.
-    * If new level is smaller then current level then draw smooth decaying instead.
-    * @param levelLeft new level of left channel to draw
-    * @param levelRight new level of right channel to draw
-    */
+     * Set current output level and repaint this component with updated values.
+     * If new level is smaller then current level then draw smooth decaying instead.
+     * @param levelLeft new level of left channel to draw
+     * @param levelRight new level of right channel to draw
+     */
     void refreshOutputLevel(float levelLeft, float levelRight)
     {
         // left level
@@ -97,11 +96,20 @@ public:
         repaint();
     }
 
+    /**
+     * Use custom colour for level bar.
+     * @param c custom level colour to use, deefault is juce::Colours::green
+     */
     void setLeveLColour(Colour c)
     {
         levelColour = c;
     }
 
+    /**
+     * Set a new skew factor to display level values logarithmically (see juce::Slider).
+     * Default is 1.0f, which is linear scaling.
+     * @param skew new skew factor
+     */
     void setSkewFactor(float skew)
     {
         skewFactor = skew;

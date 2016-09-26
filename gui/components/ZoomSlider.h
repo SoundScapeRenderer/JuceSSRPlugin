@@ -15,7 +15,8 @@
 
 //==============================================================================
 /**
- * Slider class which uses a custom drag mechanism. Designed according to SSR's zoom slider.
+ * Slider class which uses a custom drag mechanism. Edit value manually on click.
+ * Designed according to SSR's zoom slider.
  */
 class ZoomSlider    : public Slider
 {
@@ -48,6 +49,18 @@ public:
 
         g.setColour(Colours::black);
         g.strokePath(arrow, PathStrokeType(1.5f), trans);
+    }
+
+    /**
+     * Make sure that SliderStyle is always bar slider to dispaly value text
+     * since value text is not painted. Also, this makes it possible to edit
+     * the value manually in a textbox on click.
+     */
+    void resized()
+    {
+        Slider::resized();
+
+        setSliderStyle(Slider::SliderStyle::LinearBar);
     }
 
     //==============================================================================

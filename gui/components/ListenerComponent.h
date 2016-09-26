@@ -109,6 +109,7 @@ public:
         }
         else
         {
+            /// \todo use rotation towards mouse position instead of vertical drag
             // rotate reference listener
             if (e.mods == ModifierKeys::leftButtonModifier)
             {
@@ -137,7 +138,7 @@ public:
     void relocate()
     {
         juce::Point<int> pixPosRef = params.pos2pix(params.referenceX.get(), params.referenceY.get(), sceneWidth, sceneHeight);
-        setBounds(pixPosRef.x - getWidth() / 2, pixPosRef.y - getHeight() / 2, getWidth(), getHeight());
+        setTopLeftPosition(pixPosRef.x - getWidth() / 2, pixPosRef.y - getHeight() / 2);
     }
 
     /**
