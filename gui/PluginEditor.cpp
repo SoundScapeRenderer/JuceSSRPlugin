@@ -8,13 +8,12 @@
   ==============================================================================
 */
 
-#include "PluginProcessor.h"
 #include "PluginEditor.h"
-
 
 //==============================================================================
 PluginAudioProcessorEditor::PluginAudioProcessorEditor (PluginAudioProcessor& p)
-: AudioProcessorEditor (&p), processor (p)
+    : AudioProcessorEditor (&p)
+    , processor (p)
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -29,6 +28,7 @@ PluginAudioProcessorEditor::~PluginAudioProcessorEditor()
 }
 
 //==============================================================================
+
 void PluginAudioProcessorEditor::paint (Graphics& g)
 {
     g.fillAll (Colours::white);

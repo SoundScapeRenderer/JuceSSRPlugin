@@ -69,7 +69,7 @@ public:
         g.setColour(Colours::black);
         AffineTransform trans(AffineTransform::scale(width, height));
 
-        // draw tickbox  shadow only
+        // draw tickbox shadow only
         Path box;
         box.startNewSubPath(0.0f, 1.0f);
         box.lineTo(0.0f, 0.0f);

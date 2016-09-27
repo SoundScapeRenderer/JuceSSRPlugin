@@ -8,7 +8,7 @@
   ==============================================================================
 */
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include "JuceHeader.h"
 
 #define JucePlugin_MaxNumInputChannels 1
 #define JucePlugin_MaxNumOutputChannels 2
@@ -33,7 +33,7 @@ public:
         ignoreUnused(commandLine);
         // This method is where you should put your application's initialisation code..
         
-        mainWindow = new StandaloneFilterWindow(getApplicationName(),Colours::black, nullptr, false);
+        mainWindow = new StandaloneFilterWindow(getApplicationName(), Colours::black, nullptr, false);
         mainWindow->setSize(950, 650 + mainWindow->getTitleBarHeight());
         mainWindow->setTopLeftPosition(400, 200);
         mainWindow->setVisible(true);
@@ -43,7 +43,8 @@ public:
     {
         // Add your application's shutdown code here..
 
-        mainWindow = nullptr; // (deletes our window)
+        // deletes our window
+        mainWindow = nullptr;
     }
 
     //==============================================================================

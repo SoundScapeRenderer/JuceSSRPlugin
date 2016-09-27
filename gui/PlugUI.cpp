@@ -36,14 +36,6 @@ PlugUI::PlugUI (SynthParams &p)
     addAndMakeVisible (scene = new ScenePanel (params));
     scene->setName ("scene");
 
-    addAndMakeVisible (debugText = new Label ("debug",
-                                              String::empty));
-    debugText->setFont (Font (15.00f, Font::plain));
-    debugText->setJustificationType (Justification::topLeft);
-    debugText->setEditable (false, false, false);
-    debugText->setColour (TextEditor::textColourId, Colours::black);
-    debugText->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
     addAndMakeVisible (outputLevel = new OutputLevelComponent());
     outputLevel->setName ("output level");
 
@@ -64,18 +56,27 @@ PlugUI::PlugUI (SynthParams &p)
 
 
     //[UserPreSize]
+#ifdef DEBUG_TEXT
+    addAndMakeVisible(debugText = new Label("debug", String::empty));
+    debugText->setFont(Font(15.00f, Font::plain));
+    debugText->setJustificationType(Justification::topLeft);
+    debugText->setEditable(false, false, false);
+    debugText->setColour(TextEditor::textColourId, Colours::black);
+    debugText->setColour(TextEditor::backgroundColourId, Colour(0x00000000));
+
+    debugText->setInterceptsMouseClicks(false, false);
+#endif
+
     outputLevel->setLeveLColour(SynthParams::sourceLevelColour);
     outputLevel->setSkewFactor(3.0f);
 
     // register zoomSlider and reset zoomFactor to 100%
-    registerSlider(zoomSlider, &params.zoomFactor, std::bind(&PlugUI::resizeScenePanel, this));
-    zoomSlider->setValue(params.zoomFactor.getDefaultUI());
+    registerSlider(zoomSlider, &params.currentZoom, std::bind(&PlugUI::resizeScenePanel, this));
+    zoomSlider->setValue(params.currentZoom.getDefaultUI());
 
     // create some custom component designs to use as default
     lnf = new CustomLookAndFeel();
     LookAndFeel::setDefaultLookAndFeel(lnf);
-
-    debugText->setInterceptsMouseClicks(false, false);
     //[/UserPreSize]
 
     setSize (950, 650);
@@ -92,7 +93,6 @@ PlugUI::~PlugUI()
     //[/Destructor_pre]
 
     scene = nullptr;
-    debugText = nullptr;
     outputLevel = nullptr;
     zoomSlider = nullptr;
     loadButton = nullptr;
@@ -100,6 +100,9 @@ PlugUI::~PlugUI()
 
 
     //[Destructor]. You can add your own custom destruction code here..
+#ifdef DEBUG_TEXT
+    debugText = nullptr;
+#endif
     //[/Destructor]
 }
 
@@ -121,12 +124,14 @@ void PlugUI::resized()
     //[/UserPreResize]
 
     scene->setBounds (15, 12, 920, 590);
-    debugText->setBounds (685, 15, 255, 625);
     outputLevel->setBounds (570, 613, 150, 24);
     zoomSlider->setBounds (812, 613, 80, 24);
     loadButton->setBounds (190, 613, 80, 24);
     saveButton->setBounds (110, 613, 80, 24);
     //[UserResized] Add your own custom resize handling here..
+#ifdef DEBUG_TEXT
+    debugText->setBounds(685, 15, 255, 625);
+#endif
     //[/UserResized]
 }
 
@@ -181,7 +186,7 @@ void PlugUI::timerCallback()
     PanelBase::timerCallback();
     outputLevel->refreshOutputLevel(params.outputLevelLeft.getUI(), params.outputLevelRight.getUI());
 
-#if 0
+#ifdef DEBUG_TEXT
     debugText->setText(
         "SourceX = " + String(params.sourceX.get())
         + "\nSourceY = " + String(params.sourceY.get())
@@ -197,11 +202,10 @@ void PlugUI::timerCallback()
         + "\nRefOri = " + String(params.referenceOrientation.get())
         + "\nAmpliRefDist = " + String(params.amplitudeReferenceDistance.get())
 
-        + "\n\nInputChannel = " + String(params.inputChannel.getUIString())
         + "\nOutputLevelLeft = " + String(params.outputLevelLeft.get())
         + "\nOutputLevelRight = " + String(params.outputLevelRight.get())
 
-        + "\n\nZoomfactor = " + String(params.zoomFactor.get())
+        + "\n\nZoomfactor = " + String(params.currentZoom.get())
         + "\nSceneOffsetX = " + String(params.sceneOffsetX.get())
         + "\nSceneOffsetY = " + String(params.sceneOffsetY.get())
         , dontSendNotification);
@@ -228,11 +232,6 @@ BEGIN_JUCER_METADATA
   <GENERICCOMPONENT name="scene" id="31a3828dbcedcc3f" memberName="scene" virtualName=""
                     explicitFocusOrder="0" pos="15 12 920 590" class="ScenePanel"
                     params="params"/>
-  <LABEL name="debug" id="3b44d9ef5ee9c1a" memberName="debugText" virtualName=""
-         explicitFocusOrder="0" pos="685 15 255 625" edTextCol="ff000000"
-         edBkgCol="0" labelText="" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
-         bold="0" italic="0" justification="9"/>
   <GENERICCOMPONENT name="output level" id="18d306cbb6aed73e" memberName="outputLevel"
                     virtualName="" explicitFocusOrder="0" pos="570 613 150 24" class="OutputLevelComponent"
                     params=""/>

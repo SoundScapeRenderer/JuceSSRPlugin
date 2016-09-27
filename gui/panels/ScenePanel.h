@@ -63,7 +63,7 @@ public:
 
 private:
     SynthParams &params;
-
+    
     const int refListenerSize = 90;
     const int sourceNodeSize = 90;
     const int centerPointSize = 8;

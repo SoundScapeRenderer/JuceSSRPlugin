@@ -43,14 +43,14 @@ SynthParams::SynthParams()
     , outputLevelLeft("output level left", "outputLevelLeft", "outputLevelLeft", "dB", -96.0f, 12.0f, -96.0f)
     , outputLevelRight("outputlevel right", "outputLevelRight", "outputLevelRight", "dB", -96.0f, 12.0f, -96.0f)
 
-    , zoomFactor("zoom factor", "zoomFactor", "zoomFactor", "%", 25.0f, 200.0f, 100.0f)
+    , currentZoom("current zoom", "currentZoom", "currentZoom", "%", 25.0f, 200.0f, 100.0f)
     , pixelPerMeter(125)
-    , sceneOffsetX("scene offset x", "sceneOffsetX", "sceneOffsetX", "px", -2500.0f, 2500.0f, 0.0f) /// \todo in metern
-    , sceneOffsetY("scene offset y", "sceneOffsetY", "sceneOffsetY", "px", -2500.0f, 2500.0f, 125.0f) /// \todo in metern
+    , sceneOffsetX("scene offset x", "sceneOffsetX", "sceneOffsetX", "m", -30.0f, 30.0f, 0.0f)
+    , sceneOffsetY("scene offset y", "sceneOffsetY", "sceneOffsetY", "m", -30.0f, 30.0f, 1.00f)
 
     , serializeParams{ &sourceX, &sourceY, &sourceOrientation, &sourceVol, &sourceMute, &sourceType, &sourcePositionLock,
                        &referenceX, &referenceY, &referenceOrientation, &amplitudeReferenceDistance,
-                       &zoomFactor, &sceneOffsetX, &sceneOffsetY }
+                       &currentZoom, &sceneOffsetX, &sceneOffsetY }
 {
 }
 
@@ -62,18 +62,23 @@ SynthParams::~SynthParams()
 
 juce::Point<int> SynthParams::pos2pix(float meterCenterX, float meterCenterY, int sceneWidth, int sceneHeight)
 {
-    int x = static_cast<int>(meterCenterX * pixelPerMeter * zoomFactor.get() / 100.0f + (sceneWidth / 2 + sceneOffsetX.get()));
-    int y = static_cast<int>(-meterCenterY * pixelPerMeter * zoomFactor.get() / 100.0f + (sceneHeight / 2 + sceneOffsetY.get()));
+    int x = static_cast<int>(meterCenterX * getScaledPixelPerMeter() + (sceneWidth / 2 + sceneOffsetX.get() * getScaledPixelPerMeter()));
+    int y = static_cast<int>(-meterCenterY * getScaledPixelPerMeter() + (sceneHeight / 2 + sceneOffsetY.get() * getScaledPixelPerMeter()));
 
     return juce::Point<int>(x, y);
 }
 
 juce::Point<float> SynthParams::pix2pos(int pixCenterX, int pixCenterY, int sceneWidth, int sceneHeight)
 {
-    float x = (pixCenterX - (sceneWidth / 2 + sceneOffsetX.get())) / (pixelPerMeter * zoomFactor.get() / 100.0f);
-    float y = (pixCenterY - (sceneHeight / 2 + sceneOffsetY.get())) / (pixelPerMeter * zoomFactor.get() / 100.0f);
+    float x = (pixCenterX - (sceneWidth / 2 + sceneOffsetX.get() * getScaledPixelPerMeter())) / getScaledPixelPerMeter();
+    float y = (pixCenterY - (sceneHeight / 2 + sceneOffsetY.get() * getScaledPixelPerMeter())) / getScaledPixelPerMeter();
 
     return juce::Point<float>(x, -y);
+}
+
+float SynthParams::getScaledPixelPerMeter()
+{
+    return pixelPerMeter * currentZoom.get() / 100.0f;
 }
 
 const char* SynthParams::getSourceTypeNames(int index)
@@ -116,7 +121,7 @@ void SynthParams::writeXMLPatchStandalone()
 void SynthParams::readXMLPatchHost(const void* data, int sizeInBytes)
 {
     ScopedPointer<XmlElement> patch = AudioProcessor::getXmlFromBinary(data, sizeInBytes);
-    fillValues(patch);
+    readXMLPatchTree(patch);
 }
 
 void SynthParams::readXMLPatchStandalone()
@@ -129,15 +134,8 @@ void SynthParams::readXMLPatchStandalone()
     {
         File openedFile(openFileChooser.getResult());
         ScopedPointer<XmlElement> patch = XmlDocument::parse(openedFile);
-        fillValues(patch);
+        readXMLPatchTree(patch);
     }
-}
-
-void SynthParams::addElement(XmlElement* patch, String name, float value)
-{
-    XmlElement* node = new XmlElement(name);
-    node->setAttribute("value", value);
-    patch->addChildElement(node);
 }
 
 void SynthParams::writeXMLPatchTree(XmlElement* patch)
@@ -152,23 +150,16 @@ void SynthParams::writeXMLPatchTree(XmlElement* patch)
         float value = param->getUI();
         if (param->serializationTag() != "")
         {
+            // add element to xml patch tree
             String prefixedName = (param->prefix() + param->serializationTag()).replace(" ", "");
-            addElement(patch, prefixedName, value);
+            XmlElement* node = new XmlElement(prefixedName);
+            node->setAttribute("value", value);
+            patch->addChildElement(node);
         }
     }
 }
 
-void SynthParams::fillValueIfExists(XmlElement* patch, String paramName, Param& param)
-{
-    String prefixedName = (param.prefix() + param.serializationTag()).replace(" ", "");
-    if (patch->getChildByName(prefixedName) != NULL)
-    {
-        param.setUI(static_cast<float>(patch->getChildByName(prefixedName)->getDoubleAttribute("value")));
-        param.set(param.get(), true);
-    }
-}
-
-void SynthParams::fillValues(XmlElement* patch)
+void SynthParams::readXMLPatchTree(XmlElement* patch)
 {
     // if the versions don't align, inform the user
     if (patch == NULL) { return; }
@@ -183,12 +174,18 @@ void SynthParams::fillValues(XmlElement* patch)
     patchName = patch->getStringAttribute("patchname");
     patchNameDirty = true;
 
-    // iterate over all params and set the values if they exist in the xml
+    // iterate over all params and read the values if they exist in the xml patch
     for (auto &param : parameters)
     {
         if (param->serializationTag() != "")
         {
-            fillValueIfExists(patch, param->serializationTag(), *param);
+            // read and set values if exist
+            String prefixedName = (param->prefix() + param->serializationTag()).replace(" ", "");
+            if (patch->getChildByName(prefixedName) != NULL)
+            {
+                param->setUI(static_cast<float>(patch->getChildByName(prefixedName)->getDoubleAttribute("value")));
+                param->set(param->get(), true);
+            }
         }
     }
 }

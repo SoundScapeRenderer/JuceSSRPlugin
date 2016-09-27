@@ -68,11 +68,15 @@ private:
     ScopedPointer<CustomLookAndFeel> lnf;
 
     void timerCallback() override;
+
+//#define DEBUG_TEXT
+#ifdef DEBUG_TEXT
+    ScopedPointer<Label> debugText;
+#endif
     //[/UserVariables]
 
     //==============================================================================
     ScopedPointer<ScenePanel> scene;
-    ScopedPointer<Label> debugText;
     ScopedPointer<OutputLevelComponent> outputLevel;
     ScopedPointer<ZoomSlider> zoomSlider;
     ScopedPointer<TextButton> loadButton;

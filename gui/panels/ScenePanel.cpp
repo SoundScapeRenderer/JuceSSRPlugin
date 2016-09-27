@@ -103,19 +103,21 @@ void ScenePanel::resized()
 
     /// \todo initial size and scaling into own classes? relocate into panelbase?
     // set source and listener position according to their position parameters and scene drag offset
-    int listenerSizeScaled = static_cast<int>(refListenerSize * params.zoomFactor.get() / 100.0f);
+    int listenerSizeScaled = static_cast<int>(refListenerSize * params.currentZoom.getUI() / 100.0f);
     refListener->setSize(listenerSizeScaled, listenerSizeScaled);
     refListener->relocate();
 
-    int sourceSizeScaled = static_cast<int>(sourceNodeSize * params.zoomFactor.get() / 100.0f);
+    int sourceSizeScaled = static_cast<int>(sourceNodeSize * params.currentZoom.getUI() / 100.0f);
     sourceNode->setSize(sourceSizeScaled, sourceSizeScaled);
     sourceNode->relocate();
 
     // set refPoint position from scene center plus scene drag offset
-    int refPointSizeScaled = static_cast<int>(centerPointSize * jmax(63.0f, params.zoomFactor.get()) / 100.0f);
-    int paddingL = static_cast<int>(getWidth() / 2 - refPointSizeScaled / 2 + params.sceneOffsetX.get());
-    int paddingT = static_cast<int>(getHeight() / 2 - refPointSizeScaled / 2 + params.sceneOffsetY.get());
-    sceneCenter->setBounds(paddingL, paddingT, refPointSizeScaled, refPointSizeScaled);
+    int refPointSizeScaled = static_cast<int>(centerPointSize * jmax(63.0f, params.currentZoom.getUI()) / 100.0f);
+    sceneCenter->setSize(refPointSizeScaled, refPointSizeScaled);
+
+    int pixPosCenterX = static_cast<int>(params.sceneOffsetX.getUI() * params.getScaledPixelPerMeter() + (getWidth() / 2));
+    int pixPosCenterY = static_cast<int>(params.sceneOffsetY.getUI() * params.getScaledPixelPerMeter() + (getHeight() / 2));
+    sceneCenter->setTopLeftPosition(pixPosCenterX - refPointSizeScaled / 2, pixPosCenterY - refPointSizeScaled / 2);
 }
 
 void ScenePanel::childBoundsChanged(Component *child)
@@ -187,8 +189,8 @@ void ScenePanel::mouseDown(const MouseEvent& e)
 
 void ScenePanel::mouseDrag(const MouseEvent& e)
 {
-    float deltaX = e.getDistanceFromDragStartX() / 1.0f;
-    float deltaY = e.getDistanceFromDragStartY() / 1.0f;
+    float deltaX = e.getDistanceFromDragStartX() / params.getScaledPixelPerMeter();
+    float deltaY = e.getDistanceFromDragStartY() / params.getScaledPixelPerMeter();
     params.sceneOffsetX.setUI(dragStartOffset.x + deltaX);
     params.sceneOffsetY.setUI(dragStartOffset.y + deltaY);
     resized();
@@ -199,14 +201,14 @@ void ScenePanel::mouseDoubleClick(const MouseEvent& e)
     ignoreUnused(e);
     params.sceneOffsetX.setUI(params.sceneOffsetX.getDefaultUI());
     params.sceneOffsetY.setUI(params.sceneOffsetY.getDefaultUI());
-    params.zoomFactor.set(params.zoomFactor.getDefaultUI(), true);
+    params.currentZoom.set(params.currentZoom.getDefaultUI(), true);
 }
 
 void ScenePanel::mouseWheelMove(const MouseEvent& e, const MouseWheelDetails& wheel)
 {
     ignoreUnused(e);
     float delta = wheel.deltaY;
-    float currZoom = params.zoomFactor.getUI();
-    float newZoom = jmin(jmax(params.zoomFactor.getMin(), currZoom + 15.0f * delta), params.zoomFactor.getMax());
-    params.zoomFactor.set(newZoom, true);
+    float currZoom = params.currentZoom.getUI();
+    float newZoom = jmin(jmax(params.currentZoom.getMin(), currZoom + 15.0f * delta), params.currentZoom.getMax());
+    params.currentZoom.set(newZoom, true);
 }

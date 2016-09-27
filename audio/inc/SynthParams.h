@@ -44,10 +44,10 @@ public:
     Param outputLevelRight; //!< right output level in range [-96.0f ... 12.0f]dB
 
     /// GUI scaling and dragging parameter
-    Param zoomFactor; //!< scene zoom factor in range [25.0f ... 200.0f]%
+    Param currentZoom; //!< current scene zoom in range [25.0f ... 200.0f]%
     const int pixelPerMeter; //!< pixel per meter scene scale parameter 125px = 1m
-    Param sceneOffsetX; //!< scene offset x for dragging in range [-2500.0f ... 2500.0f]px
-    Param sceneOffsetY; //!< scene offset y for dragging in range [-2500.0f ... 2500.0f]px
+    Param sceneOffsetX; //!< scene offset x for dragging in range [-25.0f ... 25.0f]m
+    Param sceneOffsetY; //!< scene offset y for dragging in range [-25.0f ... 25.0f]m
 
     //==============================================================================
 
@@ -89,6 +89,13 @@ public:
     juce::Point<float> pix2pos(int pixCenterX, int pixCenterY, int sceneWidth, int sceneHeight);
 
     /**
+     * Pixel per meter value that takes the current zoom scale factor into account.
+     * Needed for some meter to pixel conversion and vice versa.
+     * scaledPixelPerMeter = pixelPerMeter * currentZoom / 100.0f.
+     */
+    float getScaledPixelPerMeter();
+
+    /**
      * Get name of source type.
      * @param index eSourceType index
      * @return name of eSourceType index
@@ -104,25 +111,27 @@ public:
     const String appVersion = ProjectInfo::versionString; //!< application version to be written into the xml
 
     /**
-     * Store host state by creating XML file to serialize parameters by using writeXMLPatchTree().
+     * Store plugin state in host by creating XML patch and converting it into MemoryBlock to serialize parameters.
+     * Will be called in the host.
      * @param destData host data
      */
     void writeXMLPatchHost(MemoryBlock& destData);
 
     /**
-     * Create XML file to serialize parameters by using writeXMLPatchTree().
+     * Creates XML via file chooser and write XML patch to serialize parameters.
      */
     void writeXMLPatchStandalone();
 
     /**
-     * Restore host state by converting binary data into a XML file and set serialized parameters by using fillValues().
-     * @param data binary data to return to XML
+     * Restore plugin state in host by converting binary data into a XML patch tree and set serialized parameters.
+     * Will be called in the host.
+     * @param data binary data to convert into XML patch
      * @param sizeInBytes data size
      */
     void readXMLPatchHost(const void * data, int sizeInBytes);
 
     /**
-     * Read XML file to set serialized parameters by using fillValues().
+     * Read XML patch tree from file via file chooser and set serialized parameters.
      */
     void readXMLPatchStandalone();
 
@@ -131,30 +140,14 @@ public:
 private:
 
     /**
-     * Adds an element to the XML tree.
-     * @param patch XML pstch to work on
-     * @param name parameter name
-     * @param value  value of parameter to be added
-     */
-    void addElement(XmlElement* patch, String name, float value);
-
-    /**
      * Write the XML patch tree for parameters to be serialized.
-     * @param patch XML patch to work on
+     * @param patch XML patch to write to
      */
     void writeXMLPatchTree(XmlElement * patch);
 
     /**
-     * Set the parameters if they exist in the XML patch.
-     * @param patch XML patch to work on
-     * @param paramName name to check whether parameter exist in XML patch
-     * @param param parameter to set
+     * Iterate over parameters and read the values in the XML patch.
+     * @param patch XML patch to read from
      */
-    void fillValueIfExists(XmlElement * patch, String paramName, Param& param);
-
-    /**
-     * Iterate over parameters and set the values in the xml by using fillValueIfExists().
-     * @param patch XML patch to work on
-     */
-    void fillValues(XmlElement * patch);
+    void readXMLPatchTree(XmlElement * patch);
 };

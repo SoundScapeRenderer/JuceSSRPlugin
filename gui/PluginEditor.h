@@ -14,9 +14,7 @@
 #include "JuceHeader.h"
 #include "PluginProcessor.h"
 
-
 #include "PlugUI.h"
-
 
 //==============================================================================
 /**
@@ -28,8 +26,11 @@ public:
     ~PluginAudioProcessorEditor();
 
     //==============================================================================
+
     void paint (Graphics&) override;
     void resized() override;
+
+    //==============================================================================
 
 private:
     // This reference is provided as a quick way for your editor to
