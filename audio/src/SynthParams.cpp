@@ -51,7 +51,11 @@ SynthParams::SynthParams()
     , serializeParams{ &sourceX, &sourceY, &sourceOrientation, &sourceVol, &sourceMute, &sourceType, &sourcePositionLock,
                        &referenceX, &referenceY, &referenceOrientation, &amplitudeReferenceDistance,
                        &currentZoom, &sceneOffsetX, &sceneOffsetY }
+
+    , positionIndex(0)
 {
+    positionInfo[0].resetToDefault();
+    positionInfo[1].resetToDefault();
 }
 
 SynthParams::~SynthParams()
@@ -189,3 +193,16 @@ void SynthParams::readXMLPatchTree(XmlElement* patch)
         }
     }
 }
+
+//==============================================================================
+
+int SynthParams::getAudioIndex()
+{
+    return positionIndex.load();
+}
+
+int SynthParams::getGUIIndex()
+{
+    return (positionIndex.load() + 1) % 2;
+}
+

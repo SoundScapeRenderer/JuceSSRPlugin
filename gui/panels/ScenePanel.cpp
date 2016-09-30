@@ -146,8 +146,7 @@ void ScenePanel::childBoundsChanged(Component *child)
         }
         else if (child == refListener)
         {
-            /// \todo too much zoom leads to host ui stuttering, scene resized() too much cpu?
-            /// \todo especially this part here
+            /// \todo too much zoom this here leads to host ui stuttering, scene resized() too much cpu?
             // make sure listenerBackground follows listener
             // listenerBackground must be double the size of source
             paddingL = refListener->getX() - refListener->getWidth() / 2;

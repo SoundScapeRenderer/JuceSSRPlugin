@@ -155,7 +155,9 @@
     <ClCompile Include="..\..\..\audio\ssr code\ssr_aap.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr code\ssr_binaural.cpp"/>
+    <ClCompile Include="..\..\..\audio\ssr code\ssr_binaural.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\audio\ssr code\ssr_brs.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>

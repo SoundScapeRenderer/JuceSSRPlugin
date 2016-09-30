@@ -81,6 +81,12 @@ private:
     ScopedPointer<TemporaryFile> tempHrirFile; //!< temporary hrir file to be created from memory
     bool setupSuccessful = false; //!< only create and use SSR renderer if loading hrir file was successful
 
+    /**
+     * Update host information by updating information of host audio playhead. 
+     * This way you can get access to bpm or transport state of host.
+     */
+    void updateHostInfo();
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginAudioProcessor)
 };
 

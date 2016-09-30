@@ -63,7 +63,7 @@ public:
         return param.getNumSteps();
     }
 
-    /// \todo implement this
+    /// \todo implement this to fix automation value input bug?
     virtual float getValueForText(const String& text) const override
     {
         return text.getFloatValue();

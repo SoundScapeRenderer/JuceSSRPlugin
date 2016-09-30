@@ -81,6 +81,9 @@ private:
     ScopedPointer<ZoomSlider> zoomSlider;
     ScopedPointer<TextButton> loadButton;
     ScopedPointer<TextButton> saveButton;
+    ScopedPointer<Label> saveLoadLabel;
+    ScopedPointer<Label> levelOutLabel;
+    ScopedPointer<Label> zoomLabel;
 
 
     //==============================================================================

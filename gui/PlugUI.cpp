@@ -54,6 +54,30 @@ PlugUI::PlugUI (SynthParams &p)
     saveButton->setButtonText (TRANS("save"));
     saveButton->addListener (this);
 
+    addAndMakeVisible (saveLoadLabel = new Label ("save load label",
+                                                  TRANS("scene:")));
+    saveLoadLabel->setFont (Font (15.00f, Font::plain));
+    saveLoadLabel->setJustificationType (Justification::centredRight);
+    saveLoadLabel->setEditable (false, false, false);
+    saveLoadLabel->setColour (TextEditor::textColourId, Colours::black);
+    saveLoadLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (levelOutLabel = new Label ("level out label",
+                                                  TRANS("level:")));
+    levelOutLabel->setFont (Font (15.00f, Font::plain));
+    levelOutLabel->setJustificationType (Justification::centredRight);
+    levelOutLabel->setEditable (false, false, false);
+    levelOutLabel->setColour (TextEditor::textColourId, Colours::black);
+    levelOutLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (zoomLabel = new Label ("zoom label",
+                                              TRANS("zoom:")));
+    zoomLabel->setFont (Font (15.00f, Font::plain));
+    zoomLabel->setJustificationType (Justification::centredRight);
+    zoomLabel->setEditable (false, false, false);
+    zoomLabel->setColour (TextEditor::textColourId, Colours::black);
+    zoomLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
 
     //[UserPreSize]
 #ifdef DEBUG_TEXT
@@ -97,6 +121,9 @@ PlugUI::~PlugUI()
     zoomSlider = nullptr;
     loadButton = nullptr;
     saveButton = nullptr;
+    saveLoadLabel = nullptr;
+    levelOutLabel = nullptr;
+    zoomLabel = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -125,9 +152,12 @@ void PlugUI::resized()
 
     scene->setBounds (15, 12, 920, 590);
     outputLevel->setBounds (570, 613, 150, 24);
-    zoomSlider->setBounds (812, 613, 80, 24);
+    zoomSlider->setBounds (820, 613, 80, 24);
     loadButton->setBounds (190, 613, 80, 24);
     saveButton->setBounds (110, 613, 80, 24);
+    saveLoadLabel->setBounds (30, 613, 80, 24);
+    levelOutLabel->setBounds (490, 613, 80, 24);
+    zoomLabel->setBounds (740, 613, 80, 24);
     //[UserResized] Add your own custom resize handling here..
 #ifdef DEBUG_TEXT
     debugText->setBounds(685, 15, 255, 625);
@@ -187,6 +217,8 @@ void PlugUI::timerCallback()
     outputLevel->refreshOutputLevel(params.outputLevelLeft.getUI(), params.outputLevelRight.getUI());
 
 #ifdef DEBUG_TEXT
+    String isPlaying = params.positionInfo[params.getAudioIndex()].isPlaying ? "true" : "false";
+
     debugText->setText(
         "SourceX = " + String(params.sourceX.get())
         + "\nSourceY = " + String(params.sourceY.get())
@@ -204,6 +236,7 @@ void PlugUI::timerCallback()
 
         + "\nOutputLevelLeft = " + String(params.outputLevelLeft.get())
         + "\nOutputLevelRight = " + String(params.outputLevelRight.get())
+        + "\nIsHostPlaying = " + isPlaying
 
         + "\n\nZoomfactor = " + String(params.currentZoom.get())
         + "\nSceneOffsetX = " + String(params.sceneOffsetX.get())
@@ -236,7 +269,7 @@ BEGIN_JUCER_METADATA
                     virtualName="" explicitFocusOrder="0" pos="570 613 150 24" class="OutputLevelComponent"
                     params=""/>
   <SLIDER name="zoom slider" id="c8e0b018d0c69bbf" memberName="zoomSlider"
-          virtualName="ZoomSlider" explicitFocusOrder="0" pos="812 613 80 24"
+          virtualName="ZoomSlider" explicitFocusOrder="0" pos="820 613 80 24"
           textboxoutline="0" min="25" max="200" int="1" style="LinearHorizontal"
           textBoxPos="TextBoxBelow" textBoxEditable="1" textBoxWidth="80"
           textBoxHeight="24" skewFactor="1"/>
@@ -246,6 +279,21 @@ BEGIN_JUCER_METADATA
   <TEXTBUTTON name="save button" id="b25b544b7310227e" memberName="saveButton"
               virtualName="" explicitFocusOrder="0" pos="110 613 80 24" buttonText="save"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
+  <LABEL name="save load label" id="efbad829208416b1" memberName="saveLoadLabel"
+         virtualName="" explicitFocusOrder="0" pos="30 613 80 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="scene:" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="34"/>
+  <LABEL name="level out label" id="e5c102789d9f520a" memberName="levelOutLabel"
+         virtualName="" explicitFocusOrder="0" pos="490 613 80 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="level:" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="34"/>
+  <LABEL name="zoom label" id="d0e9be9bac4dc773" memberName="zoomLabel"
+         virtualName="" explicitFocusOrder="0" pos="740 613 80 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="zoom:" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="34"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

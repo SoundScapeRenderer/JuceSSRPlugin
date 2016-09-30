@@ -27,7 +27,7 @@ public:
     Param sourceY; //!< source y position in range [-50.0f ... 50.0f]m
     Param sourceOrientation; //!< source orientation in range [-180.0f ... 180.0f]degs
     Param sourceVol; //!< source vol in range [-96.0f ... 12.0f]dB
-    Param sourceLevel; //!< source level in range [-96.0f ... 12.0f]dB
+    Param sourceLevel; //!< source input level in range [-96.0f ... 12.0f]dB
     ParamStepped<eOnOffState> sourceMute; //!< source muted {eOff, eOn}
     ParamStepped<eSourceType> sourceType; //!< source type {ePoint, ePlane}
     ParamStepped<eOnOffState> sourcePositionLock; //!< source position locked {eOff, eOn}
@@ -134,6 +134,18 @@ public:
      * Read XML patch tree from file via file chooser and set serialized parameters.
      */
     void readXMLPatchStandalone();
+
+    //==============================================================================
+
+    /** 
+     * Current position information of audio playhead using double buffering.
+     * Call positionInfo[getAudioIndex()] to get the newest info.
+     */
+    std::array<AudioPlayHead::CurrentPositionInfo, 2> positionInfo;
+
+    std::atomic<int> positionIndex;
+    int getAudioIndex();
+    int getGUIIndex();
 
     //==============================================================================
 

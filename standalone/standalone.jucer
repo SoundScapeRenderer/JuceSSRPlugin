@@ -194,7 +194,7 @@
         <FILE id="OsVeeJ" name="scene.h" compile="0" resource="0" file="../audio/ssr code/scene.h"/>
         <FILE id="pLYuRq" name="source.h" compile="0" resource="0" file="../audio/ssr code/source.h"/>
         <FILE id="JYXzuy" name="ssr_aap.cpp" compile="0" resource="0" file="../audio/ssr code/ssr_aap.cpp"/>
-        <FILE id="d8bvJb" name="ssr_binaural.cpp" compile="1" resource="0"
+        <FILE id="d8bvJb" name="ssr_binaural.cpp" compile="0" resource="0"
               file="../audio/ssr code/ssr_binaural.cpp"/>
         <FILE id="f1SJ1l" name="ssr_brs.cpp" compile="0" resource="0" file="../audio/ssr code/ssr_brs.cpp"/>
         <FILE id="xpAqdI" name="ssr_generic.cpp" compile="0" resource="0" file="../audio/ssr code/ssr_generic.cpp"/>

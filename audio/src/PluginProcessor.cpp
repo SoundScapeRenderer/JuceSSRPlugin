@@ -134,46 +134,43 @@ namespace {
 
 void PluginAudioProcessor::prepareToPlay(double sRate, int samplesPerBlock)
 {
+    /// \todo 96kHz leads to wrong position? sounds louder than 44.1kHz or 48kHz
     // read default_hrirs_wav from memory into hrirFileBuffer
     MemoryInputStream *in = new MemoryInputStream(BinaryData::default_hrirs_wav, BinaryData::default_hrirs_wavSize, false);
     ScopedPointer<AudioFormatReader> hrirFileReader = WavAudioFormat().createReaderFor(in, true);
-    double hrirFileSampleRate = hrirFileReader->sampleRate;
-    int numHrirFileChannels = static_cast<int>(hrirFileReader->numChannels);
-    int hrirFileLengthInSamples = static_cast<int>(hrirFileReader->lengthInSamples);
-
-    AudioSampleBuffer hrirFileBuffer(numHrirFileChannels, hrirFileLengthInSamples);
-    hrirFileReader->read(&hrirFileBuffer, 0, hrirFileLengthInSamples, 0, true, true);
+    AudioSampleBuffer hrirFileBuffer(static_cast<int>(hrirFileReader->numChannels), static_cast<int>(hrirFileReader->lengthInSamples));
+    hrirFileReader->read(&hrirFileBuffer, 0, static_cast<int>(hrirFileReader->lengthInSamples), 0, true, true);
 
     // resample default hrir buffer if necessary
     AudioSampleBuffer resampledHrirFileBuffer;
-    if (sRate != hrirFileSampleRate)
+    if (sRate != hrirFileReader->sampleRate)
     {
         ScopedPointer<LagrangeInterpolator> resampler = new LagrangeInterpolator();
-        double speedRatio = hrirFileSampleRate / sRate;
-        int resampledLengthInSamples = static_cast<int>(hrirFileLengthInSamples / speedRatio);
-        resampledHrirFileBuffer = AudioSampleBuffer(numHrirFileChannels, resampledLengthInSamples);
+        double speedRatio = hrirFileReader->sampleRate / sRate;
+        int resampledLengthInSamples = static_cast<int>(hrirFileReader->lengthInSamples / speedRatio);
+        resampledHrirFileBuffer = AudioSampleBuffer(static_cast<int>(hrirFileReader->numChannels), resampledLengthInSamples);
 
         const float **readBuffer = hrirFileBuffer.getArrayOfReadPointers();
         float **writeBuffer = resampledHrirFileBuffer.getArrayOfWritePointers();
-        for (int i = 0; i < numHrirFileChannels; ++i)
+        for (int i = 0; i < static_cast<int>(hrirFileReader->numChannels); ++i)
         {
             resampler->process(speedRatio, readBuffer[i], writeBuffer[i], resampledLengthInSamples);
         }
     }
 
     // create interleaved audio data buffer for writing multi channel wav with libsndfile
-    AudioSampleBuffer *bufferToUse = sRate == hrirFileSampleRate ? &hrirFileBuffer : &resampledHrirFileBuffer;
-    int numFrames = numHrirFileChannels * bufferToUse->getNumSamples();
+    AudioSampleBuffer *bufferToUse = sRate == hrirFileReader->sampleRate ? &hrirFileBuffer : &resampledHrirFileBuffer;
+    int numFrames = static_cast<int>(hrirFileReader->numChannels) * bufferToUse->getNumSamples();
     float *interleavedBuffer = (float*)malloc(numFrames * sizeof(float));
     long k = 0;
 
     for (long i = 0; i < bufferToUse->getNumSamples(); i++)
     {
-        for (int j = 0; j < numHrirFileChannels; j++)
+        for (int j = 0; j < static_cast<int>(hrirFileReader->numChannels); j++)
         {
             interleavedBuffer[k + j] = bufferToUse->getSample(j, i);
         }
-        k += numHrirFileChannels;
+        k += static_cast<int>(hrirFileReader->numChannels);
     }
 
     // create temporary file and save path of randomly named tempFile
@@ -183,7 +180,7 @@ void PluginAudioProcessor::prepareToPlay(double sRate, int samplesPerBlock)
     // write wav into TemporaryFile
     const char *path = tempHrirFilePath.getCharPointer();
     auto format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
-    SndfileHandle sndFile = SndfileHandle(path, SFM_WRITE, format, numHrirFileChannels, static_cast<int>(sRate));
+    SndfileHandle sndFile = SndfileHandle(path, SFM_WRITE, format, static_cast<int>(hrirFileReader->numChannels), static_cast<int>(sRate));
     sndFile.write(interleavedBuffer, numFrames);
 
     // configure SSR
@@ -224,28 +221,22 @@ void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& m
 {
     ignoreUnused(midiMessages);
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // I've added this to avoid people getting screaming feedback
-    // when they first compile the plugin, but obviously you don't need to
-    // this code if your algorithm already fills all the output channels.
-    for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
-        buffer.clear(i, 0, buffer.getNumSamples());
-
     if (setupSuccessful)
     {
-        // get source input level
-        float inputLevel;
-        bool isInputMuted = sourceMute.getStep() == eOnOffState::eOn;
-        isInputMuted ? inputLevel = 0.0f : inputLevel = buffer.getRMSLevel(0, 0, buffer.getNumSamples());
-        sourceLevel.setUI(Param::toDb(inputLevel));
+        // In case we have more outputs than inputs, this code clears any output
+        // channels that didn't contain input data, (because these aren't
+        // guaranteed to be empty - they may contain garbage).
+        // I've added this to avoid people getting screaming feedback
+        // when they first compile the plugin, but obviously you don't need to
+        // this code if your algorithm already fills all the output channels.
+        for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
+            buffer.clear(i, 0, buffer.getNumSamples());
 
         // set listener parameter
         Position listenerPos = Position(referenceX.get(), referenceY.get());
         renderer->state.reference_position.setRT(listenerPos);
         renderer->state.reference_orientation.setRT(Orientation(referenceOrientation.get() + refOrientationOffset));
-        renderer->state.amplitude_reference_distance.setRT(amplitudeReferenceDistance.get());
+        renderer->state.amplitude_reference_distance.setRT(amplitudeReferenceDistance.get()); /// \todo config window for this
 
         // set source parameter
         ssr::RendererBase<ssr::BinauralRenderer>::Source *source = renderer->get_source(sourceID);
@@ -255,8 +246,13 @@ void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& m
         Source::model_t type;
         sourceType.getStep() == eSourceType::ePlane ? type = Source::model_t::plane : type = Source::model_t::point;
         source->model.setRT(type);
-        source->mute.setRT(isInputMuted);
+        source->mute.setRT(sourceMute.getStep() == eOnOffState::eOn);
         source->gain.setRT(Param::fromDb(sourceVol.get()));
+
+        // get source input level
+        float inputLevel;
+        source->mute.get() ? inputLevel = 0.0f : inputLevel = buffer.getRMSLevel(0, 0, buffer.getNumSamples());
+        sourceLevel.setUI(Param::toDb(inputLevel));
 
         // calculate angle from which the source is seen
         // and confine angle to interval ]-180, 180], see qsourceproperties.cpp
@@ -272,10 +268,17 @@ void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& m
         }
         sourceOrientation.setUI(ang);
 
-        // call internal ssr process function of renderer
-        renderer->audio_callback(getBlockSize()
-            , buffer.getArrayOfWritePointers() // NOTE: write = read pointer, read is just const
-            , buffer.getArrayOfWritePointers());
+        // update host audio play head information to get transport state
+        updateHostInfo();
+        AudioPlayHead::CurrentPositionInfo hostPlayHead = positionInfo[getAudioIndex()];
+
+        // call internal ssr process function of renderer only if host is playing
+        if (hostPlayHead.isPlaying)
+        {
+            renderer->audio_callback(getBlockSize()
+                , buffer.getArrayOfWritePointers() // NOTE: write = read pointer, read is just const
+                , buffer.getArrayOfWritePointers());
+        }
 
         // get ssr output level
         outputLevelLeft.setUI(Param::toDb(buffer.getRMSLevel(0, 0, buffer.getNumSamples())));
@@ -285,7 +288,6 @@ void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& m
     {
         buffer.clear();
     }
-    /// \todo getCPUUsage() einbauen
 }
 
 //==============================================================================
@@ -310,6 +312,21 @@ void PluginAudioProcessor::getStateInformation(MemoryBlock& destData)
 void PluginAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 {
     SynthParams::readXMLPatchHost(data, sizeInBytes);
+}
+
+//==============================================================================
+
+void PluginAudioProcessor::updateHostInfo()
+{
+    // use double buffering
+    if (AudioPlayHead* pHead = getPlayHead())
+    {
+        if (pHead->getCurrentPosition(positionInfo[getAudioIndex()])) {
+            positionIndex.exchange(getGUIIndex());
+            return;
+        }
+    }
+    positionInfo[getAudioIndex()].resetToDefault();
 }
 
 //==============================================================================
