@@ -83,7 +83,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <AdditionalLibraryDirectories>../../../lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
-      <AdditionalDependencies>libfftw-3.3_Z7_d.lib;libfftwf-3.3_Z7_d.lib;libsndfileStatic_Z7_d.lib;libxml2Static_a_d.lib;libxml2Static_a_dll_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfftw-3.3_Z7_d.lib;libfftwf-3.3_Z7_d.lib;libsndfileStatic_Z7_d.lib;libxml2Static_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -127,7 +127,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalLibraryDirectories>../../../lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
-      <AdditionalDependencies>libfftw-3.3_Z7_d.lib;libfftwf-3.3_Z7_d.lib;libsndfileStatic_Z7_d.lib;libxml2Static_a_d.lib;libxml2Static_a_dll_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfftw-3.3_Z7_d.lib;libfftwf-3.3_Z7_d.lib;libsndfileStatic_Z7_d.lib;libxml2Static_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
