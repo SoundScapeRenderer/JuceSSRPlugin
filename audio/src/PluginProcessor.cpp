@@ -134,7 +134,7 @@ namespace {
 
 void PluginAudioProcessor::prepareToPlay(double sRate, int samplesPerBlock)
 {
-    /// \todo 96kHz leads to wrong position? sounds louder than 44.1kHz or 48kHz
+    /// \todo 96kHz leads to wrong distance attenuation? sounds louder than 44.1kHz or 48kHz
     // read default_hrirs_wav from memory into hrirFileBuffer
     MemoryInputStream *in = new MemoryInputStream(BinaryData::default_hrirs_wav, BinaryData::default_hrirs_wavSize, false);
     ScopedPointer<AudioFormatReader> hrirFileReader = WavAudioFormat().createReaderFor(in, true);

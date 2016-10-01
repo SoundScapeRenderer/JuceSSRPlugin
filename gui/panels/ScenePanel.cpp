@@ -63,10 +63,6 @@ ScenePanel::ScenePanel(SynthParams &p)
     sceneCenter->setName("scene center point");
     sceneCenter->setInterceptsMouseClicks(false, false);
     sceneCenter->setImage(ImageCache::getFromMemory(BinaryData::plus_icon_png, BinaryData::plus_icon_pngSize)); //< http://iconmonstr.com/
-    
-    // reset scene drag offset to default
-    params.sceneOffsetX.setUI(params.sceneOffsetX.getDefaultUI());
-    params.sceneOffsetY.setUI(params.sceneOffsetY.getDefaultUI());
 
     // set size of scene component
     setSize(920, 590);
@@ -198,8 +194,22 @@ void ScenePanel::mouseDrag(const MouseEvent& e)
 void ScenePanel::mouseDoubleClick(const MouseEvent& e)
 {
     ignoreUnused(e);
-    params.sceneOffsetX.setUI(params.sceneOffsetX.getDefaultUI());
-    params.sceneOffsetY.setUI(params.sceneOffsetY.getDefaultUI());
+
+    if (e.mods.isCtrlDown())
+    {
+        params.sceneOffsetX.setUI(-params.referenceX.get());
+        params.sceneOffsetY.setUI(params.referenceY.get() + params.sceneOffsetY.getDefaultUI());
+    }
+    else if (e.mods.isAltDown())
+    {
+        params.sceneOffsetX.setUI(-params.sourceX.get());
+        params.sceneOffsetY.setUI(params.sourceY.get() + params.sceneOffsetY.getDefaultUI());
+    }
+    else
+    {
+        params.sceneOffsetX.setUI(params.sceneOffsetX.getDefaultUI());
+        params.sceneOffsetY.setUI(params.sceneOffsetY.getDefaultUI());
+    }
     params.currentZoom.set(params.currentZoom.getDefaultUI(), true);
 }
 

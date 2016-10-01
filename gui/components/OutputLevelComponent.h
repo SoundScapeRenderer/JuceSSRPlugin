@@ -65,12 +65,19 @@ public:
 
     /**
      * Set current output level and repaint this component with updated values.
-     * If new level is smaller then current level then draw smooth decaying instead.
+     * If new level is smaller than current level then draw smooth decaying instead.
      * @param levelLeft new level of left channel to draw
      * @param levelRight new level of right channel to draw
      */
     void refreshOutputLevel(float levelLeft, float levelRight)
     {
+        // do not repaint if level is already at minLevel
+        bool needRepaint = false;
+        if (currentLevelLeft != levelLeft || currentLevelRight != levelRight)
+        {
+            needRepaint = true;
+        }
+
         // left level
         if (levelLeft > currentLevelLeft)
         {
@@ -93,7 +100,10 @@ public:
             currentLevelRight = jmax(minLevel, currentLevelRight);
         }
 
-        repaint();
+        if (needRepaint)
+        {
+            repaint();
+        }
     }
 
     /**

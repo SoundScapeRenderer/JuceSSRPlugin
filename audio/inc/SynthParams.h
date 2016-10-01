@@ -46,8 +46,8 @@ public:
     /// GUI scaling and dragging parameter
     Param currentZoom; //!< current scene zoom in range [25.0f ... 200.0f]%
     const int pixelPerMeter; //!< pixel per meter scene scale parameter 125px = 1m
-    Param sceneOffsetX; //!< scene offset x for dragging in range [-25.0f ... 25.0f]m
-    Param sceneOffsetY; //!< scene offset y for dragging in range [-25.0f ... 25.0f]m
+    Param sceneOffsetX; //!< scene offset x for dragging in range [-35.7.0f ... 35.7f]m
+    Param sceneOffsetY; //!< scene offset y for dragging in range [-41.0f ... 41.0f]m
 
     //==============================================================================
 

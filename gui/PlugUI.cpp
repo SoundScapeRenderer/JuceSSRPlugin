@@ -87,16 +87,13 @@ PlugUI::PlugUI (SynthParams &p)
     debugText->setEditable(false, false, false);
     debugText->setColour(TextEditor::textColourId, Colours::black);
     debugText->setColour(TextEditor::backgroundColourId, Colour(0x00000000));
-
     debugText->setInterceptsMouseClicks(false, false);
 #endif
 
     outputLevel->setLeveLColour(SynthParams::sourceLevelColour);
     outputLevel->setSkewFactor(3.0f);
 
-    // register zoomSlider and reset zoomFactor to 100%
     registerSlider(zoomSlider, &params.currentZoom, std::bind(&PlugUI::resizeScenePanel, this));
-    zoomSlider->setValue(params.currentZoom.getDefaultUI());
 
     // create some custom component designs to use as default
     lnf = new CustomLookAndFeel();
@@ -234,13 +231,13 @@ void PlugUI::timerCallback()
         + "\nRefOri = " + String(params.referenceOrientation.get())
         + "\nAmpliRefDist = " + String(params.amplitudeReferenceDistance.get())
 
-        + "\nOutputLevelLeft = " + String(params.outputLevelLeft.get())
-        + "\nOutputLevelRight = " + String(params.outputLevelRight.get())
-        + "\nIsHostPlaying = " + isPlaying
-
         + "\n\nZoomfactor = " + String(params.currentZoom.get())
         + "\nSceneOffsetX = " + String(params.sceneOffsetX.get())
         + "\nSceneOffsetY = " + String(params.sceneOffsetY.get())
+
+        + "\nOutputLevelLeft = " + String(params.outputLevelLeft.get())
+        + "\nOutputLevelRight = " + String(params.outputLevelRight.get())
+        + "\nIsHostPlaying = " + isPlaying
         , dontSendNotification);
 #endif
 }

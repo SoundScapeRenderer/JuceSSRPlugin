@@ -53,7 +53,11 @@ public:
     void mouseDown(const MouseEvent& e);
     void mouseDrag(const MouseEvent& e);
 
-    /// reset dragging offset and zoom
+    /**
+     * Double click on scene to reset zoom and drag offset.
+     * Double click on scene while holding CTRL will jump to listener.
+     * Double click on scene while holding ALT will jump to source.
+     */
     void mouseDoubleClick(const MouseEvent& e);
     
     /// zoom in and out by scrolling

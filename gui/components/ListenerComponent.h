@@ -65,12 +65,12 @@ public:
         g.addTransform(trans);
         g.drawImageWithin(listenerImg, 0, 0, getWidth(), getHeight(), RectanglePlacement::centred);
     }
-
+    
     void resized()
     {
         bounds->setMinimumOnscreenAmounts(getHeight() / 2, getWidth() / 2, getHeight() / 2, getWidth() / 2);
     }
-    
+
     //==============================================================================
 
     /**

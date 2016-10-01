@@ -118,6 +118,7 @@ protected:
         s->setSceneSize(sceneWidth, sceneHeight);
 
         registerSlider(s->getVolSlider(), vol);
+        s->getVolSlider()->setDefaultSliderValue(vol->getDefaultUI());
 
         sourceReg[s] = { posX, posY , vol, level };
         if (hook)

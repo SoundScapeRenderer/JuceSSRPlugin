@@ -25,8 +25,8 @@ const Colour SynthParams::sourceLevelColour(58, 239, 58);
 //==============================================================================
 
 SynthParams::SynthParams()
-    : sourceX("source x", "sourceX", "sourceX", "m", -100.0f, 100.0f, 0.0f)
-    , sourceY("source y", "sourceY", "sourceY", "m", -100.0f, 100.0f, 2.0f)
+    : sourceX("source x", "sourceX", "sourceX", "m", -50.0f, 50.0f, 0.0f)
+    , sourceY("source y", "sourceY", "sourceY", "m", -50.0f, 50.0f, 2.0f)
     , sourceOrientation("source orientation", "sourceOrientation", "sourceOrientation", "degs", -180.0f, 180.0f, 0.0f)
     , sourceVol("source vol", "sourceVol", "sourceVol", "dB", -96.0f, 12.0f, -6.0f)
     , sourceLevel("sourceLevel", "sourceLevel", "sourceLevel", "dB", -96.0f, 12.0f, -96.0f)
@@ -45,8 +45,8 @@ SynthParams::SynthParams()
 
     , currentZoom("current zoom", "currentZoom", "currentZoom", "%", 25.0f, 200.0f, 100.0f)
     , pixelPerMeter(125)
-    , sceneOffsetX("scene offset x", "sceneOffsetX", "sceneOffsetX", "m", -30.0f, 30.0f, 0.0f)
-    , sceneOffsetY("scene offset y", "sceneOffsetY", "sceneOffsetY", "m", -30.0f, 30.0f, 1.00f)
+    , sceneOffsetX("scene offset x", "sceneOffsetX", "sceneOffsetX", "m", -35.7f, 35.7f, 0.0f)
+    , sceneOffsetY("scene offset y", "sceneOffsetY", "sceneOffsetY", "m", -41.0f, 41.0f, 1.00f)
 
     , serializeParams{ &sourceX, &sourceY, &sourceOrientation, &sourceVol, &sourceMute, &sourceType, &sourcePositionLock,
                        &referenceX, &referenceY, &referenceOrientation, &amplitudeReferenceDistance,

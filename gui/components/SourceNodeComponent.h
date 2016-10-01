@@ -13,14 +13,15 @@
 
 #include "JuceHeader.h"
 #include "SynthParams.h"
+
 #include "SourceBackgroundComponent.h"
 #include "VolLevelSlider.h"
 
 //==============================================================================
 /**
  * Draggable component on left-click which can not be dragged outside of the plugin window.
- * Used as Source node with references pointers to VolLevelSlider, SourceBackgroundComponent
- * and DocumentWindow (for right-click menu). Menu stays open until right-click again.
+ * Used as Source node with reference pointers to VolLevelSlider, SourceBackgroundComponent
+ * and ResizableWindow (for right-click menu). Menu stays open until right-click again.
  * Designed according to SSR's source node with small changes (mute and fixed state).
  */
 class SourceNodeComponent    : public Component
@@ -34,7 +35,7 @@ public:
     {
         lockImg = ImageCache::getFromMemory(BinaryData::lock_icon_png, BinaryData::lock_icon_pngSize);
         muteImg = ImageCache::getFromMemory(BinaryData::mute_icon_png, BinaryData::mute_icon_pngSize);
-
+        
         bounds = new ComponentBoundsConstrainer();
     }
 

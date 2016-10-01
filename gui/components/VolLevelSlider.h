@@ -15,8 +15,9 @@
 
 //==============================================================================
 /**
- * Bar slider that draws its internal volume level. Currently used by calling 
- * refreshVolLevel() from a timerCallback().
+ * Bar slider that draws its internal post-fader volume level. Currently used by 
+ * calling refreshVolLevel() from a timerCallback(). Click on slider while
+ * holding the shift key to reset slider value.
  * Uses an arrow thumb to show the current slider value.
  * Designed according to SSR's source volume slider.
  */
@@ -45,8 +46,8 @@ public:
         g.setColour(Colours::white);
         g.fillRect(0.0f, 0.0f, boxWidth, boxHeight);
 
-        // fill up volume level bar up to current level
-        float postFaderLevel = currentLevel + static_cast<float>(getValue());
+        // fill volume level bar up to current post-fader level
+        float postFaderLevel = jmax(minLevel, currentLevel + static_cast<float>(getValue()));
         float levelProportion = static_cast<float>(pow((postFaderLevel - minLevel) / (maxLevel - minLevel), getSkewFactor()));
         float levelPosition = outlineThickness + levelProportion * (boxWidth - 2 * outlineThickness);
 
@@ -71,12 +72,41 @@ public:
     //==============================================================================
 
     /**
-     * Set current volume level and repaint this component with updated values.
-     * If new level is smaller then current currentLevel then draw smooth decaying instead.
+     * If slider is clicked while holding shift then reset slider value to 0dB.
+     */
+    void mouseDown(const MouseEvent& e)
+    {
+        if (e.mods.isShiftDown())
+        {
+            this->setValue(defaultValue);
+        }
+        else
+        {
+            Slider::mouseDown(e);
+        }
+    }
+
+    /**
+     * Set a new default slider value. That value is used if this
+     * component is clicked while holding the shift key.
+     */
+    void setDefaultSliderValue(double val)
+    {
+        defaultValue = val;
+    }
+
+    //==============================================================================
+
+    /**
+     * Set current (prefader) volume level and repaint this component with updated values.
+     * If new level is smaller than current currentLevel then draw smooth decaying instead.
      * @param level new level to draw
      */
     void refreshVolLevel(float level)
     {
+        // do not repaint if level is already at minLevel
+        bool needRepaint = currentLevel != level? true : false;
+
         if (level > currentLevel)
         {
             currentLevel = level;
@@ -87,14 +117,18 @@ public:
             currentLevel = jmax(minLevel, currentLevel);
         }
 
-        repaint();
+        if (needRepaint)
+        {
+            repaint();
+        }
     }
 
     //==============================================================================
 
 private:
-    float currentLevel = -96.0f;
+    double defaultValue = 0.0f;
 
+    float currentLevel = -96.0f;
     const float minLevel = -96.0f;
     const float maxLevel = 12.0f;
     const float clipLevel = 0.0f;
