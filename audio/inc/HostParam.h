@@ -5,7 +5,7 @@
 #include "JuceHeader.h"
 #include "Param.h"
 
-/// \todo clean class and document
+/// \todo clean class and doc
 template<typename _par>
 class HostParam : public AudioProcessorParameter, public Param::Listener
 {

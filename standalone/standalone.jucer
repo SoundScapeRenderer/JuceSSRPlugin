@@ -10,10 +10,10 @@
       <FILE id="vljkJH" name="lock icon.png" compile="0" resource="1" file="../assets/lock icon.png"/>
       <FILE id="AeJ81q" name="mute icon.png" compile="0" resource="1" file="../assets/mute icon.png"/>
       <FILE id="jCX9mS" name="plus icon.png" compile="0" resource="1" file="../assets/plus icon.png"/>
+      <FILE id="PVNyzl" name="settings icon.png" compile="0" resource="1"
+            file="../assets/settings icon.png"/>
     </GROUP>
     <GROUP id="{15FC078A-D7EC-ED70-E8F2-79886D332AC0}" name="ssr data">
-      <FILE id="D3H0pE" name="default_hrirs.wav" compile="0" resource="1"
-            file="../ssr data/default_hrirs.wav"/>
       <FILE id="HMQEHd" name="asdf.xsd" compile="0" resource="0" file="../ssr data/asdf.xsd"/>
       <GROUP id="{7CB670DC-7C8A-6FA7-50D8-E99BD8985625}" name="images">
         <FILE id="vloSI6" name="listener.png" compile="0" resource="1" file="../ssr data/images/listener.png"/>
@@ -48,7 +48,7 @@
       </GROUP>
       <GROUP id="{83CE8C65-0970-B484-0232-6E0AA2E66BF3}" name="impulse_responses">
         <GROUP id="{028FCC9E-69B9-E8A2-3FE5-9DCF443E3863}" name="hrirs">
-          <FILE id="vGKQi5" name="hrirs_fabian.wav" compile="0" resource="0"
+          <FILE id="vGKQi5" name="hrirs_fabian.wav" compile="0" resource="1"
                 file="../ssr data/impulse_responses/hrirs/hrirs_fabian.wav"/>
           <FILE id="dgXSGz" name="hrirs_fabian_documentation.pdf" compile="0"
                 resource="0" file="../ssr data/impulse_responses/hrirs/hrirs_fabian_documentation.pdf"/>
@@ -251,9 +251,11 @@
               file="../gui/components/SourceNodeComponent.h"/>
         <FILE id="MDAqkm" name="VolLevelSlider.h" compile="0" resource="0"
               file="../gui/components/VolLevelSlider.h"/>
-        <FILE id="A2SWsN" name="ZoomSlider.h" compile="0" resource="0" file="../gui/components/ZoomSlider.h"/>
+        <FILE id="A2SWsN" name="DragSlider.h" compile="0" resource="0" file="../gui/components/DragSlider.h"/>
       </GROUP>
       <GROUP id="{97002C86-853A-E142-A502-E0F82A3882D2}" name="panels">
+        <FILE id="eYmINh" name="ConfigPanel.cpp" compile="1" resource="0" file="../gui/panels/ConfigPanel.cpp"/>
+        <FILE id="LpaGSt" name="ConfigPanel.h" compile="0" resource="0" file="../gui/panels/ConfigPanel.h"/>
         <FILE id="CSjbtc" name="ScenePanel.cpp" compile="1" resource="0" file="../gui/panels/ScenePanel.cpp"/>
         <FILE id="WrCX58" name="ScenePanel.h" compile="0" resource="0" file="../gui/panels/ScenePanel.h"/>
         <FILE id="EEyOF2" name="InfoPanel.cpp" compile="1" resource="0" file="../gui/panels/InfoPanel.cpp"/>

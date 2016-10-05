@@ -189,6 +189,7 @@
     <ClCompile Include="..\..\..\audio\ssr code\xmlparser.cpp"/>
     <ClCompile Include="..\..\..\audio\src\PluginProcessor.cpp"/>
     <ClCompile Include="..\..\..\audio\src\SynthParams.cpp"/>
+    <ClCompile Include="..\..\..\gui\panels\ConfigPanel.cpp"/>
     <ClCompile Include="..\..\..\gui\panels\ScenePanel.cpp"/>
     <ClCompile Include="..\..\..\gui\panels\InfoPanel.cpp"/>
     <ClCompile Include="..\..\..\gui\panels\SourceMenuPanel.cpp"/>
@@ -1408,7 +1409,8 @@
     <ClInclude Include="..\..\..\gui\components\SourceBackgroundComponent.h"/>
     <ClInclude Include="..\..\..\gui\components\SourceNodeComponent.h"/>
     <ClInclude Include="..\..\..\gui\components\VolLevelSlider.h"/>
-    <ClInclude Include="..\..\..\gui\components\ZoomSlider.h"/>
+    <ClInclude Include="..\..\..\gui\components\DragSlider.h"/>
+    <ClInclude Include="..\..\..\gui\panels\ConfigPanel.h"/>
     <ClInclude Include="..\..\..\gui\panels\ScenePanel.h"/>
     <ClInclude Include="..\..\..\gui\panels\InfoPanel.h"/>
     <ClInclude Include="..\..\..\gui\panels\SourceMenuPanel.h"/>
@@ -1881,7 +1883,7 @@
     <None Include="..\..\..\assets\lock icon.png"/>
     <None Include="..\..\..\assets\mute icon.png"/>
     <None Include="..\..\..\assets\plus icon.png"/>
-    <None Include="..\..\..\ssr data\default_hrirs.wav"/>
+    <None Include="..\..\..\assets\settings icon.png"/>
     <None Include="..\..\..\ssr data\asdf.xsd"/>
     <None Include="..\..\..\ssr data\images\listener.png"/>
     <None Include="..\..\..\ssr data\images\listener_background.png"/>

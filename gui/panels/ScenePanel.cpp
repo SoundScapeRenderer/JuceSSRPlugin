@@ -36,6 +36,7 @@ ScenePanel::ScenePanel(SynthParams &p)
 
     addAndMakeVisible(refListener = new ListenerComponent(params, listenerBackground));
     refListener->setName("listener");
+    refListener->addMouseListener(this, false);
 
     // create source components
     addAndMakeVisible(sourceVolSlider = new VolLevelSlider("source vol slider"));
@@ -45,6 +46,7 @@ ScenePanel::ScenePanel(SynthParams &p)
     sourceVolSlider->setSkewFactor(3);
     sourceVolSlider->setColour(Slider::backgroundColourId, SynthParams::sourceLevelColour);
     sourceVolSlider->setColour(Slider::textBoxOutlineColourId, SynthParams::sourceColourBlue);
+    sourceVolSlider->addMouseListener(this, false);
 
     addAndMakeVisible(sourceBackground = new SourceBackgroundComponent());
     sourceBackground->setName("source background");
@@ -54,6 +56,7 @@ ScenePanel::ScenePanel(SynthParams &p)
     addAndMakeVisible(sourceNode = new SourceNodeComponent(params, sourceVolSlider, sourceBackground, sourceMenu));
     sourceNode->setName("source node");
     sourceNode->setNodeColour(SynthParams::sourceColourBlue);
+    sourceNode->addMouseListener(this, false);
 
     // NOTE: must be called after both sourceNode and sourceMenu has been created!
     sourceMenu->setContentOwned(new SourceMenuPanel(params, sourceNode), true);
@@ -97,7 +100,7 @@ void ScenePanel::resized()
     logoButton->setBounds(20, 510, 70, 70);
     infoWindow->setBounds(20, 20, 280, 490);
 
-    /// \todo initial size and scaling into own classes? relocate into panelbase?
+    /// \todo initial size and scaling into own classes? or dragging into ScenePanel.h?
     // set source and listener position according to their position parameters and scene drag offset
     int listenerSizeScaled = static_cast<int>(refListenerSize * params.currentZoom.getUI() / 100.0f);
     refListener->setSize(listenerSizeScaled, listenerSizeScaled);
@@ -112,7 +115,7 @@ void ScenePanel::resized()
     sceneCenter->setSize(refPointSizeScaled, refPointSizeScaled);
 
     int pixPosCenterX = static_cast<int>(params.sceneOffsetX.getUI() * params.getScaledPixelPerMeter() + (getWidth() / 2));
-    int pixPosCenterY = static_cast<int>(params.sceneOffsetY.getUI() * params.getScaledPixelPerMeter() + (getHeight() / 2));
+    int pixPosCenterY = static_cast<int>(-params.sceneOffsetY.getUI() * params.getScaledPixelPerMeter() + (getHeight() / 2));
     sceneCenter->setTopLeftPosition(pixPosCenterX - refPointSizeScaled / 2, pixPosCenterY - refPointSizeScaled / 2);
 }
 
@@ -135,16 +138,13 @@ void ScenePanel::childBoundsChanged(Component *child)
             paddingT = sourceNode->getY() + static_cast<int>(sourceSizeScaled * 1.1625f);
             sourceVolSlider->setTopLeftPosition(paddingL, paddingT);
 
-            // sourceBackground must be double the size of source
             paddingL = sourceNode->getX() - sourceSizeScaled / 2;
             paddingT = sourceNode->getY() - sourceSizeScaled / 2;
             sourceBackground->setBounds(paddingL, paddingT, sourceSizeScaled * 2, sourceSizeScaled * 2);
         }
         else if (child == refListener)
         {
-            /// \todo too much zoom this here leads to host ui stuttering, scene resized() too much cpu?
             // make sure listenerBackground follows listener
-            // listenerBackground must be double the size of source
             paddingL = refListener->getX() - refListener->getWidth() / 2;
             paddingT = refListener->getY() - refListener->getHeight() / 2;
             listenerBackground->setBounds(paddingL, paddingT, refListener->getWidth() * 2, refListener->getHeight() * 2);
@@ -171,6 +171,7 @@ void ScenePanel::buttonClicked(Button* buttonThatWasClicked)
     {
         /// \todo add content for infopanel
         infoWindow->setVisible(!infoWindow->isVisible());
+        sourceMenu->setVisible(false);
     }
 }
 
@@ -178,17 +179,24 @@ void ScenePanel::buttonClicked(Button* buttonThatWasClicked)
 
 void ScenePanel::mouseDown(const MouseEvent& e)
 {
-    ignoreUnused(e);
-    dragStartOffset = Point<float>(params.sceneOffsetX.get(), params.sceneOffsetY.get());
+    if (e.eventComponent == this)
+    {
+        dragStartOffset = Point<float>(params.sceneOffsetX.get(), params.sceneOffsetY.get());
+        sourceMenu->setVisible(false);
+    }
+    infoWindow->setVisible(false);
 }
 
 void ScenePanel::mouseDrag(const MouseEvent& e)
 {
-    float deltaX = e.getDistanceFromDragStartX() / params.getScaledPixelPerMeter();
-    float deltaY = e.getDistanceFromDragStartY() / params.getScaledPixelPerMeter();
-    params.sceneOffsetX.setUI(dragStartOffset.x + deltaX);
-    params.sceneOffsetY.setUI(dragStartOffset.y + deltaY);
-    resized();
+    if (e.eventComponent == this)
+    {
+        float deltaX = e.getDistanceFromDragStartX() / params.getScaledPixelPerMeter();
+        float deltaY = e.getDistanceFromDragStartY() / params.getScaledPixelPerMeter();
+        params.sceneOffsetX.set(dragStartOffset.x + deltaX);
+        params.sceneOffsetY.set(dragStartOffset.y - deltaY);
+        resized();
+    }
 }
 
 void ScenePanel::mouseDoubleClick(const MouseEvent& e)
@@ -197,18 +205,18 @@ void ScenePanel::mouseDoubleClick(const MouseEvent& e)
 
     if (e.mods.isCtrlDown())
     {
-        params.sceneOffsetX.setUI(-params.referenceX.get());
-        params.sceneOffsetY.setUI(params.referenceY.get() + params.sceneOffsetY.getDefaultUI());
+        params.sceneOffsetX.set(-params.referenceX.getUI());
+        params.sceneOffsetY.set(-params.referenceY.getUI() + params.sceneOffsetY.getDefaultUI());
     }
     else if (e.mods.isAltDown())
     {
-        params.sceneOffsetX.setUI(-params.sourceX.get());
-        params.sceneOffsetY.setUI(params.sourceY.get() + params.sceneOffsetY.getDefaultUI());
+        params.sceneOffsetX.set(-params.sourceX.getUI());
+        params.sceneOffsetY.set(-params.sourceY.getUI() + params.sceneOffsetY.getDefaultUI());
     }
     else
     {
-        params.sceneOffsetX.setUI(params.sceneOffsetX.getDefaultUI());
-        params.sceneOffsetY.setUI(params.sceneOffsetY.getDefaultUI());
+        params.sceneOffsetX.set(params.sceneOffsetX.getDefaultUI());
+        params.sceneOffsetY.set(params.sceneOffsetY.getDefaultUI());
     }
     params.currentZoom.set(params.currentZoom.getDefaultUI(), true);
 }

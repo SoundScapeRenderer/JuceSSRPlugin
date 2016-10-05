@@ -17,8 +17,8 @@
 /**
  * Reference Listener's background component class.
  * Using updateShadowAngle() to change shadow orientation according to reference listener.
- * For correct drawing results this component should be set exactly double the width 
- * and height of the reference listener component.
+ * For correct drawing results this component should be set exactly twice the
+ * size of the reference listener.
  * Designed according to SSR's reference listener background.
  */
 class ListenerBackgroundComponent    : public Component
@@ -29,7 +29,6 @@ public:
         // pass all mouse click events to component behind this
         setInterceptsMouseClicks(false, false);
 
-        listenerBackgroundImg = ImageCache::getFromMemory(BinaryData::listener_background_png, BinaryData::listener_background_pngSize);
         listenerShadowImg = ImageCache::getFromMemory(BinaryData::listener_shadow_png, BinaryData::listener_shadow_pngSize);
     }
 
@@ -44,9 +43,11 @@ public:
         float w = static_cast<float>(getWidth());
         float h = static_cast<float>(getHeight());
 
-        // draw listener background
-        Image bg = listenerBackgroundImg.rescaled(getWidth(), getHeight());
-        g.setTiledImageFill(bg, 0, 0, 1.0f);
+        // draw listener background, setGradientFill() is way more efficient than setTiledImageFill() of a rescaled image
+        ColourGradient gradient(Colours::transparentWhite, w / 2.0f, h /  2.0f, Colours::white, w, h, true);
+        gradient.addColour(0.4, Colours::transparentWhite);
+        gradient.addColour(0.75, Colours::white);
+        g.setGradientFill(gradient);
         g.fillEllipse(0.0f, 0.0f, w, h);
 
         // draw listener shadow
@@ -77,7 +78,7 @@ public:
     //==============================================================================
 
 private:
-    Image listenerShadowImg, listenerBackgroundImg;
+    Image listenerShadowImg;
     float angle = 0.0f;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ListenerBackgroundComponent)

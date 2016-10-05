@@ -35,13 +35,10 @@ public:
     {
         lockImg = ImageCache::getFromMemory(BinaryData::lock_icon_png, BinaryData::lock_icon_pngSize);
         muteImg = ImageCache::getFromMemory(BinaryData::mute_icon_png, BinaryData::mute_icon_pngSize);
-        
-        bounds = new ComponentBoundsConstrainer();
     }
 
     ~SourceNodeComponent()
     {
-        bounds = nullptr;
     }
 
     //==============================================================================
@@ -119,15 +116,10 @@ public:
         }
     }
 
-    void resized()
-    {
-        bounds->setMinimumOnscreenAmounts(getHeight() / 2, getWidth() / 2, getHeight() / 2, getWidth() / 2);
-    }
-
     //==============================================================================
 
     /**
-     * Handle mouse down event.
+     * Handle mouse down event and prepare for dragging.
      * Drag on left-click if position is not locked to move.
      * En-/disable popup menu on right-click.
      */
@@ -135,30 +127,29 @@ public:
     {
         if (e.mods == ModifierKeys::leftButtonModifier && params.sourcePositionLock.getStep() == eOnOffState::eOff)
         {
-            dragger.startDraggingComponent(this, e);
+            dragStartPosition = Point<float>(params.sourceX.get(), params.sourceY.get());
         }
-        else
+        else if (e.mods == ModifierKeys::rightButtonModifier)
         {
-            if (e.mods == ModifierKeys::rightButtonModifier)
-            {
-                menu->setVisible(!menu->isVisible());
-            }
+            menu->setVisible(!menu->isVisible());
         }
     }
     
-    /// handle mouse dragging and calculating new position in meter
+    /**
+     * Handle mouse drag event.
+     * On left-click, calculate the new position in meter and relocate()
+     * this component if position is not fixed.
+     */
     void mouseDrag (const MouseEvent& e)
     {
         // drag on left-click if position is not locked
         if (e.mods == ModifierKeys::leftButtonModifier && params.sourcePositionLock.getStep() == eOnOffState::eOff)
         {
-            dragger.dragComponent(this, e, bounds);
-
-            int middleX = getX() + getWidth() / 2;
-            int middleY = getY() + getHeight() / 2;
-            juce::Point<float> posSource = params.pix2pos(middleX, middleY, sceneWidth, sceneHeight);
-            params.sourceX.setUI(posSource.x);
-            params.sourceY.setUI(posSource.y);
+            float deltaX = e.getDistanceFromDragStartX() / params.getScaledPixelPerMeter();
+            float deltaY = e.getDistanceFromDragStartY() / params.getScaledPixelPerMeter();
+            params.sourceX.setUI(dragStartPosition.x + deltaX);
+            params.sourceY.setUI(dragStartPosition.y - deltaY);
+            relocate();
         }
     }
 
@@ -198,8 +189,7 @@ public:
 
 private:
     SynthParams &params;
-    ComponentDragger dragger;
-    ScopedPointer<ComponentBoundsConstrainer> bounds;
+    Point<float> dragStartPosition = Point<float>(0.0f, 0.0f);
     int sceneWidth;
     int sceneHeight;
 

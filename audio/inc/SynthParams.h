@@ -22,32 +22,32 @@ public:
 
     //==============================================================================
 
-    /// source parameter
+    /// source related parameters
     Param sourceX; //!< source x position in range [-50.0f ... 50.0f]m
-    Param sourceY; //!< source y position in range [-50.0f ... 50.0f]m
+    Param sourceY; //!< source y position (inverted y axis) in range [-50.0f ... 50.0f]m
     Param sourceOrientation; //!< source orientation in range [-180.0f ... 180.0f]degs
     Param sourceVol; //!< source vol in range [-96.0f ... 12.0f]dB
     Param sourceLevel; //!< source input level in range [-96.0f ... 12.0f]dB
     ParamStepped<eOnOffState> sourceMute; //!< source muted {eOff, eOn}
     ParamStepped<eSourceType> sourceType; //!< source type {ePoint, ePlane}
     ParamStepped<eOnOffState> sourcePositionLock; //!< source position locked {eOff, eOn}
+    Param amplitudeReferenceDistance; //!< SSR's amplitude reference distance in range [0.5f ... 50.0f]m
 
-    /// reference listener parameter
+    /// reference listener related parameters
     Param referenceX; //!< reference listener x position in range [-50.0f ... 50.0f]m
-    Param referenceY; //!< reference listener y position in range [-50.0f ... 50.0f]m
+    Param referenceY; //!< reference listener y position (inverted y axis)  in range [-50.0f ... 50.0f]m
     Param referenceOrientation; //!< reference listener orientation in range [-180.0f ... 180.0f]degs
     const float refOrientationOffset; //!< offset due to reference listener image's default orientation
-    Param amplitudeReferenceDistance; //!< SSR's amplitude reference distance in range [0.0f ... 50.0f]m
 
-    /// output level parameter
+    /// output level related parameters
     Param outputLevelLeft; //!< left output level in range [-96.0f ... 12.0f]dB
     Param outputLevelRight; //!< right output level in range [-96.0f ... 12.0f]dB
 
-    /// GUI scaling and dragging parameter
+    /// GUI scaling and dragging related parameters
     Param currentZoom; //!< current scene zoom in range [25.0f ... 200.0f]%
     const int pixelPerMeter; //!< pixel per meter scene scale parameter 125px = 1m
-    Param sceneOffsetX; //!< scene offset x for dragging in range [-35.7.0f ... 35.7f]m
-    Param sceneOffsetY; //!< scene offset y for dragging in range [-41.0f ... 41.0f]m
+    Param sceneOffsetX; //!< scene offset x for dragging in range [-50.0f ... 50.0f]m
+    Param sceneOffsetY; //!< scene offset y for dragging (inverted y axis)  in range [-50.0f ... 50.0f]m
 
     //==============================================================================
 
@@ -76,21 +76,8 @@ public:
     juce::Point<int> pos2pix(float meterCenterX, float meterCenterY, int sceneWidth, int sceneHeight);
 
     /**
-     * Converts a pixel coordinate of a scene with given width and height into a meter position.
-     * Reference point is the center of that scene, where 1m is equivalent to 125px.
-     * Reference point can be moved by setting the sceneOffsetX and sceneOffsetY parameter of SynthParams.
-     * Scaling can be used by setting the zoomFactor parameter of SynthParams.
-     * @param pixCenterX centerX pixel of an object in the scene GUI
-     * @param pixCenterY centerY pixel of an object in the scene GUI
-     * @param sceneWidth width of the scene GUI in pixel
-     * @param sceneHeight height of the scene GUI in pixel
-     * @return position point in meter with inverse y
-     */
-    juce::Point<float> pix2pos(int pixCenterX, int pixCenterY, int sceneWidth, int sceneHeight);
-
-    /**
      * Pixel per meter value that takes the current zoom scale factor into account.
-     * Needed for some meter to pixel conversion and vice versa.
+     * Needed for some meter to pixel conversion.
      * scaledPixelPerMeter = pixelPerMeter * currentZoom / 100.0f.
      */
     float getScaledPixelPerMeter();

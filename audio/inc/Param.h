@@ -4,7 +4,7 @@
 #include <array>
 #include "JuceHeader.h"
 
-/// \todo clean class and document
+/// \todo clean class and doc
 class Param {
 public:
     Param(const String &name, const String &serializationTag, const String &hostTag, const String &unit, float minval, float maxval, float defaultval, int numSteps = 0)

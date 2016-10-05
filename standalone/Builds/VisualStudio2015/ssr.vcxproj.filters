@@ -442,6 +442,9 @@
     <ClCompile Include="..\..\..\audio\src\SynthParams.cpp">
       <Filter>ssr\audio\src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\gui\panels\ConfigPanel.cpp">
+      <Filter>ssr\gui\panels</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\gui\panels\ScenePanel.cpp">
       <Filter>ssr\gui\panels</Filter>
     </ClCompile>
@@ -1926,8 +1929,11 @@
     <ClInclude Include="..\..\..\gui\components\VolLevelSlider.h">
       <Filter>ssr\gui\components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\gui\components\ZoomSlider.h">
+    <ClInclude Include="..\..\..\gui\components\DragSlider.h">
       <Filter>ssr\gui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gui\panels\ConfigPanel.h">
+      <Filter>ssr\gui\panels</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\gui\panels\ScenePanel.h">
       <Filter>ssr\gui\panels</Filter>
@@ -3341,8 +3347,8 @@
     <None Include="..\..\..\assets\plus icon.png">
       <Filter>ssr\assets</Filter>
     </None>
-    <None Include="..\..\..\ssr data\default_hrirs.wav">
-      <Filter>ssr\ssr data</Filter>
+    <None Include="..\..\..\assets\settings icon.png">
+      <Filter>ssr\assets</Filter>
     </None>
     <None Include="..\..\..\ssr data\asdf.xsd">
       <Filter>ssr\ssr data</Filter>

@@ -33,23 +33,23 @@ SynthParams::SynthParams()
     , sourceMute("source muted", "sourceMute", "sourceMute", eOnOffState::eOff, OnOffStateNames)
     , sourceType("source type", "sourceType", "sourceType", eSourceType::ePoint, SourceTypeNames)
     , sourcePositionLock("source position lock", "sourcePositionLock", "sourcePositionLock", eOnOffState::eOff, OnOffStateNames)
+    , amplitudeReferenceDistance("amplitude reference distance", "amplitudeReferenceDistance", "amplitudeReferenceDistance", "m", 0.5f, 50.0f, 3.0f)
 
     , referenceX("reference x", "referenceX", "referenceX", "m", -50.0f, 50.0f, 0.0f)
     , referenceY("reference y", "referenceY", "referenceY", "m", -50.0f, 50.0f, 0.0f)
     , referenceOrientation("reference orientation", "referenceOrientation", "referenceOrientation", "degs", -180.0f, 180.0f, 0.0f)
     , refOrientationOffset(90.0f)
-    , amplitudeReferenceDistance("amplitude reference distance", "amplitudeReferenceDistance", "amplitudeReferenceDistance", "m", 0.0f, 50.0f, 3.0f)
 
     , outputLevelLeft("output level left", "outputLevelLeft", "outputLevelLeft", "dB", -96.0f, 12.0f, -96.0f)
     , outputLevelRight("outputlevel right", "outputLevelRight", "outputLevelRight", "dB", -96.0f, 12.0f, -96.0f)
 
     , currentZoom("current zoom", "currentZoom", "currentZoom", "%", 25.0f, 200.0f, 100.0f)
     , pixelPerMeter(125)
-    , sceneOffsetX("scene offset x", "sceneOffsetX", "sceneOffsetX", "m", -35.7f, 35.7f, 0.0f)
-    , sceneOffsetY("scene offset y", "sceneOffsetY", "sceneOffsetY", "m", -41.0f, 41.0f, 1.00f)
+    , sceneOffsetX("scene offset x", "sceneOffsetX", "sceneOffsetX", "m", -50.0f, 50.0f, 0.0f)
+    , sceneOffsetY("scene offset y", "sceneOffsetY", "sceneOffsetY", "m", -50.0f, 50.0f, -1.00f)
 
     , serializeParams{ &sourceX, &sourceY, &sourceOrientation, &sourceVol, &sourceMute, &sourceType, &sourcePositionLock,
-                       &referenceX, &referenceY, &referenceOrientation, &amplitudeReferenceDistance,
+                       &amplitudeReferenceDistance, &referenceX, &referenceY, &referenceOrientation,
                        &currentZoom, &sceneOffsetX, &sceneOffsetY }
 
     , positionIndex(0)
@@ -67,17 +67,9 @@ SynthParams::~SynthParams()
 juce::Point<int> SynthParams::pos2pix(float meterCenterX, float meterCenterY, int sceneWidth, int sceneHeight)
 {
     int x = static_cast<int>(meterCenterX * getScaledPixelPerMeter() + (sceneWidth / 2 + sceneOffsetX.get() * getScaledPixelPerMeter()));
-    int y = static_cast<int>(-meterCenterY * getScaledPixelPerMeter() + (sceneHeight / 2 + sceneOffsetY.get() * getScaledPixelPerMeter()));
+    int y = static_cast<int>(-meterCenterY * getScaledPixelPerMeter() + (sceneHeight / 2 - sceneOffsetY.get() * getScaledPixelPerMeter()));
 
     return juce::Point<int>(x, y);
-}
-
-juce::Point<float> SynthParams::pix2pos(int pixCenterX, int pixCenterY, int sceneWidth, int sceneHeight)
-{
-    float x = (pixCenterX - (sceneWidth / 2 + sceneOffsetX.get() * getScaledPixelPerMeter())) / getScaledPixelPerMeter();
-    float y = (pixCenterY - (sceneHeight / 2 + sceneOffsetY.get() * getScaledPixelPerMeter())) / getScaledPixelPerMeter();
-
-    return juce::Point<float>(x, -y);
 }
 
 float SynthParams::getScaledPixelPerMeter()

@@ -17,8 +17,8 @@
 /**
  * Source background component class.
  * Shows plane waves which direction can be set via setPlaneWaveAngle().
- * For correct drawing results this component should be set exactly double the width 
- * and height of the source node component.
+ * For correct drawing results this component should be set exactly twice the
+ * size of the source node component it belongs to.
  * Plane wave designed according to SSR's plane wave.
  */
 class SourceBackgroundComponent    : public Component

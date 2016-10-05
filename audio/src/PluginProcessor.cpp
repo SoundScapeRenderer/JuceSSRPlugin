@@ -136,7 +136,7 @@ void PluginAudioProcessor::prepareToPlay(double sRate, int samplesPerBlock)
 {
     /// \todo 96kHz leads to wrong distance attenuation? sounds louder than 44.1kHz or 48kHz
     // read default_hrirs_wav from memory into hrirFileBuffer
-    MemoryInputStream *in = new MemoryInputStream(BinaryData::default_hrirs_wav, BinaryData::default_hrirs_wavSize, false);
+    MemoryInputStream *in = new MemoryInputStream(BinaryData::hrirs_fabian_wav, BinaryData::hrirs_fabian_wavSize, false);
     ScopedPointer<AudioFormatReader> hrirFileReader = WavAudioFormat().createReaderFor(in, true);
     AudioSampleBuffer hrirFileBuffer(static_cast<int>(hrirFileReader->numChannels), static_cast<int>(hrirFileReader->lengthInSamples));
     hrirFileReader->read(&hrirFileBuffer, 0, static_cast<int>(hrirFileReader->lengthInSamples), 0, true, true);
@@ -236,7 +236,7 @@ void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& m
         Position listenerPos = Position(referenceX.get(), referenceY.get());
         renderer->state.reference_position.setRT(listenerPos);
         renderer->state.reference_orientation.setRT(Orientation(referenceOrientation.get() + refOrientationOffset));
-        renderer->state.amplitude_reference_distance.setRT(amplitudeReferenceDistance.get()); /// \todo config window for this
+        renderer->state.amplitude_reference_distance.setRT(amplitudeReferenceDistance.get());
 
         // set source parameter
         ssr::RendererBase<ssr::BinauralRenderer>::Source *source = renderer->get_source(sourceID);

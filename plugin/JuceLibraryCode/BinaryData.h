@@ -21,8 +21,8 @@ namespace BinaryData
     extern const char*   plus_icon_png;
     const int            plus_icon_pngSize = 91;
 
-    extern const char*   default_hrirs_wav;
-    const int            default_hrirs_wavSize = 737324;
+    extern const char*   settings_icon_png;
+    const int            settings_icon_pngSize = 595;
 
     extern const char*   listener_png;
     const int            listener_pngSize = 8084;
@@ -72,11 +72,14 @@ namespace BinaryData
     extern const char*   ssr_logo_large_png;
     const int            ssr_logo_large_pngSize = 9075;
 
+    extern const char*   hrirs_fabian_wav;
+    const int            hrirs_fabian_wavSize = 737324;
+
     // Points to the start of a list of resource names.
     extern const char* namedResourceList[];
 
     // Number of elements in the namedResourceList array.
-    const int namedResourceListSize = 21;
+    const int namedResourceListSize = 22;
 
     // If you provide the name of one of the binary resource variables above, this function will
     // return the corresponding data and its size (or a null pointer if the name isn't found).

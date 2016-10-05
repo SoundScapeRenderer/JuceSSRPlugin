@@ -12,7 +12,7 @@
 #define SCENEPANEL_H_INCLUDED
 
 #include "JuceHeader.h"
-#include "panels/PanelBase.h"
+#include "PanelBase.h"
 
 //==============================================================================
 /**
@@ -68,8 +68,8 @@ public:
 private:
     SynthParams &params;
     
-    const int refListenerSize = 90;
-    const int sourceNodeSize = 90;
+    const int refListenerSize = 85;
+    const int sourceNodeSize = 85;
     const int centerPointSize = 8;
     Point<float> dragStartOffset = Point<float>(0.0f, 0.0f);
 

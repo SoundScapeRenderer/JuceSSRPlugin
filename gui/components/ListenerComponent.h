@@ -30,13 +30,10 @@ public:
         , listenerBackground(bg)
     {
         listenerImg = ImageCache::getFromMemory(BinaryData::listener_png, BinaryData::listener_pngSize);
-
-        bounds = new ComponentBoundsConstrainer();
     }
 
     ~ListenerComponent()
     {
-        bounds = nullptr;
     }
 
     //==============================================================================
@@ -65,68 +62,47 @@ public:
         g.addTransform(trans);
         g.drawImageWithin(listenerImg, 0, 0, getWidth(), getHeight(), RectanglePlacement::centred);
     }
-    
-    void resized()
-    {
-        bounds->setMinimumOnscreenAmounts(getHeight() / 2, getWidth() / 2, getHeight() / 2, getWidth() / 2);
-    }
 
     //==============================================================================
 
     /**
-     * Handle mouse down event.
-     * Drag on right-click to move this component.
-     * Drag on left-click to rotate.
+     * Handle mouse down event and prepare for dragging.
      */
     void mouseDown (const MouseEvent& e)
     {
         if (e.mods == ModifierKeys::rightButtonModifier)
         {
-            dragger.startDraggingComponent(this, e);
-        }
-        else
-        {
-            if (e.mods == ModifierKeys::leftButtonModifier)
-            {
-                angleOnStartDrag = params.referenceOrientation.get();
-            }
+            dragStartPosition = Point<float>(params.referenceX.get(), params.referenceY.get());
         }
     }
     
-    /// handle mouse dragging and calculating new position in meter or angle after rotation
-    void mouseDrag (const MouseEvent& e)
+    /**
+     * Handle mouse drag event.
+     * On right-click, calculate the new position in meter and relocate()
+     * this component if position is not fixed.
+     * On left-click, calculate the new angle and rotate this component.
+     */
+    void mouseDrag(const MouseEvent& e)
     {
-        // move reference listener
         if (e.mods == ModifierKeys::rightButtonModifier)
         {
-            dragger.dragComponent(this, e, bounds);
-
-            int middleX = getX() + getWidth() / 2;
-            int middleY = getY() + getHeight() / 2;
-            juce::Point<float> pos = params.pix2pos(middleX, middleY, sceneWidth, sceneHeight);
-            params.referenceX.setUI(pos.x);
-            params.referenceY.setUI(pos.y);
+            // move reference listener to current position
+            float deltaX = e.getDistanceFromDragStartX() / params.getScaledPixelPerMeter();
+            float deltaY = e.getDistanceFromDragStartY() / params.getScaledPixelPerMeter();
+            params.referenceX.setUI(dragStartPosition.x + deltaX);
+            params.referenceY.setUI(dragStartPosition.y - deltaY);
+            relocate();
         }
-        else
+        else if (e.mods == ModifierKeys::leftButtonModifier) 
         {
-            /// \todo use rotation towards mouse position instead of vertical drag
-            // rotate reference listener
-            if (e.mods == ModifierKeys::leftButtonModifier)
-            {
-                mouseStartY = static_cast<float>(e.getDistanceFromDragStartY());
-                float newAngle = fmod(angleOnStartDrag + mouseStartY, 360.0f);
-                if (newAngle > 180.0f)
-                {
-                    newAngle -= 360.0f;
-                }
-                else if (newAngle <= -180.0f)
-                {
-                    newAngle += 360.0f;
-                }
-                params.referenceOrientation.setUI(newAngle);
-                updateBackgroundAngle(newAngle);
-                repaint();
-            }
+            // rotate reference listener towards mouse position
+            Point<float> mousePosition = Point<float>(static_cast<float>(e.getPosition().x), static_cast<float>(e.getPosition().y));
+            Point<float> listenerCenterPosition = Point<float>(static_cast<float>(getWidth() / 2), static_cast<float>(getHeight() / 2));
+            float newAngle = -radiansToDegrees(listenerCenterPosition.getAngleToPoint(mousePosition));
+
+            params.referenceOrientation.setUI(newAngle);
+            updateBackgroundAngle(newAngle);
+            repaint();
         }
     }
 
@@ -154,16 +130,12 @@ public:
 
 private:
     SynthParams &params;
-    ComponentDragger dragger;
-    ScopedPointer<ComponentBoundsConstrainer> bounds;
+    Point<float> dragStartPosition = Point<float>(0.0f, 0.0f);
     int sceneWidth;
     int sceneHeight;
 
     Image listenerImg;
     ListenerBackgroundComponent *listenerBackground;
-
-    float mouseStartY = 0.0f;
-    float angleOnStartDrag = 0.0f;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ListenerComponent)
 };

@@ -16,12 +16,12 @@
 /**
  * Nothing but custom drawing functions for JUCE components and replacing fonts.
  */
-class CustomLookAndFeel : public LookAndFeel_V2
+class CustomLookAndFeel : public LookAndFeel_V1
 {
 public:
     //==============================================================================
 
-    CustomLookAndFeel() : LookAndFeel_V2()
+    CustomLookAndFeel() : LookAndFeel_V1()
     {
         customFont = Typeface::createSystemTypefaceFor(BinaryData::DejaVuSansMono_ttf, BinaryData::DejaVuSansMono_ttfSize);
     }
@@ -107,16 +107,18 @@ public:
 
         // draw box with arrow to open drop down selector
         float outlineThickness = isButtonDown ? 1.2f : 0.5f;
-        buttonX = static_cast<int>(width * 0.875f);
-        buttonW = width - buttonX;
+        buttonW = jmin(height * 5 / 4, width * 7 / 8) - static_cast<int>(outlineThickness * 2);
+        buttonX = width - buttonW;
+
         g.setColour(Colours::lightgrey.brighter(0.2f));
         g.fillRect(buttonX + outlineThickness, buttonY + outlineThickness,
                    buttonW - outlineThickness, buttonH - outlineThickness * 2.0f);
+
         Path p;
         p.addTriangle(buttonX + buttonW * 0.25f, buttonY + buttonH * 0.35f,
                       buttonX + buttonW * 0.75f, buttonY + buttonH * 0.35f,
                       buttonX + buttonW * 0.5f, buttonY + buttonH * 0.65f);
-        g.setColour(Colours::black);
+        g.setColour(box.isEnabled()? Colours::black : Colours::grey);
         g.fillPath(p);
 
         // draw drop down button shadow

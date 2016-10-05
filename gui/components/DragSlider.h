@@ -1,15 +1,15 @@
 /*
   ==============================================================================
 
-    ZoomSlider.h
+    DragSlider.h
     Created: 10 Aug 2016 11:33:20pm
     Author:  Nutty
 
   ==============================================================================
 */
 
-#ifndef ZOOMSLIDER_H_INCLUDED
-#define ZOOMSLIDER_H_INCLUDED
+#ifndef DRAGSLIDER_H_INCLUDED
+#define DRAGSLIDER_H_INCLUDED
 
 #include "JuceHeader.h"
 
@@ -18,15 +18,15 @@
  * Slider class which uses a custom drag mechanism. Edit value manually on click.
  * Designed according to SSR's zoom slider.
  */
-class ZoomSlider    : public Slider
+class DragSlider : public Slider
 {
 public:
-    ZoomSlider(const juce::String &componentName)
+    DragSlider(const juce::String &componentName)
         : Slider(componentName)
     {
     }
 
-    ~ZoomSlider()
+    ~DragSlider()
     {
     }
 
@@ -99,8 +99,8 @@ private:
     double dragStartValue = 0.0;
     bool isMouseOver = false;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ZoomSlider)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DragSlider)
 };
 
 
-#endif  // ZOOMSLIDER_H_INCLUDED
+#endif  // DRAGSLIDER_H_INCLUDED

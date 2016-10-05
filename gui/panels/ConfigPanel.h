@@ -17,16 +17,12 @@
   ==============================================================================
 */
 
-#ifndef __JUCE_HEADER_17F31DC76882C8CC__
-#define __JUCE_HEADER_17F31DC76882C8CC__
+#ifndef __JUCE_HEADER_ED666CC7E31F9094__
+#define __JUCE_HEADER_ED666CC7E31F9094__
 
 //[Headers]     -- You can add your own extra header files here --
 #include "JuceHeader.h"
-#include "panels/PanelBase.h"
-#include "panels/ScenePanel.h"
-#include "CustomLookAndFeel.h"
-#include "components/OutputLevelComponent.h"
-#include "components/DragSlider.h"
+#include "PanelBase.h"
 //[/Headers]
 
 
@@ -34,71 +30,50 @@
 //==============================================================================
 /**
                                                                     //[Comments]
-    Plugin UI that contains the scene UI, zoomSlider of the scene,
-    serialization buttons and output levels (left/right channel).
+    Configuration panel used for global settings e.g. rendering algorithm,
+    IR file or amplitude reference distance. This panel is not finished yet
+    since many configuration options are still not implemented.
                                                                     //[/Comments]
 */
-class PlugUI  : public PanelBase,
-                public SliderListener,
-                public ButtonListener
+class ConfigPanel  : public PanelBase,
+                     public SliderListener,
+                     public ComboBoxListener
 {
 public:
     //==============================================================================
-    PlugUI (SynthParams &p);
-    ~PlugUI();
+    ConfigPanel (SynthParams &p);
+    ~ConfigPanel();
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-    /**
-     * Resize scene UI panel, use this function whenever zoomFactor has been changed.
-     */
-    void resizeScenePanel();
     //[/UserMethods]
 
     void paint (Graphics& g);
     void resized();
     void sliderValueChanged (Slider* sliderThatWasMoved);
-    void buttonClicked (Button* buttonThatWasClicked);
+    void comboBoxChanged (ComboBox* comboBoxThatHasChanged);
 
 
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     SynthParams &params;
-    ScopedPointer<CustomLookAndFeel> lnf;
-
-    void timerCallback() override;
-
-    /**
-     * Show a configuration window to set amplitude_reference_distance.
-     * Later, this should be used to replace the complete SSR configuration
-     * like choosing rendering method and hrir or wfs_prefilter files etc.
-     */
-    void showConfigWindow();
-
-//#define DEBUG_TEXT
-#ifdef DEBUG_TEXT
-    ScopedPointer<Label> debugText;
-#endif
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<ScenePanel> scene;
-    ScopedPointer<OutputLevelComponent> outputLevel;
-    ScopedPointer<DragSlider> zoomSlider;
-    ScopedPointer<TextButton> loadButton;
-    ScopedPointer<TextButton> saveButton;
-    ScopedPointer<Label> saveLoadLabel;
-    ScopedPointer<Label> levelOutLabel;
-    ScopedPointer<Label> zoomLabel;
-    ScopedPointer<ImageButton> configButton;
+    ScopedPointer<Slider> ampRefDistanceSlider;
+    ScopedPointer<Label> ampRefLabel;
+    ScopedPointer<Label> rendererLabel;
+    ScopedPointer<ComboBox> rendererAlgorithmBox;
+    ScopedPointer<Label> IRFileLabel;
+    ScopedPointer<ComboBox> IRFileBox;
 
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlugUI)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ConfigPanel)
 };
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
 
-#endif   // __JUCE_HEADER_17F31DC76882C8CC__
+#endif   // __JUCE_HEADER_ED666CC7E31F9094__
