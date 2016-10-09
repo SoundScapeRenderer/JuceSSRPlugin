@@ -42,16 +42,20 @@ class SourceMenuPanel  : public PanelBase,
 {
 public:
     //==============================================================================
-    SourceMenuPanel (SynthParams &p, SourceNodeComponent *s);
+    SourceMenuPanel (PluginParams &p, SourceNodeComponent *s);
     ~SourceMenuPanel();
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
     /**
-     * Repaint source node, use this function whenever mute source or fix
-     * source position is enabled or disabled.
+     * Repaint source node whenever mute state is enabled or disabled.
      */
-    void repaintSourceNode();
+    void sourceMutedStateChanged();
+
+    /**
+     * Repaint source node whenever fixPosition state is enabled or disabled.
+     */
+    void sourceFixedPositionStateChanged();
 
     /**
      * Update visibility of source plane wave, use this whenever source type has
@@ -69,7 +73,7 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    SynthParams &params;
+    PluginParams &params;
     SourceNodeComponent *sourceNode;
 
     void timerCallback() override;

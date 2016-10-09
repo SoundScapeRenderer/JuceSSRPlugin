@@ -28,7 +28,7 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-PlugUI::PlugUI (SynthParams &p)
+PlugUI::PlugUI (PluginParams &p)
     : PanelBase(p), params(p)
 {
     //[Constructor_pre] You can add your own custom stuff here..
@@ -98,7 +98,7 @@ PlugUI::PlugUI (SynthParams &p)
     debugText->setInterceptsMouseClicks(false, false);
 #endif
 
-    outputLevel->setLeveLColour(SynthParams::sourceLevelColour);
+    outputLevel->setLeveLColour(PluginParams::sourceLevelColour);
     outputLevel->setSkewFactor(3.0f);
 
     registerSlider(zoomSlider, &params.currentZoom, std::bind(&PlugUI::resizeScenePanel, this));
@@ -224,6 +224,22 @@ void PlugUI::resizeScenePanel()
     scene->resized();
 }
 
+void PlugUI::showConfigWindow()
+{
+    // from showAudioSettingsDialog() in juce_StandaloneFilterWindow.h
+    DialogWindow::LaunchOptions config;
+    config.content.setOwned(new ConfigPanel(params));
+    config.content->setSize(400, 300);
+
+    config.dialogTitle = TRANS("Plugin Configurations");
+    config.escapeKeyTriggersCloseButton = true;
+    config.useNativeTitleBar = true;
+    config.resizable = false;
+    config.componentToCentreAround = this;
+
+    config.launchAsync();
+}
+
 void PlugUI::timerCallback()
 {
     PanelBase::timerCallback();
@@ -257,22 +273,6 @@ void PlugUI::timerCallback()
         , dontSendNotification);
 #endif
 }
-
-void PlugUI::showConfigWindow()
-{
-    // from showAudioSettingsDialog() in juce_StandaloneFilterWindow.h
-    DialogWindow::LaunchOptions config;
-    config.content.setOwned(new ConfigPanel(params));
-    config.content->setSize(400, 300);
-
-    config.dialogTitle = TRANS("Plugin Configurations");
-    config.escapeKeyTriggersCloseButton = true;
-    config.useNativeTitleBar = true;
-    config.resizable = false;
-    config.componentToCentreAround = this;
-
-    config.launchAsync();
-}
 //[/MiscUserCode]
 
 
@@ -286,7 +286,7 @@ void PlugUI::showConfigWindow()
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="PlugUI" componentName=""
-                 parentClasses="public PanelBase" constructorParams="SynthParams &amp;p"
+                 parentClasses="public PanelBase" constructorParams="PluginParams &amp;p"
                  variableInitialisers="PanelBase(p), params(p)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="1"
                  initialWidth="950" initialHeight="650">

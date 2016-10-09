@@ -190,7 +190,7 @@
     </ClCompile>
     <ClCompile Include="..\..\..\audio\ssr code\xmlparser.cpp"/>
     <ClCompile Include="..\..\..\audio\src\PluginProcessor.cpp"/>
-    <ClCompile Include="..\..\..\audio\src\SynthParams.cpp"/>
+    <ClCompile Include="..\..\..\audio\src\PluginParams.cpp"/>
     <ClCompile Include="..\..\..\gui\panels\ConfigPanel.cpp"/>
     <ClCompile Include="..\..\..\gui\panels\ScenePanel.cpp"/>
     <ClCompile Include="..\..\..\gui\panels\InfoPanel.cpp"/>
@@ -1400,7 +1400,7 @@
     <ClInclude Include="..\..\..\audio\inc\HostParam.h"/>
     <ClInclude Include="..\..\..\audio\inc\Param.h"/>
     <ClInclude Include="..\..\..\audio\inc\PluginProcessor.h"/>
-    <ClInclude Include="..\..\..\audio\inc\SynthParams.h"/>
+    <ClInclude Include="..\..\..\audio\inc\PluginParams.h"/>
     <ClInclude Include="..\..\..\gui\components\ListenerBackgroundComponent.h"/>
     <ClInclude Include="..\..\..\gui\components\ListenerComponent.h"/>
     <ClInclude Include="..\..\..\gui\components\OutputLevelComponent.h"/>

@@ -27,7 +27,7 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-ConfigPanel::ConfigPanel (SynthParams &p)
+ConfigPanel::ConfigPanel (PluginParams &p)
     : PanelBase(p), params(p)
 {
     //[Constructor_pre] You can add your own custom stuff here..
@@ -193,7 +193,7 @@ void ConfigPanel::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="ConfigPanel" componentName=""
-                 parentClasses="public PanelBase" constructorParams="SynthParams &amp;p"
+                 parentClasses="public PanelBase" constructorParams="PluginParams &amp;p"
                  variableInitialisers="PanelBase(p), params(p)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="1"
                  initialWidth="400" initialHeight="500">

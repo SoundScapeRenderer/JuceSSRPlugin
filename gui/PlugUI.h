@@ -44,7 +44,7 @@ class PlugUI  : public PanelBase,
 {
 public:
     //==============================================================================
-    PlugUI (SynthParams &p);
+    PlugUI (PluginParams &p);
     ~PlugUI();
 
     //==============================================================================
@@ -64,7 +64,7 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    SynthParams &params;
+    PluginParams &params;
     ScopedPointer<CustomLookAndFeel> lnf;
 
     void timerCallback() override;

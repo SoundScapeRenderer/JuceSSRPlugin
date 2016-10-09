@@ -1,4 +1,4 @@
-#include "SynthParams.h"
+#include "PluginParams.h"
 
 namespace {
     static const char *OnOffStateNames[] = {
@@ -14,17 +14,17 @@ namespace {
     };
 }
 
-const Colour SynthParams::sourceColourBrown(163, 95, 35);
-const Colour SynthParams::sourceColourBlue(43, 174, 247);
-const Colour SynthParams::sourceColourGreen(75, 135, 35);
-const Colour SynthParams::sourceColourViolet(97, 31, 160);
-const Colour SynthParams::sourceColourRed(173, 54, 35);
-const Colour SynthParams::sceneBackgroundColour(237, 237, 230);
-const Colour SynthParams::sourceLevelColour(58, 239, 58);
+const Colour PluginParams::sourceColourBrown(163, 95, 35);
+const Colour PluginParams::sourceColourBlue(43, 174, 247);
+const Colour PluginParams::sourceColourGreen(75, 135, 35);
+const Colour PluginParams::sourceColourViolet(97, 31, 160);
+const Colour PluginParams::sourceColourRed(173, 54, 35);
+const Colour PluginParams::sceneBackgroundColour(237, 237, 230);
+const Colour PluginParams::sourceLevelColour(58, 239, 58);
 
 //==============================================================================
 
-SynthParams::SynthParams()
+PluginParams::PluginParams()
     : sourceX("source x", "sourceX", "sourceX", "m", -50.0f, 50.0f, 0.0f)
     , sourceY("source y", "sourceY", "sourceY", "m", -50.0f, 50.0f, 2.0f)
     , sourceOrientation("source orientation", "sourceOrientation", "sourceOrientation", "degs", -180.0f, 180.0f, 0.0f)
@@ -44,7 +44,6 @@ SynthParams::SynthParams()
     , outputLevelRight("outputlevel right", "outputLevelRight", "outputLevelRight", "dB", -96.0f, 12.0f, -96.0f)
 
     , currentZoom("current zoom", "currentZoom", "currentZoom", "%", 25.0f, 200.0f, 100.0f)
-    , pixelPerMeter(125)
     , sceneOffsetX("scene offset x", "sceneOffsetX", "sceneOffsetX", "m", -50.0f, 50.0f, 0.0f)
     , sceneOffsetY("scene offset y", "sceneOffsetY", "sceneOffsetY", "m", -50.0f, 50.0f, -1.00f)
 
@@ -58,33 +57,20 @@ SynthParams::SynthParams()
     positionInfo[1].resetToDefault();
 }
 
-SynthParams::~SynthParams()
+PluginParams::~PluginParams()
 {
 }
 
 //==============================================================================
 
-juce::Point<int> SynthParams::pos2pix(float meterCenterX, float meterCenterY, int sceneWidth, int sceneHeight)
-{
-    int x = static_cast<int>(meterCenterX * getScaledPixelPerMeter() + (sceneWidth / 2 + sceneOffsetX.get() * getScaledPixelPerMeter()));
-    int y = static_cast<int>(-meterCenterY * getScaledPixelPerMeter() + (sceneHeight / 2 - sceneOffsetY.get() * getScaledPixelPerMeter()));
-
-    return juce::Point<int>(x, y);
-}
-
-float SynthParams::getScaledPixelPerMeter()
-{
-    return pixelPerMeter * currentZoom.get() / 100.0f;
-}
-
-const char* SynthParams::getSourceTypeNames(int index)
+const char* PluginParams::getSourceTypeNames(int index)
 {
     return SourceTypeNames[jmin(jmax(0, index), static_cast<int>(eSourceType::nSteps))];
 }
 
 //==============================================================================
 
-void SynthParams::writeXMLPatchHost(MemoryBlock& destData)
+void PluginParams::writeXMLPatchHost(MemoryBlock& destData)
 {
     // create an outer node of the patch
     ScopedPointer<XmlElement> patch = new XmlElement("patch");
@@ -92,7 +78,7 @@ void SynthParams::writeXMLPatchHost(MemoryBlock& destData)
     AudioProcessor::copyXmlToBinary(*patch, destData);
 }
 
-void SynthParams::writeXMLPatchStandalone()
+void PluginParams::writeXMLPatchStandalone()
 {
     // create an outer node of the patch
     ScopedPointer<XmlElement> patch = new XmlElement("patch");
@@ -114,15 +100,15 @@ void SynthParams::writeXMLPatchStandalone()
     }
 }
 
-void SynthParams::readXMLPatchHost(const void* data, int sizeInBytes)
+void PluginParams::readXMLPatchHost(const void* data, int sizeInBytes)
 {
     ScopedPointer<XmlElement> patch = AudioProcessor::getXmlFromBinary(data, sizeInBytes);
     readXMLPatchTree(patch);
 }
 
-void SynthParams::readXMLPatchStandalone()
+void PluginParams::readXMLPatchStandalone()
 {
-    // read the xml params into the synth params
+    // read the xml params into the plugin params
     FileChooser openFileChooser("Please select the patch you want to read!",
         File::getSpecialLocation(File::commonDocumentsDirectory).getChildFile(appName), "*.xml");
 
@@ -134,7 +120,7 @@ void SynthParams::readXMLPatchStandalone()
     }
 }
 
-void SynthParams::writeXMLPatchTree(XmlElement* patch)
+void PluginParams::writeXMLPatchTree(XmlElement* patch)
 {
     // set name and  version of the patch
     patch->setAttribute("version", appVersion);
@@ -155,7 +141,7 @@ void SynthParams::writeXMLPatchTree(XmlElement* patch)
     }
 }
 
-void SynthParams::readXMLPatchTree(XmlElement* patch)
+void PluginParams::readXMLPatchTree(XmlElement* patch)
 {
     // if the versions don't align, inform the user
     if (patch == NULL) { return; }
@@ -188,12 +174,12 @@ void SynthParams::readXMLPatchTree(XmlElement* patch)
 
 //==============================================================================
 
-int SynthParams::getAudioIndex()
+int PluginParams::getAudioIndex()
 {
     return positionIndex.load();
 }
 
-int SynthParams::getGUIIndex()
+int PluginParams::getGUIIndex()
 {
     return (positionIndex.load() + 1) % 2;
 }

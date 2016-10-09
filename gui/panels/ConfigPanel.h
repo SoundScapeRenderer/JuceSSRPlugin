@@ -41,7 +41,7 @@ class ConfigPanel  : public PanelBase,
 {
 public:
     //==============================================================================
-    ConfigPanel (SynthParams &p);
+    ConfigPanel (PluginParams &p);
     ~ConfigPanel();
 
     //==============================================================================
@@ -57,7 +57,7 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    SynthParams &params;
+    PluginParams &params;
     //[/UserVariables]
 
     //==============================================================================

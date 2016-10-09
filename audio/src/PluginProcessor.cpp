@@ -254,20 +254,6 @@ void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& m
         source->mute.get() ? inputLevel = 0.0f : inputLevel = buffer.getRMSLevel(0, 0, buffer.getNumSamples());
         sourceLevel.setUI(Param::toDb(inputLevel));
 
-        // calculate angle from which the source is seen
-        // and confine angle to interval ]-180, 180], see qsourceproperties.cpp
-        float ang = source->orientation.get().azimuth - referenceOrientation.get() + refOrientationOffset;
-        ang = std::fmod(ang, 360.0f);
-        if (ang > 180.0f)
-        {
-            ang -= 360.0f;
-        }
-        else if (ang <= -180.0f)
-        {
-            ang += 360.0f;
-        }
-        sourceOrientation.setUI(ang);
-
         // update host audio play head information to get transport state
         updateHostInfo();
         AudioPlayHead::CurrentPositionInfo hostPlayHead = positionInfo[getAudioIndex()];
@@ -306,12 +292,12 @@ AudioProcessorEditor* PluginAudioProcessor::createEditor()
 
 void PluginAudioProcessor::getStateInformation(MemoryBlock& destData)
 {
-    SynthParams::writeXMLPatchHost(destData);
+    PluginParams::writeXMLPatchHost(destData);
 }
 
 void PluginAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 {
-    SynthParams::readXMLPatchHost(data, sizeInBytes);
+    PluginParams::readXMLPatchHost(data, sizeInBytes);
 }
 
 //==============================================================================

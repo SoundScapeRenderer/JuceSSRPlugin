@@ -5,19 +5,19 @@
 #include <functional>
 
 #include "JuceHeader.h"
-#include "SynthParams.h"
+#include "PluginParams.h"
 #include "components/ListenerComponent.h"
 #include "components/SourceNodeComponent.h"
 
 /**
- * Parent class for all panel components that make use of the dirtyFlag of SynthParams (e.g. for automation).
+ * Parent class for all panel components that make use of the dirtyFlag of PluginParams (e.g. for automation).
  * The child components in these panels have to be registered with their corresponding parameter.
  */
 class PanelBase : public Component, protected Timer
 {
 public:
 
-    PanelBase(SynthParams &p) : params(p)
+    PanelBase(PluginParams &p) : params(p)
     {
         startTimerHz(60);
     }
@@ -34,20 +34,15 @@ protected:
 
     /**
      * Register reference listener component with corresponding parameters that needs to be checked.
-     * Needs to know about the size of the scene component that it is in.
      * @param l listener component
      * @param posX x position of reference listener
      * @param posY y position of reference listener
      * @param ori reference listener orientation
-     * @param sceneWidth width of the scene component in px
-     * @param sceneHeight height of the scene component in px
-     * @param hook callback function
+     * @param hook callback function that should correctly reposition reference listener component
      */
-    void registerListener(ListenerComponent *l, Param *posX, Param *posY, Param *ori,
-                          int sceneWidth, int sceneHeight, const tHookFn hook = tHookFn())
+    void registerListener(ListenerComponent *l, Param *posX, Param *posY, Param *ori, const tHookFn hook = tHookFn())
     {
-        l->setSceneSize(sceneWidth, sceneHeight);
-        l->updateBackgroundAngle(ori->getUI());
+        l->updateListenerOrientation(ori->getUI() + params.refOrientationOffset);
 
         listenerReg[l] = { posX, posY, ori };
         if (hook)
@@ -60,7 +55,7 @@ protected:
     /**
      * Check whether registered parameters of listener have been changed and synchronize its
      * position and orientation on UI.
-     * Registered callback function is called whenever listener position or orientation is dirty.
+     * Registered callback function is called whenever listener position is dirty.
      */
     void updateDirtyListener()
     {
@@ -73,8 +68,6 @@ protected:
             {
                 if (l2p.second[i]->isUIDirty())
                 {
-                    l2p.first->relocate();
-
                     if (itHook != postUpdateHook.end())
                     {
                         itHook->second();
@@ -85,13 +78,7 @@ protected:
             // orientation
             if (l2p.second[2]->isUIDirty())
             {
-                l2p.first->repaint();
-                l2p.first->updateBackgroundAngle(l2p.second[2]->getUI());
-
-                if (itHook != postUpdateHook.end())
-                {
-                    itHook->second();
-                }
+                l2p.first->updateListenerOrientation(l2p.second[2]->getUI() + params.refOrientationOffset);
             }
         }
     }
@@ -99,28 +86,15 @@ protected:
     //==============================================================================
 
     /**
-     * Register source component with corresponding parameters that needs to be checked.
-     * This function also registers source's volume slider and volume parameter.
-     * Needs to know about the size of the scene component that it is in.
+     * Register source component with corresponding position parameters that needs to be checked.
      * @param s source component
      * @param posX x position of source
      * @param posY y position of source
-     * @param vol source input volume
-     * @param level real time input level of the source
-     * @param lock indicator solely for whether source is allowed to be moved
-     * @param sceneWidth width of the scene component in px
-     * @param sceneHeight height of the scene component in px
-     * @param hook callback function
+     * @param hook callback function that should correctly reposition source node component
      */
-    void registerSource(SourceNodeComponent *s, Param *posX, Param *posY, Param *vol, Param *level,
-                        int sceneWidth, int sceneHeight, const tHookFn hook = tHookFn())
+    void registerSource(SourceNodeComponent *s, Param *posX, Param *posY, const tHookFn hook = tHookFn())
     {
-        s->setSceneSize(sceneWidth, sceneHeight);
-
-        registerSlider(s->getVolSlider(), vol);
-        s->getVolSlider()->setDefaultSliderValue(vol->getDefaultUI());
-
-        sourceReg[s] = { posX, posY , vol, level };
+        sourceReg[s] = { posX, posY };
         if (hook)
         {
             postUpdateHook[s] = hook;
@@ -129,7 +103,7 @@ protected:
     }
 
     /**
-     * Check whether registered parameters of sources have been changed and synchronize its position on UI.
+     * Check whether registered position parameters of sources have changed and synchronize its position on UI.
      * Registered callback function is called whenever source position is dirty.
      */
     void updateDirtySources()
@@ -141,8 +115,6 @@ protected:
             {
                 if (s2p.second[i]->isUIDirty())
                 {
-                    s2p.first->relocate();
-
                     auto itHook = postUpdateHook.find(s2p.first);
                     if (itHook != postUpdateHook.end())
                     {
@@ -150,19 +122,6 @@ protected:
                     }
                 }
             }
-        }
-    }
-
-    /**
-     * Update all source levels independently from audio buffer size.
-     * Depends only on set timer frequency.
-     */
-    void updateSourceLevels()
-    {
-        // refresh all source levels
-        for (auto s2p : sourceReg)
-        {
-            s2p.first->getVolSlider()->refreshVolLevel(s2p.second[3]->getUI());
         }
     }
 
@@ -372,17 +331,16 @@ protected:
     {
         updateDirtyListener();
         updateDirtySources();
-        updateSourceLevels();
 
         updateDirtySliders();
         updateDirtyButtons();
         updateDirtySourceTypeBoxes();
     }
 
-    SynthParams &params;
+    PluginParams &params;
     std::map<Component*, tHookFn> postUpdateHook;
     std::map<ListenerComponent*, std::array<Param*, 3>> listenerReg;
-    std::map<SourceNodeComponent*, std::array<Param*, 5>> sourceReg;
+    std::map<SourceNodeComponent*, std::array<Param*, 2>> sourceReg;
     std::map<Slider*, Param*> sliderReg;
     std::map<Button*, ParamStepped<eOnOffState>*> buttonReg;
     std::map<ComboBox*, ParamStepped<eSourceType>*> sourceTypeReg;

@@ -18,7 +18,7 @@ public:
     ~HostParam()
     {
         /* Problem in the destruction sequence:
-         * The Param instances belong to SynthParams, a superclass of PluginAudioProcessor
+         * The Param instances belong to PluginParams, a superclass of PluginAudioProcessor
          * The HostParam instances are held in a pointer array that is a private member of
          * the Juce class AudioProcessor, which is also a superclass of PluginAudioProcessor.
          *
@@ -107,6 +107,7 @@ template<typename _par>
 class HostParamLog : public HostParam<_par>
 {
 public:
+    // log scaling
     HostParamLog(_par &p, float midPoint) : HostParam<_par>(p)
     {
         skew = log(0.5f) / log((midPoint - p.getMin()) / (p.getMax() - p.getMin()));

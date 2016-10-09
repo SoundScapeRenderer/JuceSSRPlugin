@@ -27,7 +27,7 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceNodeComponent *s)
+SourceMenuPanel::SourceMenuPanel (PluginParams &p, SourceNodeComponent *s)
     : PanelBase(p), params(p), sourceNode(s)
 {
     //[Constructor_pre] You can add your own custom stuff here..
@@ -146,8 +146,8 @@ SourceMenuPanel::SourceMenuPanel (SynthParams &p, SourceNodeComponent *s)
 
 
     //[UserPreSize]
-    registerButton(muteToggle, &params.sourceMute, std::bind(&SourceMenuPanel::repaintSourceNode, this));
-    registerButton(fixToggle, &params.sourcePositionLock, std::bind(&SourceMenuPanel::repaintSourceNode, this));
+    registerButton(muteToggle, &params.sourceMute, std::bind(&SourceMenuPanel::sourceMutedStateChanged, this));
+    registerButton(fixToggle, &params.sourcePositionLock, std::bind(&SourceMenuPanel::sourceFixedPositionStateChanged, this));
 
     registerSourceTypeBox(sourceModelBox, &params.sourceType, std::bind(&SourceMenuPanel::updatePlaneWaveVisibility, this));
     //[/UserPreSize]
@@ -259,9 +259,14 @@ void SourceMenuPanel::buttonClicked (Button* buttonThatWasClicked)
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
-void SourceMenuPanel::repaintSourceNode()
+void SourceMenuPanel::sourceMutedStateChanged()
 {
-    sourceNode->repaint();
+    sourceNode->setSourceMute(params.sourceMute.getStep() == eOnOffState::eOn);
+}
+
+void SourceMenuPanel::sourceFixedPositionStateChanged()
+{
+    sourceNode->setSourcePositionFixed(params.sourcePositionLock.getStep() == eOnOffState::eOn);
 }
 
 void SourceMenuPanel::updatePlaneWaveVisibility()
@@ -296,7 +301,7 @@ void SourceMenuPanel::timerCallback()
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="SourceMenuPanel" componentName=""
-                 parentClasses="public PanelBase" constructorParams="SynthParams &amp;p, SourceNodeComponent *s"
+                 parentClasses="public PanelBase" constructorParams="PluginParams &amp;p, SourceNodeComponent *s"
                  variableInitialisers="PanelBase(p), params(p), sourceNode(s)"
                  snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
                  fixedSize="1" initialWidth="250" initialHeight="225">

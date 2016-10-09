@@ -229,12 +229,13 @@
         <FILE id="N5zpDY" name="Param.h" compile="0" resource="0" file="../audio/inc/Param.h"/>
         <FILE id="wG5bd2" name="PluginProcessor.h" compile="0" resource="0"
               file="../audio/inc/PluginProcessor.h"/>
-        <FILE id="KACPut" name="SynthParams.h" compile="0" resource="0" file="../audio/inc/SynthParams.h"/>
+        <FILE id="KACPut" name="PluginParams.h" compile="0" resource="0" file="../audio/inc/PluginParams.h"/>
       </GROUP>
       <GROUP id="{B9C9E0A8-99F6-C6E5-85F9-53911923394F}" name="src">
         <FILE id="CrW3P9" name="PluginProcessor.cpp" compile="1" resource="0"
               file="../audio/src/PluginProcessor.cpp"/>
-        <FILE id="gYqefv" name="SynthParams.cpp" compile="1" resource="0" file="../audio/src/SynthParams.cpp"/>
+        <FILE id="gYqefv" name="PluginParams.cpp" compile="1" resource="0"
+              file="../audio/src/PluginParams.cpp"/>
       </GROUP>
     </GROUP>
     <GROUP id="{F6382FEF-D578-65A9-AE2B-732BBA4674EA}" name="gui">

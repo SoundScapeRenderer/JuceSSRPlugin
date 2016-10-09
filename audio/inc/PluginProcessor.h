@@ -12,17 +12,17 @@
 #define PLUGINPROCESSOR_H_INCLUDED
 
 #include "JuceHeader.h"
-#include "SynthParams.h"
+#include "PluginParams.h"
 
 #include "ssr code/controller.h"
 #include "ssr code/binauralrenderer.h"
 
 //==============================================================================
 /**
- * Common JUCE PluginProcessor. Derived from SynthParams for communication with UI.
+ * Common JUCE PluginProcessor. Derived from PluginParams for communication with UI.
  * The SSR is incorporated in this class.
  */
-class PluginAudioProcessor : public AudioProcessor, public SynthParams
+class PluginAudioProcessor : public AudioProcessor, public PluginParams
 {
 public:
     PluginAudioProcessor();

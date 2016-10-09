@@ -15,10 +15,10 @@ enum class eSourceType : int {
     nSteps = 2
 };
 
-class SynthParams {
+class PluginParams {
 public:
-    SynthParams();
-    ~SynthParams();
+    PluginParams();
+    ~PluginParams();
 
     //==============================================================================
 
@@ -45,7 +45,6 @@ public:
 
     /// GUI scaling and dragging related parameters
     Param currentZoom; //!< current scene zoom in range [25.0f ... 200.0f]%
-    const int pixelPerMeter; //!< pixel per meter scene scale parameter 125px = 1m
     Param sceneOffsetX; //!< scene offset x for dragging in range [-50.0f ... 50.0f]m
     Param sceneOffsetY; //!< scene offset y for dragging (inverted y axis)  in range [-50.0f ... 50.0f]m
 
@@ -61,26 +60,6 @@ public:
     static const Colour sourceLevelColour;
 
     //==============================================================================
-
-    /**
-     * Converts a meter position into a pixel coordinate of a scene with given width and height.
-     * Reference point is the center of that scene, where 1m is equivalent to 125px.
-     * Reference point can be moved by setting the sceneOffsetX and sceneOffsetY parameter of SynthParams.
-     * Scaling can be used by setting the zoomFactor parameter of SynthParams.
-     * @param meterCenterX centerX position in meter of an object in the scene GUI
-     * @param meterCenterY centerY position in meter of an object in the scene GUI
-     * @param sceneWidth width of the scene GUI in pixel
-     * @param sceneHeight height of the scene GUI in pixel
-     * @return coordinate point in pixel with inverse y
-     */
-    juce::Point<int> pos2pix(float meterCenterX, float meterCenterY, int sceneWidth, int sceneHeight);
-
-    /**
-     * Pixel per meter value that takes the current zoom scale factor into account.
-     * Needed for some meter to pixel conversion.
-     * scaledPixelPerMeter = pixelPerMeter * currentZoom / 100.0f.
-     */
-    float getScaledPixelPerMeter();
 
     /**
      * Get name of source type.
