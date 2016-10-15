@@ -3368,6 +3368,12 @@
     <None Include="..\..\..\assets\settings icon.png">
       <Filter>ssr\assets</Filter>
     </None>
+    <None Include="..\..\..\assets\soxHrir48000.wav">
+      <Filter>ssr\assets</Filter>
+    </None>
+    <None Include="..\..\..\assets\soxHrir96000.wav">
+      <Filter>ssr\assets</Filter>
+    </None>
     <None Include="..\..\..\ssr data\asdf.xsd">
       <Filter>ssr\ssr data</Filter>
     </None>

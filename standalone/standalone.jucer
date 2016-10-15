@@ -12,6 +12,10 @@
       <FILE id="jCX9mS" name="plus icon.png" compile="0" resource="1" file="../assets/plus icon.png"/>
       <FILE id="PVNyzl" name="settings icon.png" compile="0" resource="1"
             file="../assets/settings icon.png"/>
+      <FILE id="MRPZb9" name="soxHrir48000.wav" compile="0" resource="1"
+            file="../assets/soxHrir48000.wav"/>
+      <FILE id="SNYq4j" name="soxHrir96000.wav" compile="0" resource="1"
+            file="../assets/soxHrir96000.wav"/>
     </GROUP>
     <GROUP id="{15FC078A-D7EC-ED70-E8F2-79886D332AC0}" name="ssr data">
       <FILE id="HMQEHd" name="asdf.xsd" compile="0" resource="0" file="../ssr data/asdf.xsd"/>
@@ -182,7 +186,7 @@
         <FILE id="ky3o3g" name="publisher.h" compile="0" resource="0" file="../audio/ssr code/publisher.h"/>
         <GROUP id="{2EBEA918-34BF-B1F3-D53D-B3C9BC0E0F25}" name="razor-ahrs">
           <FILE id="tadRba" name="Example.cpp" compile="0" resource="0" file="../audio/ssr code/razor-ahrs/Example.cpp"/>
-          <FILE id="qL48pQ" name="GPL.txt" compile="0" resource="1" file="../audio/ssr code/razor-ahrs/GPL.txt"/>
+          <FILE id="qL48pQ" name="GPL.txt" compile="0" resource="0" file="../audio/ssr code/razor-ahrs/GPL.txt"/>
           <FILE id="EcUcOW" name="RazorAHRS.cpp" compile="0" resource="0" file="../audio/ssr code/razor-ahrs/RazorAHRS.cpp"/>
           <FILE id="gD7POM" name="RazorAHRS.h" compile="0" resource="0" file="../audio/ssr code/razor-ahrs/RazorAHRS.h"/>
           <FILE id="T9dZ9I" name="README.txt" compile="0" resource="0" file="../audio/ssr code/razor-ahrs/README.txt"/>

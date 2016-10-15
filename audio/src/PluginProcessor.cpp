@@ -134,55 +134,6 @@ namespace {
 
 void PluginAudioProcessor::prepareToPlay(double sRate, int samplesPerBlock)
 {
-    /// \todo 96kHz leads to wrong distance attenuation? sounds louder than 44.1kHz or 48kHz
-    // read default_hrirs_wav from memory into hrirFileBuffer
-    MemoryInputStream *in = new MemoryInputStream(BinaryData::hrirs_fabian_wav, BinaryData::hrirs_fabian_wavSize, false);
-    ScopedPointer<AudioFormatReader> hrirFileReader = WavAudioFormat().createReaderFor(in, true);
-    AudioSampleBuffer hrirFileBuffer(static_cast<int>(hrirFileReader->numChannels), static_cast<int>(hrirFileReader->lengthInSamples));
-    hrirFileReader->read(&hrirFileBuffer, 0, static_cast<int>(hrirFileReader->lengthInSamples), 0, true, true);
-
-    // resample default hrir buffer if necessary
-    AudioSampleBuffer resampledHrirFileBuffer;
-    if (sRate != hrirFileReader->sampleRate)
-    {
-        ScopedPointer<LagrangeInterpolator> resampler = new LagrangeInterpolator();
-        double speedRatio = hrirFileReader->sampleRate / sRate;
-        int resampledLengthInSamples = static_cast<int>(hrirFileReader->lengthInSamples / speedRatio);
-        resampledHrirFileBuffer = AudioSampleBuffer(static_cast<int>(hrirFileReader->numChannels), resampledLengthInSamples);
-
-        const float **readBuffer = hrirFileBuffer.getArrayOfReadPointers();
-        float **writeBuffer = resampledHrirFileBuffer.getArrayOfWritePointers();
-        for (int i = 0; i < static_cast<int>(hrirFileReader->numChannels); ++i)
-        {
-            resampler->process(speedRatio, readBuffer[i], writeBuffer[i], resampledLengthInSamples);
-        }
-    }
-
-    // create interleaved audio data buffer for writing multi channel wav with libsndfile
-    AudioSampleBuffer *bufferToUse = sRate == hrirFileReader->sampleRate ? &hrirFileBuffer : &resampledHrirFileBuffer;
-    int numFrames = static_cast<int>(hrirFileReader->numChannels) * bufferToUse->getNumSamples();
-    float *interleavedBuffer = (float*)malloc(numFrames * sizeof(float));
-    long k = 0;
-
-    for (long i = 0; i < bufferToUse->getNumSamples(); i++)
-    {
-        for (int j = 0; j < static_cast<int>(hrirFileReader->numChannels); j++)
-        {
-            interleavedBuffer[k + j] = bufferToUse->getSample(j, i);
-        }
-        k += static_cast<int>(hrirFileReader->numChannels);
-    }
-
-    // create temporary file and save path of randomly named tempFile
-    tempHrirFile = new TemporaryFile(".wav");
-    String tempHrirFilePath = tempHrirFile->getFile().getFullPathName();
-
-    // write wav into TemporaryFile
-    const char *path = tempHrirFilePath.getCharPointer();
-    auto format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
-    SndfileHandle sndFile = SndfileHandle(path, SFM_WRITE, format, static_cast<int>(hrirFileReader->numChannels), static_cast<int>(sRate));
-    sndFile.write(interleavedBuffer, numFrames);
-
     // configure SSR
     auto conf = ssr::configuration(ssr_argc, ssr_argv);
     conf.renderer_params.set<int>("sample_rate", static_cast<int>(sRate));
@@ -191,7 +142,7 @@ void PluginAudioProcessor::prepareToPlay(double sRate, int samplesPerBlock)
     conf.renderer_params.set<int>("out_channels", getNumOutputChannels());
 
     conf.renderer_params.set("hrir_size", 0); // "0" means use all that are there
-    conf.renderer_params.set("hrir_file", tempHrirFilePath);
+    conf.renderer_params.set("hrir_file", createTempHRIRFile(sRate));
 
     try
     {
@@ -259,7 +210,7 @@ void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& m
         AudioPlayHead::CurrentPositionInfo hostPlayHead = positionInfo[getAudioIndex()];
 
         // call internal ssr process function of renderer only if host is playing
-        if (hostPlayHead.isPlaying)
+        //if (hostPlayHead.isPlaying)
         {
             renderer->audio_callback(getBlockSize()
                 , buffer.getArrayOfWritePointers() // NOTE: write = read pointer, read is just const
@@ -301,6 +252,68 @@ void PluginAudioProcessor::setStateInformation(const void* data, int sizeInBytes
 }
 
 //==============================================================================
+
+String PluginAudioProcessor::createTempHRIRFile(double sRate)
+{
+    // load suitable HRIR file into a MemoryInputStream
+    // NOTE: comparing doubles (sample rates) is not nice but here it is possible since (pre-resampled) HRIR files
+    // from memory only has zeros after dots and there are no prior calculations involved
+    MemoryInputStream *in;
+    sRate == 48000.0 ? in = new MemoryInputStream(BinaryData::soxHrir48000_wav, BinaryData::soxHrir48000_wavSize, false)
+        : (sRate == 96000.0 ? in = new MemoryInputStream(BinaryData::soxHrir96000_wav, BinaryData::soxHrir96000_wavSize, false)
+            : in = new MemoryInputStream(BinaryData::hrirs_fabian_wav, BinaryData::hrirs_fabian_wavSize, false));
+
+    // read wav MemoryInputStream into hrirFileBuffer
+    ScopedPointer<AudioFormatReader> hrirFileReader = WavAudioFormat().createReaderFor(in, true);
+    AudioSampleBuffer hrirFileBuffer(static_cast<int>(hrirFileReader->numChannels), static_cast<int>(hrirFileReader->lengthInSamples));
+    hrirFileReader->read(&hrirFileBuffer, 0, static_cast<int>(hrirFileReader->lengthInSamples), 0, true, true);
+
+    // resample default hrir buffer if necessary
+    AudioSampleBuffer resampledHrirFileBuffer;
+    if (sRate != hrirFileReader->sampleRate)
+    {
+        // preparations for resampling
+        ScopedPointer<LagrangeInterpolator> resampler = new LagrangeInterpolator();
+        double speedRatio = hrirFileReader->sampleRate / sRate;
+        int resampledLengthInSamples = std::round(hrirFileReader->lengthInSamples / speedRatio);
+        resampledHrirFileBuffer = AudioSampleBuffer(static_cast<int>(hrirFileReader->numChannels), resampledLengthInSamples);
+
+        // resample data of hrirFileBuffer into resampledHrirFileBuffer
+        const float **readBuffer = hrirFileBuffer.getArrayOfReadPointers();
+        float **writeBuffer = resampledHrirFileBuffer.getArrayOfWritePointers();
+        for (int i = 0; i < static_cast<int>(hrirFileReader->numChannels); ++i)
+        {
+            resampler->process(speedRatio, readBuffer[i], writeBuffer[i], resampledLengthInSamples);
+        }
+    }
+
+    // create interleaved audio data buffer for writing a multi channel wav using libsndfile
+    AudioSampleBuffer *bufferToUse = sRate == hrirFileReader->sampleRate ? &hrirFileBuffer : &resampledHrirFileBuffer;
+    int numFrames = static_cast<int>(hrirFileReader->numChannels) * bufferToUse->getNumSamples();
+    float *interleavedBuffer = (float*)malloc(numFrames * sizeof(float));
+
+    long k = 0;
+    for (long i = 0; i < bufferToUse->getNumSamples(); ++i)
+    {
+        for (int j = 0; j < static_cast<int>(hrirFileReader->numChannels); ++j)
+        {
+            interleavedBuffer[k + j] = bufferToUse->getSample(j, i);
+        }
+        k += static_cast<int>(hrirFileReader->numChannels);
+    }
+
+    // create temporary file in the system's default temporary file location
+    tempHrirFile = new TemporaryFile(".wav");
+    String tempHrirFilePath = tempHrirFile->getFile().getFullPathName();
+
+    // write wav into TemporaryFile using libsndfile
+    const char *path = tempHrirFilePath.getCharPointer();
+    auto format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
+    SndfileHandle sndFile = SndfileHandle(path, SFM_WRITE, format, static_cast<int>(hrirFileReader->numChannels), static_cast<int>(sRate));
+    sndFile.write(interleavedBuffer, numFrames);
+
+    return tempHrirFilePath;
+}
 
 void PluginAudioProcessor::updateHostInfo()
 {

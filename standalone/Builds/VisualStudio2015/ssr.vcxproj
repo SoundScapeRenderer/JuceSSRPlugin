@@ -1884,6 +1884,8 @@
     <None Include="..\..\..\assets\mute icon.png"/>
     <None Include="..\..\..\assets\plus icon.png"/>
     <None Include="..\..\..\assets\settings icon.png"/>
+    <None Include="..\..\..\assets\soxHrir48000.wav"/>
+    <None Include="..\..\..\assets\soxHrir96000.wav"/>
     <None Include="..\..\..\ssr data\asdf.xsd"/>
     <None Include="..\..\..\ssr data\images\listener.png"/>
     <None Include="..\..\..\ssr data\images\listener_background.png"/>

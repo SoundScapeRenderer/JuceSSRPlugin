@@ -82,6 +82,17 @@ private:
     bool setupSuccessful = false; //!< only create and use SSR renderer if loading hrir file was successful
 
     /**
+     * Create a temporary HRIR file in the default temporary file location. Resample the
+     * original hrirs_fabian.wav only if current sample rate is not {44.1, 48.0, 96.0}kHz,
+     * otherwise use one of the (pre-resampled) HRIR files from memory.
+     * The original HRIR file has a samplerate of 44.1kHz, the others were resampled using SoX
+     * (http://sox.sourceforge.net/) since it sounds better than the JUCE LagrangeInterpolator.
+     * @param sRate currently used sample rate, resample HRIR file if neccessary
+     * @return absolute path name of created (resampled) temporary HRIR file
+     */
+    String createTempHRIRFile(double sRate);
+
+    /**
      * Update host information by updating information of host audio playhead. 
      * This way you can get access to bpm or transport state of host.
      */

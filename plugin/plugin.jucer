@@ -19,6 +19,10 @@
       <FILE id="tOO8Z8" name="plus icon.png" compile="0" resource="1" file="../assets/plus icon.png"/>
       <FILE id="ll5KUk" name="settings icon.png" compile="0" resource="1"
             file="../assets/settings icon.png"/>
+      <FILE id="xIzSI0" name="soxHrir48000.wav" compile="0" resource="1"
+            file="../assets/soxHrir48000.wav"/>
+      <FILE id="WzwuHt" name="soxHrir96000.wav" compile="0" resource="1"
+            file="../assets/soxHrir96000.wav"/>
     </GROUP>
     <GROUP id="{2F948DE4-F9C4-14BA-D49A-B21CB547997D}" name="ssr data">
       <FILE id="Pes73y" name="asdf.xsd" compile="0" resource="0" file="../ssr data/asdf.xsd"/>
