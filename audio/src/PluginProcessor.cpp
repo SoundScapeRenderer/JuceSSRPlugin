@@ -22,7 +22,7 @@ PluginAudioProcessor::PluginAudioProcessor()
     // e.g. in Cubase by setting reduction level to 0%
     addParameter(new HostParam<Param>(sourceX));
     addParameter(new HostParam<Param>(sourceY));
-    addParameter(new HostParam<Param>(sourceVol));
+    addParameter(new HostParamLog<Param>(sourceVol, sourceVol.getDefaultUI()));
     addParameter(new HostParam<ParamStepped<eOnOffState>>(sourceMute));
 
     addParameter(new HostParam<Param>(referenceX));

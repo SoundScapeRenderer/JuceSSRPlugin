@@ -266,6 +266,10 @@ void SourceMenuPanel::sourceMutedStateChanged()
 
 void SourceMenuPanel::sourceFixedPositionStateChanged()
 {
+    // lock source's X and Y position parameter
+    params.sourceX.setValueLock(params.sourcePositionLock.getStep() == eOnOffState::eOn);
+    params.sourceY.setValueLock(params.sourcePositionLock.getStep() == eOnOffState::eOn);
+
     sourceNode->setSourcePositionFixed(params.sourcePositionLock.getStep() == eOnOffState::eOn);
 }
 

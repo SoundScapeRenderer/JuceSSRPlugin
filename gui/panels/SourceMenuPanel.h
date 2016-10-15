@@ -53,7 +53,8 @@ public:
     void sourceMutedStateChanged();
 
     /**
-     * Repaint source node whenever fixPosition state is enabled or disabled.
+     * Lock source position params and repaint source node whenever fixPosition 
+     * state is enabled or disabled.
      */
     void sourceFixedPositionStateChanged();
 

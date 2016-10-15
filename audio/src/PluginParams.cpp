@@ -130,10 +130,10 @@ void PluginParams::writeXMLPatchTree(XmlElement* patch)
     for (auto &param : parameters)
     {
         float value = param->getUI();
-        if (param->serializationTag() != "")
+        if (param->getSerializationTag() != "")
         {
             // add element to xml patch tree
-            String prefixedName = (param->prefix() + param->serializationTag()).replace(" ", "");
+            String prefixedName = param->getSerializationTag().replace(" ", "");
             XmlElement* node = new XmlElement(prefixedName);
             node->setAttribute("value", value);
             patch->addChildElement(node);
@@ -159,12 +159,13 @@ void PluginParams::readXMLPatchTree(XmlElement* patch)
     // iterate over all params and read the values if they exist in the xml patch
     for (auto &param : parameters)
     {
-        if (param->serializationTag() != "")
+        if (param->getSerializationTag() != "")
         {
             // read and set values if exist
-            String prefixedName = (param->prefix() + param->serializationTag()).replace(" ", "");
+            String prefixedName = param->getSerializationTag().replace(" ", "");
             if (patch->getChildByName(prefixedName) != NULL)
             {
+                param->setValueLock(false);
                 param->setUI(static_cast<float>(patch->getChildByName(prefixedName)->getDoubleAttribute("value")));
                 param->set(param->get(), true);
             }

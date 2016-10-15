@@ -1,13 +1,19 @@
 #pragma once
 
-#include <atomic>
-#include <array>
 #include "JuceHeader.h"
 
-/// \todo clean/reduce class and doc
-class Param {
+#include <atomic>
+#include <array>
+
+/**
+ * Base parameter class for float values. Uses a dirty flag to handle synchronization of the UI
+ * and listener callbacks that can be used to notify host of changes.
+ */
+class Param
+{
 public:
-    Param(const String &name, const String &serializationTag, const String &hostTag, const String &unit, float minval, float maxval, float defaultval, int numSteps = 0)
+    Param(const String &name, const String &serializationTag, const String &hostTag, const String &unit
+          , float minval, float maxval, float defaultval, int numSteps = 0)
         : val_(defaultval)
         , min_(minval)
         , max_(maxval)
@@ -16,79 +22,104 @@ public:
         , serializationTag_(serializationTag)
         , hostTag_(hostTag)
         , unit_(unit)
+        , lock_(false)
         , numSteps_(numSteps)
     {
-        jassert(minval < maxval);
-        // this is broken for ParamDb because minval and maxval are in the dB range, but defaultval is already transformed
-        //jassert(minval <= defaultval);
-        //jassert(defaultval <= maxval);
+        jassert(minval <= defaultval);
+        jassert(defaultval <= maxval);
     }
     virtual ~Param() {}
 
+    //==============================================================================
+
+    /// setter and getter for prefix
     void setPrefix(const String &s) { prefix_ = s; }
-    const String& prefix() { return prefix_; }
+    const String& getPrefix() { return prefix_; }
 
-    const String& name() const { return name_; }
-    const String& serializationTag() const { return serializationTag_; }
-    String hostTag() const { return prefix_.isEmpty() ? (hostTag_) : (prefix_ + " " + hostTag_); }
-    const String& unit() const { return unit_; }
-    int getNumSteps() const { return numSteps_; }
+    /// string getter for name, host tag, serialization tag and unit
+    const String& getName() const { return name_; }
+    const String& getSerializationTag() const { return prefix_.isEmpty() ? serializationTag_ : prefix_ + serializationTag_; }
+    String getHostTag() const { return prefix_.isEmpty() ? hostTag_ : prefix_ + " " + hostTag_; }
+    const String& getUnit() const { return unit_; }
 
-    void set(float f) { val_.store(f); }
+    //==============================================================================
+
+    /**
+     * Set value lock to prevent value changes.
+     * @param b if true then lock param value
+     */
+    void setValueLock(bool b)
+    {
+        lock_.store(b);
+    }
+
+    bool isValueLockEnabled() { lock_.load(); }
+
+    /**
+     * Set param value if lock is disabled.
+     */
+    void set(float f) { if (!lock_.load()) { val_.store(f); } }
+
+    /**
+     * Set param value and dirtyFlag if lock is disabled.
+     * @param f new value
+     * @param setDirty exchange dirtyFlag to true or false
+     */
     void set(float f, bool setDirty)
     {
-        val_.store(f);
-        uiDirty.exchange(setDirty);
+        if (!lock_.load())
+        {
+            val_.store(f);
+            uiDirty.exchange(setDirty);
+        }
     }
-    float get() const { return val_.load(); }
 
+    /// further getter for useful param values
+    float get() const { return val_.load(); }
+    float getMin() const { return min_; }
+    float getMax() const { return max_; }
+    float getDefault() const { return default_; }
+
+    /**
+     * Set param value (virtual) and notify registered listener of changes.
+     * @param f new float value, bounds are checked
+     * @param notifyHost if true then call listener callback
+     */
     virtual void setUI(float f, bool notifyHost = true)
     {
         set(jmin(jmax(min_, f), max_));
         if (notifyHost) { listener.call(&Listener::paramUIChanged); }
     }
+
+    /// virtual getter for values and strings
     virtual float getUI() const { return get(); }
     virtual float getDefaultUI() const { return getDefault(); }
     virtual String getUIString() const { return getUIString(get()); }
     virtual String getUIString(float v) const { return String::formatted("%f", v); }
-    virtual bool hasLabels() const { return false; }
 
-    float getMin() const { return min_; }
-    float getMax() const { return max_; }
-    float getDefault() const { return default_; }
-    String getUnit() const { return unit_; }
-
+    /**
+     * Use this to set param values from host. This just sets a new value
+     * and sets the dirty flag to true for further handling of the UI.
+     */
     void setHost(float f)
     {
         setUI(f, false);
         uiDirty.exchange(true);
     }
 
-    /// get and reset semantics -> this will break if one value is represented twice on the ui
+    /**
+     * Check whether this param's UI is dirty. Set dirty flag to false, after checking.
+     * NOTE: get and reset semantics -> this will break if one value is represented twice on the ui
+     * @return true if dirty flag is set
+     */
     bool isUIDirty()
     {
         return uiDirty.exchange(false);
     }
 
-    constexpr static float MIN_DB = -96.f;
+    //==============================================================================
 
-    static inline float toDb(float linear) { return linear > 0.f ? 20.f * std::log10(linear) : MIN_DB; }
-    static inline float fromDb(float db) { return db <= MIN_DB ? 0.f : std::pow(10.f, db / 20.f); }
-
-    static inline float toCent(float factor) { return std::log(factor) / log(2.f)*1200.f; }
-    static inline float fromCent(float ct) { return std::pow(2.f, ct / 1200.f); }
-
-    static inline float toSemi(float factor) { return std::log(factor) / log(2.f)*12.f; }
-    static inline float fromSemi(float st) { return std::pow(2.f, st / 12.f); }
-
-    /**
-    * @param modRange max modulation in octaves
-    */
-    static inline float bipolarToFreq(float modValue, float fInput, float modRange)
-    {
-        return fInput * std::pow(2.f, modValue * modRange);
-    }
-
+    /// listener class to be used to notify host of changes of the UI
     class Listener
     {
     public:
@@ -100,56 +131,56 @@ public:
     void addListener(Listener *newListener) { listener.add(newListener); }
     void removeListener(Listener *aListener) { listener.remove(aListener); }
 
+    //==============================================================================
+
+    /// for derived ParamStepped
+    virtual int getNumSteps() const { return numSteps_; }
+    virtual bool hasLabels() const { return false; }
+
+    //==============================================================================
+
+    /// decibel conversion functions
+    constexpr static float MIN_DB = -96.0f;
+    static inline float toDb(float linear) { return linear > 0.0f ? 20.0f * std::log10(linear) : MIN_DB; }
+    static inline float fromDb(float db) { return db <= MIN_DB ? 0.0f : std::pow(10.0f, db / 20.0f); }
+
+    //==============================================================================
+
 protected:
-    ScopedPointer<float> value;
-    std::atomic<float> val_;
-    float min_;
-    float max_;
-    float default_;
-    String name_;
-    String serializationTag_;
-    String hostTag_;
-    String unit_;
-    int numSteps_;
+    std::atomic<float> val_; //!< current value of param
+    float min_; //!< min value of param
+    float max_; //!< max value of param
+    float default_; //!< default value of param
+    String name_; //!< name of param
+    String serializationTag_; //!< name of param to be written into patches
+    String hostTag_; //!< name of param to be used in host
+    String unit_; //!< unit of param value
+    std::atomic<bool> lock_; //!< lock for params, if true then param value can not be changed 
+    String prefix_; //!< name prefix of param
+    int numSteps_; //!< number of steps, used for ParamStepped
 
-    String prefix_;
-
-    ListenerList<Listener> listener;
-    std::atomic<bool> uiDirty;
+    ListenerList<Listener> listener; //!< listener for callbacks notifying host
+    std::atomic<bool> uiDirty; //!< dirty flag to check for further handling and synchronization on UI
 };
 
-class ParamDb : public Param
+//==============================================================================
+
+/**
+ * Derived parameter class from Param with a static number of steps for enums. _enum must be of type int and
+ * needs _enum::nSteps as a value which is the number of steps.
+ */
+template<typename _enum>
+class ParamStepped : public Param 
 {
 public:
-    ParamDb(const String &name, const String &serializationTag, const String &hostTag, const String &unit, float minval, float maxval, float defaultval)
-        : Param(name, serializationTag, hostTag, unit, minval, maxval, fromDb(defaultval))
-    {}
-
-    virtual void setUI(float f, bool notifyHost = true) override
-    {
-        if (f >= min_ && f <= max_)
-        {
-            set(fromDb(f));
-        }
-        else
-        {
-            jassert(false);
-        }
-        if (notifyHost) { listener.call(&Listener::paramUIChanged); }
-    }
-    virtual float getUI() const override { return toDb(get()); }
-    virtual float getDefaultUI() const { return toDb(getDefault()); }
-};
-
-template<typename _enum>
-class ParamStepped : public Param {
-public:
-    ParamStepped(const String &name, const String &serializationTag, const String &hostTag, _enum defaultval, const char **labels = nullptr)
-        : Param(name, serializationTag, hostTag, "", 0.f, static_cast<float>(_enum::nSteps) - 1.f,
-                static_cast<float>(defaultval), static_cast<int>(_enum::nSteps))
+    ParamStepped(const String &name, const String &serializationTag, const String &hostTag
+                 , _enum defaultval, const char **labels = nullptr)
+        : Param(name, serializationTag, hostTag, "", 0.0f, static_cast<float>(_enum::nSteps) - 1.0f
+                , static_cast<float>(defaultval), static_cast<int>(_enum::nSteps))
         , step_(defaultval)
         , labelsSet(false)
     {
+        // set label strings
         const char **lbl = labels;
         for (size_t u = 0; u < labels_.size() && lbl != nullptr && *lbl != nullptr; ++u, ++lbl)
         {
@@ -158,24 +189,53 @@ public:
         }
     }
 
-    //! \todo what about the set method? Make sure that no inconsistent state is created!
+    //==============================================================================
 
-    _enum getStep() const { return step_.load(); }
+    /**
+     * Set current step value. This also sets parent's float value.
+     * @param v new _enum value
+     */
     void setStep(_enum v)
     {
-        step_.store(v);
-        set(static_cast<float>(v));
-    }
-    virtual void setUI(float f, bool notifyHost = true) override
-    {
-        set(f);
-        int ival = static_cast<int>(std::trunc(f + .5f));
-        jassert(ival >= 0 && ival < static_cast<int>(_enum::nSteps));
-        step_.store(static_cast<_enum>(ival));
-        if (notifyHost) { listener.call(&Listener::paramUIChanged); }
+        if (!lock_.load())
+        {
+            step_.store(v);
+            set(static_cast<float>(v));
+        }
     }
 
+    /**
+     * Set step param value and notify registered listener of changes.
+     * @param f new step value as flaot, bounds are checked
+     * @param notifyHost if true then call listener callback
+     */
+    virtual void setUI(float f, bool notifyHost = true) override
+    {
+        // check bounds of step value
+        if (!lock_.load())
+        {
+            int ival = static_cast<int>(std::trunc(f + .5f));
+            ival = jmin(jmax(0, ival), static_cast<int>(_enum::nSteps) - 1);
+            step_.store(static_cast<_enum>(ival));
+        }
+
+        Param::setUI(f, notifyHost);
+    }
+
+    /**
+     * Get current step param enum value.
+     */
+    _enum getStep() const { return step_.load(); }
+
+    /**
+     * Get text label of current set step param value.
+     */
     virtual String getUIString() const override { return labels_[static_cast<size_t>(getStep())]; }
+
+    /**
+     * Get text label of a specific step param value.
+     * @param v specific _enum value to get text label from
+     */
     virtual String getUIString(float v) const override
     {
         size_t u = static_cast<size_t>(std::trunc(v + .5f));
@@ -189,10 +249,16 @@ public:
             return String::formatted("val%u", u);
         }
     }
+
+    /**
+     * If step param's text label is set then return true.
+     */
     virtual bool hasLabels() const override { return labelsSet; }
 
+    //==============================================================================
+
 protected:
-    std::atomic<_enum> step_;
-    std::array<String, static_cast<size_t>(_enum::nSteps)> labels_;
-    bool labelsSet;
+    std::atomic<_enum> step_; //!< current step value
+    std::array<String, static_cast<size_t>(_enum::nSteps)> labels_; //!< step value text labels
+    bool labelsSet; //!< true if has labels
 };
