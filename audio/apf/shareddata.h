@@ -59,9 +59,9 @@ class SharedData
     }
 
     /** 
-    * Real-time alternative to pushing rhs into fifo queue. 
-    * This sets _data directly instead.
-    **/
+     * Real-time alternative instead of pushing rhs into fifo queue. 
+     * This sets _data directly.
+     */
     void setRT(const X& rhs) {
         _data = rhs;
     }

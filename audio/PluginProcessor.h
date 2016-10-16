@@ -14,8 +14,9 @@
 #include "JuceHeader.h"
 #include "PluginParams.h"
 
-#include "ssr code/controller.h"
-#include "ssr code/binauralrenderer.h"
+#include "apf/pointer_policy.h"
+#include "apf/default_thread_policy.h"
+#include "ssr src/binauralrenderer.h"
 
 //==============================================================================
 /**
@@ -87,7 +88,7 @@ private:
      * otherwise use one of the (pre-resampled) HRIR files from memory.
      * The original HRIR file has a samplerate of 44.1kHz, the others were resampled using SoX
      * (http://sox.sourceforge.net/) since it sounds better than the JUCE LagrangeInterpolator.
-     * @param sRate currently used sample rate, resample HRIR file if neccessary
+     * @param sRate currently used sample rate, resample HRIR file if necessary
      * @return absolute path name of created (resampled) temporary HRIR file
      */
     String createTempHRIRFile(double sRate);

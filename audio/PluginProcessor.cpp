@@ -126,28 +126,21 @@ void PluginAudioProcessor::changeProgramName(int index, const String& newName)
 
 //==============================================================================
 
-// SSR configuration args stuff
-namespace {
-    char* ssr_argv[] = { "ssr_juce", "--binaural", "--no-ip-server", "--no-gui", "--no-tracker", "--verbose" };
-    int ssr_argc = sizeof(ssr_argv) / sizeof(ssr_argv[0]);
-}
-
 void PluginAudioProcessor::prepareToPlay(double sRate, int samplesPerBlock)
 {
-    // configure SSR
-    auto conf = ssr::configuration(ssr_argc, ssr_argv);
-    conf.renderer_params.set<int>("sample_rate", static_cast<int>(sRate));
-    conf.renderer_params.set<int>("block_size", samplesPerBlock);
-    conf.renderer_params.set<int>("in_channels", getNumInputChannels());
-    conf.renderer_params.set<int>("out_channels", getNumOutputChannels());
-
-    conf.renderer_params.set("hrir_size", 0); // "0" means use all that are there
-    conf.renderer_params.set("hrir_file", createTempHRIRFile(sRate));
+    // configure SSR Renderer
+    apf::parameter_map renderer_params;
+    renderer_params.set<int>("sample_rate", static_cast<int>(sRate));
+    renderer_params.set<int>("block_size", samplesPerBlock);
+    
+    // set hrir_file and hrir_size for binaural renderer, 0 for using complete size of hrir_file
+    renderer_params.set("hrir_file", createTempHRIRFile(sRate));
+    renderer_params.set("hrir_size", 0);
 
     try
     {
         // create renderer
-        renderer.reset(new ssr::BinauralRenderer(conf.renderer_params));
+        renderer.reset(new ssr::BinauralRenderer(renderer_params));
         renderer->load_reproduction_setup();
 
         // add mono input source
@@ -193,7 +186,7 @@ void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& m
         ssr::RendererBase<ssr::BinauralRenderer>::Source *source = renderer->get_source(sourceID);
         Position sourcePos = Position(sourceX.get(), sourceY.get());
         source->position.setRT(sourcePos);
-        source->orientation.setRT((listenerPos - sourcePos).orientation()); // quserinterface.cpp
+        source->orientation.setRT((listenerPos - sourcePos).orientation());
         Source::model_t type;
         sourceType.getStep() == eSourceType::ePlane ? type = Source::model_t::plane : type = Source::model_t::point;
         source->model.setRT(type);
@@ -210,11 +203,22 @@ void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& m
         AudioPlayHead::CurrentPositionInfo hostPlayHead = positionInfo[getAudioIndex()];
 
         // call internal ssr process function of renderer only if host is playing
-        //if (hostPlayHead.isPlaying)
+        if (hostPlayHead.isPlaying)
         {
             renderer->audio_callback(getBlockSize()
                 , buffer.getArrayOfWritePointers() // NOTE: write = read pointer, read is just const
                 , buffer.getArrayOfWritePointers());
+        }
+
+        // normalize volume due to missing normalization in the convolution of the SSR renderer
+        if (getSampleRate() != 44100.0)
+        {
+            // reference is volume at sample rate of 44.1 kHz, for now
+            float gain = (static_cast<float>(44100.0 / getSampleRate()));
+            for (int c = 0; c < buffer.getNumChannels(); ++c)
+            {
+                FloatVectorOperations::multiply(buffer.getWritePointer(c, 0), gain, buffer.getNumSamples());
+            }
         }
 
         // get ssr output level
@@ -275,7 +279,7 @@ String PluginAudioProcessor::createTempHRIRFile(double sRate)
         // preparations for resampling
         ScopedPointer<LagrangeInterpolator> resampler = new LagrangeInterpolator();
         double speedRatio = hrirFileReader->sampleRate / sRate;
-        int resampledLengthInSamples = std::round(hrirFileReader->lengthInSamples / speedRatio);
+        int resampledLengthInSamples = static_cast<int>(std::round(hrirFileReader->lengthInSamples / speedRatio));
         resampledHrirFileBuffer = AudioSampleBuffer(static_cast<int>(hrirFileReader->numChannels), resampledLengthInSamples);
 
         // resample data of hrirFileBuffer into resampledHrirFileBuffer

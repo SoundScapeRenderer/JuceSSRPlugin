@@ -7,7 +7,7 @@
 
 /**
  * Parameter class for communication between host and plugin. This mainly implements JUCE 
- * AudioProcessorParameter functions. If neccessary, go there for further documentation.
+ * AudioProcessorParameter functions. If necessary, go there for further documentation.
  */
 template<typename _par>
 class HostParam : public AudioProcessorParameter, public Param::Listener
