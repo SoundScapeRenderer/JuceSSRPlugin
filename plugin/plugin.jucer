@@ -282,11 +282,11 @@
             extraLinkerFlags="">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="1" optimisation="1" targetName="plugin" headerPath="../../../audio/&#10;../../../gui&#10;../../../assets/libs/"
-                       libraryPath="../../../assets/libs/" defines=""/>
+                       isDebug="1" optimisation="1" targetName="plugin" headerPath="../../../audio/&#10;../../../gui&#10;../../../libs/"
+                       libraryPath="../../../libs/" defines=""/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="0" optimisation="3" targetName="plugin" headerPath="../../../audio/&#10;../../../gui&#10;../../../assets/libs/"
-                       libraryPath="../../../assets/libs/" defines=""/>
+                       isDebug="0" optimisation="3" targetName="plugin" headerPath="../../../audio/&#10;../../../gui&#10;../../../libs/"
+                       libraryPath="../../../libs/" defines=""/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../juce/modules"/>

@@ -12,13 +12,14 @@
 #include "HostParam.h"
 
 // UI header, should be hidden behind a factory
-#include <PluginEditor.h>
+#include "PluginEditor.h"
 
 //==============================================================================
 PluginAudioProcessor::PluginAudioProcessor()
 {
-    // add automation params for host
-    // NOTE: make sure automation in host is not interpolated for more precision
+    // add parameters that should be accessible for the host
+    // NOTE: make sure automation recordings in host are not interpolated for more
+    // precision, especially for parameters with a wide value range
     // e.g. in Cubase by setting reduction level to 0%
     addParameter(new HostParam<Param>(sourceX));
     addParameter(new HostParam<Param>(sourceY));

@@ -277,11 +277,11 @@
             extraLinkerFlags="">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="1" optimisation="1" targetName="standalone" headerPath="../../../audio/&#10;../../../gui&#10;../../../assets/libs/"
-                       libraryPath="../../../assets/libs/"/>
+                       isDebug="1" optimisation="1" targetName="standalone" headerPath="../../../audio/&#10;../../../gui&#10;../../../libs/"
+                       libraryPath="../../../libs/"/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="0" optimisation="3" targetName="standalone" libraryPath="../../../assets/libs/"
-                       headerPath="../../../audio/&#10;../../../gui&#10;../../../assets/libs/"/>
+                       isDebug="0" optimisation="3" targetName="standalone" libraryPath="../../../libs/"
+                       headerPath="../../../audio/&#10;../../../gui&#10;../../../libs/"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../juce/modules"/>

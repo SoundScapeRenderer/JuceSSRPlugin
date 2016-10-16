@@ -15,6 +15,10 @@ enum class eSourceType : int {
     nSteps = 2
 };
 
+/**
+ * This class contains all parameters of the plugin as well as 
+ * functions for serialization in a custom XML format.
+ */
 class PluginParams {
 public:
     PluginParams();
