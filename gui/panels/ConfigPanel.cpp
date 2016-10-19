@@ -27,8 +27,8 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-ConfigPanel::ConfigPanel (PluginParams &p)
-    : PanelBase(p), params(p)
+ConfigPanel::ConfigPanel (PluginAudioProcessor &p)
+    : PanelBase(p), processor(p)
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
@@ -87,7 +87,7 @@ ConfigPanel::ConfigPanel (PluginParams &p)
     IRFileBox->setSelectedItemIndex(0, dontSendNotification);
     IRFileBox->setEnabled(false);
 
-    registerSlider(ampRefDistanceSlider, &params.amplitudeReferenceDistance);
+    registerSlider(ampRefDistanceSlider, &processor.amplitudeReferenceDistance);
     //[/UserPreSize]
 
     setSize (400, 500);
@@ -193,8 +193,8 @@ void ConfigPanel::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="ConfigPanel" componentName=""
-                 parentClasses="public PanelBase" constructorParams="PluginParams &amp;p"
-                 variableInitialisers="PanelBase(p), params(p)" snapPixels="8"
+                 parentClasses="public PanelBase" constructorParams="PluginAudioProcessor &amp;p"
+                 variableInitialisers="PanelBase(p), processor(p)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="1"
                  initialWidth="400" initialHeight="500">
   <BACKGROUND backgroundColour="ffffffff"/>

@@ -8,7 +8,7 @@
   ==============================================================================
 */
 
-#include "PluginProcessor.h"
+#include "PluginAudioProcessor.h"
 #include "HostParam.h"
 
 // UI header, should be hidden behind a factory
@@ -197,7 +197,7 @@ void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& m
         // get source input level
         float inputLevel;
         source->mute.get() ? inputLevel = 0.0f : inputLevel = buffer.getRMSLevel(0, 0, buffer.getNumSamples());
-        sourceLevel.setUI(Param::toDb(inputLevel));
+        sourceLevel.set(Param::toDb(inputLevel));
 
         // update host audio play head information to get transport state
         updateHostInfo();
@@ -223,8 +223,8 @@ void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& m
         }
 
         // get ssr output level
-        outputLevelLeft.setUI(Param::toDb(buffer.getRMSLevel(0, 0, buffer.getNumSamples())));
-        outputLevelRight.setUI(Param::toDb(buffer.getRMSLevel(1, 0, buffer.getNumSamples())));
+        outputLevelLeft.set(Param::toDb(buffer.getRMSLevel(0, 0, buffer.getNumSamples())));
+        outputLevelRight.set(Param::toDb(buffer.getRMSLevel(1, 0, buffer.getNumSamples())));
     }
     else
     {

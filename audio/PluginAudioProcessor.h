@@ -22,6 +22,12 @@
 /**
  * Common JUCE PluginProcessor. Derived from PluginParams for communication with UI.
  * The SSR is incorporated in this class.
+ *
+ * NOTE: For future addings of HRIR or prefilter files (for WFS) and further SSR renderers it is
+ * recommended to implement a function in which you can change renderers and files.
+ * Don't forget to use suspendProcessing() because the configurations can be time consuming
+ * and meanwhile the processBlock() could try to use a not available renderer callback!
+ * That function should be public to be accessible from the ConfigPanel.
  */
 class PluginAudioProcessor : public AudioProcessor, public PluginParams
 {
@@ -94,8 +100,8 @@ private:
     String createTempHRIRFile(double sRate);
 
     /**
-     * Update host information by updating information of host audio playhead. 
-     * This way you can get access to bpm or transport state of host.
+     * Update host information by updating information of host's audio playhead.
+     * See positionInfo in PluginParams to get access to bpm or transport state of the host.
      */
     void updateHostInfo();
 

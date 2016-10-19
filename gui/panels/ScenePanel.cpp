@@ -320,7 +320,7 @@ void ScenePanel::updateSourceOrientationAndPlaneWave(bool updateOrientation, boo
         params.sourceOrientation.setUI(ang);
     }
 
-    // upadte plane wave direction towards reference listener
+    // update plane wave direction towards reference listener
     if (updatePlaneWave)
     {
         sourceBackground->setPlaneWaveAngle(radiansToDegrees(angle));

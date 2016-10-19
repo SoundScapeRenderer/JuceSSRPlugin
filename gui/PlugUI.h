@@ -69,13 +69,6 @@ private:
 
     void timerCallback() override;
 
-    /**
-     * Show a configuration window to set amplitude_reference_distance.
-     * Later, this should be used to replace the complete SSR configuration
-     * like choosing rendering method and hrir or wfs_prefilter files etc.
-     */
-    void showConfigWindow();
-
 //#define DEBUG_TEXT
 #ifdef DEBUG_TEXT
     ScopedPointer<Label> debugText;
@@ -91,7 +84,6 @@ private:
     ScopedPointer<Label> saveLoadLabel;
     ScopedPointer<Label> levelOutLabel;
     ScopedPointer<Label> zoomLabel;
-    ScopedPointer<ImageButton> configButton;
 
 
     //==============================================================================

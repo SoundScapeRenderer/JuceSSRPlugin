@@ -22,6 +22,8 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include "JuceHeader.h"
+
+#include "PluginAudioProcessor.h"
 #include "PanelBase.h"
 //[/Headers]
 
@@ -41,7 +43,7 @@ class ConfigPanel  : public PanelBase,
 {
 public:
     //==============================================================================
-    ConfigPanel (PluginParams &p);
+    ConfigPanel (PluginAudioProcessor &p);
     ~ConfigPanel();
 
     //==============================================================================
@@ -57,7 +59,7 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    PluginParams &params;
+    PluginAudioProcessor &processor; //!< plugin processor
     //[/UserVariables]
 
     //==============================================================================

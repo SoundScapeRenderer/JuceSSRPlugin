@@ -194,7 +194,7 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\audio\PluginParams.cpp"/>
-    <ClCompile Include="..\..\..\audio\PluginProcessor.cpp"/>
+    <ClCompile Include="..\..\..\audio\PluginAudioProcessor.cpp"/>
     <ClCompile Include="..\..\..\gui\panels\ConfigPanel.cpp"/>
     <ClCompile Include="..\..\..\gui\panels\ScenePanel.cpp"/>
     <ClCompile Include="..\..\..\gui\panels\InfoPanel.cpp"/>
@@ -1403,7 +1403,7 @@
     <ClInclude Include="..\..\..\audio\HostParam.h"/>
     <ClInclude Include="..\..\..\audio\Param.h"/>
     <ClInclude Include="..\..\..\audio\PluginParams.h"/>
-    <ClInclude Include="..\..\..\audio\PluginProcessor.h"/>
+    <ClInclude Include="..\..\..\audio\PluginAudioProcessor.h"/>
     <ClInclude Include="..\..\..\gui\components\ListenerBackgroundComponent.h"/>
     <ClInclude Include="..\..\..\gui\components\ListenerComponent.h"/>
     <ClInclude Include="..\..\..\gui\components\OutputLevelComponent.h"/>

@@ -226,10 +226,10 @@
       <FILE id="rqOpUo" name="PluginParams.cpp" compile="1" resource="0"
             file="../audio/PluginParams.cpp"/>
       <FILE id="u7KY3L" name="PluginParams.h" compile="0" resource="0" file="../audio/PluginParams.h"/>
-      <FILE id="LG4FT5" name="PluginProcessor.cpp" compile="1" resource="0"
-            file="../audio/PluginProcessor.cpp"/>
-      <FILE id="iH8ltO" name="PluginProcessor.h" compile="0" resource="0"
-            file="../audio/PluginProcessor.h"/>
+      <FILE id="LG4FT5" name="PluginAudioProcessor.cpp" compile="1" resource="0"
+            file="../audio/PluginAudioProcessor.cpp"/>
+      <FILE id="iH8ltO" name="PluginAudioProcessor.h" compile="0" resource="0"
+            file="../audio/PluginAudioProcessor.h"/>
     </GROUP>
     <GROUP id="{F6382FEF-D578-65A9-AE2B-732BBA4674EA}" name="gui">
       <GROUP id="{AC96C688-C775-C0D5-9C18-BF4B4143B837}" name="components">

@@ -18,7 +18,6 @@
 */
 
 //[Headers] You can add your own extra header files here...
-#include "panels/ConfigPanel.h"
 //[/Headers]
 
 #include "PlugUI.h"
@@ -79,13 +78,6 @@ PlugUI::PlugUI (PluginParams &p)
     zoomLabel->setColour (TextEditor::textColourId, Colours::black);
     zoomLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (configButton = new ImageButton ("config button"));
-    configButton->addListener (this);
-
-    configButton->setImages (false, true, true,
-                             ImageCache::getFromMemory (BinaryData::settings_icon_png, BinaryData::settings_icon_pngSize), 1.000f, Colour (0x00000000),
-                             ImageCache::getFromMemory (BinaryData::settings_icon_png, BinaryData::settings_icon_pngSize), 1.000f, Colour (0x00000000),
-                             ImageCache::getFromMemory (BinaryData::settings_icon_png, BinaryData::settings_icon_pngSize), 1.000f, Colour (0x00000000));
 
     //[UserPreSize]
 #ifdef DEBUG_TEXT
@@ -129,7 +121,6 @@ PlugUI::~PlugUI()
     saveLoadLabel = nullptr;
     levelOutLabel = nullptr;
     zoomLabel = nullptr;
-    configButton = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -164,7 +155,6 @@ void PlugUI::resized()
     saveLoadLabel->setBounds (75, 613, 80, 24);
     levelOutLabel->setBounds (490, 613, 80, 24);
     zoomLabel->setBounds (740, 613, 80, 24);
-    configButton->setBounds (27, 610, 30, 30);
     //[UserResized] Add your own custom resize handling here..
 #ifdef DEBUG_TEXT
     debugText->setBounds(685, 15, 255, 625);
@@ -205,12 +195,6 @@ void PlugUI::buttonClicked (Button* buttonThatWasClicked)
         params.writeXMLPatchStandalone();
         //[/UserButtonCode_saveButton]
     }
-    else if (buttonThatWasClicked == configButton)
-    {
-        //[UserButtonCode_configButton] -- add your button handler code here..
-        showConfigWindow();
-        //[/UserButtonCode_configButton]
-    }
 
     //[UserbuttonClicked_Post]
     //[/UserbuttonClicked_Post]
@@ -222,22 +206,6 @@ void PlugUI::buttonClicked (Button* buttonThatWasClicked)
 void PlugUI::resizeScenePanel()
 {
     scene->resized();
-}
-
-void PlugUI::showConfigWindow()
-{
-    // from showAudioSettingsDialog() in juce_StandaloneFilterWindow.h
-    DialogWindow::LaunchOptions config;
-    config.content.setOwned(new ConfigPanel(params));
-    config.content->setSize(400, 300);
-
-    config.dialogTitle = TRANS("Plugin Configurations");
-    config.escapeKeyTriggersCloseButton = true;
-    config.useNativeTitleBar = true;
-    config.resizable = false;
-    config.componentToCentreAround = this;
-
-    config.launchAsync();
 }
 
 void PlugUI::timerCallback()
@@ -323,13 +291,6 @@ BEGIN_JUCER_METADATA
          edBkgCol="0" labelText="zoom:" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="34"/>
-  <IMAGEBUTTON name="config button" id="619f31078ee974fc" memberName="configButton"
-               virtualName="" explicitFocusOrder="0" pos="27 610 30 30" buttonText="config button"
-               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
-               resourceNormal="BinaryData::settings_icon_png" opacityNormal="1"
-               colourNormal="0" resourceOver="BinaryData::settings_icon_png"
-               opacityOver="1" colourOver="0" resourceDown="BinaryData::settings_icon_png"
-               opacityDown="1" colourDown="0"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

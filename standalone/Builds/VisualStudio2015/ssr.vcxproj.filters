@@ -424,7 +424,7 @@
     <ClCompile Include="..\..\..\audio\PluginParams.cpp">
       <Filter>ssr\audio</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\audio\PluginProcessor.cpp">
+    <ClCompile Include="..\..\..\audio\PluginAudioProcessor.cpp">
       <Filter>ssr\audio</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\gui\panels\ConfigPanel.cpp">
@@ -1890,7 +1890,7 @@
     <ClInclude Include="..\..\..\audio\PluginParams.h">
       <Filter>ssr\audio</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\audio\PluginProcessor.h">
+    <ClInclude Include="..\..\..\audio\PluginAudioProcessor.h">
       <Filter>ssr\audio</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\gui\components\ListenerBackgroundComponent.h">

@@ -2,12 +2,12 @@
 
 #include "JuceHeader.h"
 
-#include <atomic>
 #include "Param.h"
 
 /**
- * Parameter class for communication between host and plugin. This mainly implements JUCE 
- * AudioProcessorParameter functions. If necessary, go there for further documentation.
+ * Parameter class for communication between host and plugin. This mainly implements JUCE's
+ * AudioProcessorParameter functions and maps them onto our Param.h class.
+ * If necessary, go there for further documentation.
  */
 template<typename _par>
 class HostParam : public AudioProcessorParameter, public Param::Listener
@@ -53,7 +53,7 @@ public:
     void setValue(float newValue) override
     {
         jassert(newValue >= 0.0f && newValue <= 1.0f);
-        param.setHost(hostToEngine(newValue));
+        param.set(hostToEngine(newValue), true);
     }
     
     /**

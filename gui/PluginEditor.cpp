@@ -9,22 +9,33 @@
 */
 
 #include "PluginEditor.h"
+#include "panels/ConfigPanel.h"
 
 //==============================================================================
 PluginAudioProcessorEditor::PluginAudioProcessorEditor (PluginAudioProcessor& p)
     : AudioProcessorEditor (&p)
     , processor (p)
 {
+    configImg = ImageCache::getFromMemory(BinaryData::settings_icon_png, BinaryData::settings_icon_pngSize);
+
+    addAndMakeVisible(ui = new PlugUI(p));
+
+    addAndMakeVisible(configButton = new ImageButton("config button"));
+    configButton->addListener(this);
+    configButton->setImages(false, true, true,
+                            configImg, 1.000f, Colour(0x00000000),
+                            configImg, 1.000f, Colour(0x00000000),
+                            configImg, 1.000f, Colour(0x00000000));
+
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (950, 650);
-
-    addAndMakeVisible(ui = new PlugUI(p));
 }
 
 PluginAudioProcessorEditor::~PluginAudioProcessorEditor()
 {
     ui = nullptr;
+    configButton = nullptr;
 }
 
 //==============================================================================
@@ -38,4 +49,32 @@ void PluginAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
+    ui->setBounds(0, 0, 950, 650);
+    configButton->setBounds(27, 610, 30, 30);
+}
+
+//==============================================================================
+
+void PluginAudioProcessorEditor::buttonClicked(Button* buttonThatWasClicked)
+{
+    if (buttonThatWasClicked == configButton)
+    {
+        showConfigWindow();
+    }
+}
+
+void PluginAudioProcessorEditor::showConfigWindow()
+{
+    // from showAudioSettingsDialog() in juce_StandaloneFilterWindow.h
+    DialogWindow::LaunchOptions config;
+    config.content.setOwned(new ConfigPanel(processor));
+    config.content->setSize(400, 300);
+
+    config.dialogTitle = TRANS("Plugin Configurations");
+    config.escapeKeyTriggersCloseButton = true;
+    config.useNativeTitleBar = true;
+    config.resizable = false;
+    config.componentToCentreAround = this;
+
+    config.launchAsync();
 }

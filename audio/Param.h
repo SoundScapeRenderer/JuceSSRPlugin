@@ -8,6 +8,7 @@
 /**
  * Base parameter class for float values. Uses a dirty flag to handle synchronization of the UI
  * and listener callbacks that can be used to notify host of changes.
+ * Needs some atomic member to prevent state inconsistencies.
  */
 class Param
 {
@@ -57,11 +58,15 @@ public:
 
     /**
      * Set param value if lock is disabled.
+     * Limits new value between minimum an maximum.
      */
-    void set(float f) { if (!lock_.load()) { val_.store(f); } }
+    void set(float f) { if (!lock_.load()) { val_.store(jmin(jmax(min_, f), max_)); } }
 
     /**
      * Set param value and dirtyFlag if lock is disabled.
+     * Limits new value between minimum an maximum.
+     * Use this if values were changed from the host or
+     * somewhere else and UI needs synchronization handling.
      * @param f new value
      * @param setDirty exchange dirtyFlag to true or false
      */
@@ -69,7 +74,7 @@ public:
     {
         if (!lock_.load())
         {
-            val_.store(f);
+            val_.store(jmin(jmax(min_, f), max_));
             uiDirty.exchange(setDirty);
         }
     }
@@ -87,7 +92,7 @@ public:
      */
     virtual void setUI(float f, bool notifyHost = true)
     {
-        set(jmin(jmax(min_, f), max_));
+        set(f);
         if (notifyHost) { listener.call(&Listener::paramUIChanged); }
     }
 
@@ -96,16 +101,6 @@ public:
     virtual float getDefaultUI() const { return getDefault(); }
     virtual String getUIString() const { return getUIString(get()); }
     virtual String getUIString(float v) const { return String::formatted("%f", v); }
-
-    /**
-     * Use this to set param values from host. This just sets a new value
-     * and sets the dirty flag to true for further handling of the UI.
-     */
-    void setHost(float f)
-    {
-        setUI(f, false);
-        uiDirty.exchange(true);
-    }
 
     /**
      * Check whether this param's UI is dirty. Set dirty flag to false, after checking.
@@ -119,7 +114,10 @@ public:
 
     //==============================================================================
 
-    /// listener class to be used to notify host of changes of the UI
+    /**
+     * Listener class to be used to register value changes of a parameter.
+     * Use this to notify host of parameter changes of the plugin, see HostParam.h.
+     */
     class Listener
     {
     public:
@@ -167,7 +165,9 @@ protected:
 
 /**
  * Derived parameter class from Param with a static number of steps for enums. _enum must be of type int and
- * needs _enum::nSteps as a value which is the number of steps.
+ * needs _enum::nSteps as a value which is the number of steps, see PluginParams.h.
+ * A label can be set to give each step a concrete name.
+ * The step value is an atomic member to prevent state inconsistencies.
  */
 template<typename _enum>
 class ParamStepped : public Param 
@@ -206,6 +206,7 @@ public:
 
     /**
      * Set step param value and notify registered listener of changes.
+     * Limits new value between minimum an maximum.
      * @param f new step value as flaot, bounds are checked
      * @param notifyHost if true then call listener callback
      */
