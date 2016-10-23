@@ -80,7 +80,7 @@ PlugUI::PlugUI (PluginParams &p)
 
 
     //[UserPreSize]
-#ifdef DEBUG_TEXT
+#if DEBUG_TEXT == 1
     addAndMakeVisible(debugText = new Label("debug", String::empty));
     debugText->setFont(Font(15.00f, Font::plain));
     debugText->setJustificationType(Justification::topLeft);
@@ -124,7 +124,7 @@ PlugUI::~PlugUI()
 
 
     //[Destructor]. You can add your own custom destruction code here..
-#ifdef DEBUG_TEXT
+#if DEBUG_TEXT == 1
     debugText = nullptr;
 #endif
     //[/Destructor]
@@ -156,7 +156,7 @@ void PlugUI::resized()
     levelOutLabel->setBounds (490, 613, 80, 24);
     zoomLabel->setBounds (740, 613, 80, 24);
     //[UserResized] Add your own custom resize handling here..
-#ifdef DEBUG_TEXT
+#if DEBUG_TEXT == 1
     debugText->setBounds(685, 15, 255, 625);
 #endif
     //[/UserResized]
@@ -213,8 +213,8 @@ void PlugUI::timerCallback()
     PanelBase::timerCallback();
     outputLevel->refreshOutputLevel(params.outputLevelLeft.getUI(), params.outputLevelRight.getUI());
 
-#ifdef DEBUG_TEXT
-    String isPlaying = params.positionInfo[params.getAudioIndex()].isPlaying ? "true" : "false";
+#if DEBUG_TEXT == 1
+    String isPlaying = params.positionInfo[params.getGUIIndex()].isPlaying ? "true" : "false";
 
     debugText->setText(
         "SourceX = " + String(params.sourceX.get())

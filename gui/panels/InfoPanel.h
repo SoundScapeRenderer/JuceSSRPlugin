@@ -22,6 +22,7 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include "JuceHeader.h"
+#include "PluginParams.h"
 //[/Headers]
 
 
@@ -38,7 +39,7 @@ class InfoPanel  : public Component
 {
 public:
     //==============================================================================
-    InfoPanel ();
+    InfoPanel (PluginParams &p);
     ~InfoPanel();
 
     //==============================================================================
@@ -52,9 +53,15 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
+    PluginParams &params;
     //[/UserVariables]
 
     //==============================================================================
+    ScopedPointer<Label> infoLabel;
+    ScopedPointer<HyperlinkButton> ssrHyperlink;
+    ScopedPointer<Label> authorLabel;
+    ScopedPointer<Label> versionLabel;
+    ScopedPointer<Drawable> drawable1;
 
 
     //==============================================================================

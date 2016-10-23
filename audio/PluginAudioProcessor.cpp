@@ -16,8 +16,16 @@
 
 //==============================================================================
 PluginAudioProcessor::PluginAudioProcessor()
+#if PERFORMANCE_TEST_JUCESSR == 1
+    : pcProcessing("processing", 100, File(File::getSpecialLocation(
+        File::SpecialLocationType::userDesktopDirectory).getFullPathName() + "/pcProcessing.txt"))
+    , pcRendererSetup("rendererSetup", 100, File(File::getSpecialLocation(
+        File::SpecialLocationType::userDesktopDirectory).getFullPathName() + "/pcRendererSetup.txt"))
+    , pcRendering("rendering", 100, File(File::getSpecialLocation(
+        File::SpecialLocationType::userDesktopDirectory).getFullPathName() + "/pcRendering.txt"))
+#endif
 {
-    // add parameters that should be accessible for the host
+    // add parameters that should be accessible for the host to a internal list
     // NOTE: make sure automation recordings in host are not interpolated for more
     // precision, especially for parameters with a wide value range
     // e.g. in Cubase by setting reduction level to 0%
@@ -144,7 +152,7 @@ void PluginAudioProcessor::prepareToPlay(double sRate, int samplesPerBlock)
         renderer.reset(new ssr::BinauralRenderer(renderer_params));
         renderer->load_reproduction_setup();
 
-        // add mono input source
+        // add only one input source
         apf::parameter_map sourceParam;
         sourceID = renderer->add_source(sourceParam);
 
@@ -164,6 +172,9 @@ void PluginAudioProcessor::releaseResources()
 
 void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
+#if PERFORMANCE_TEST_JUCESSR == 1
+    pcProcessing.start();
+#endif
     ignoreUnused(midiMessages);
 
     if (setupSuccessful)
@@ -177,52 +188,64 @@ void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& m
         for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
             buffer.clear(i, 0, buffer.getNumSamples());
 
-        // set listener parameter
-        Position listenerPos = Position(referenceX.get(), referenceY.get());
-        renderer->state.reference_position.setRT(listenerPos);
-        renderer->state.reference_orientation.setRT(Orientation(referenceOrientation.get() + refOrientationOffset));
-        renderer->state.amplitude_reference_distance.setRT(amplitudeReferenceDistance.get());
-
-        // set source parameter
-        ssr::RendererBase<ssr::BinauralRenderer>::Source *source = renderer->get_source(sourceID);
-        Position sourcePos = Position(sourceX.get(), sourceY.get());
-        source->position.setRT(sourcePos);
-        source->orientation.setRT((listenerPos - sourcePos).orientation());
-        Source::model_t type;
-        sourceType.getStep() == eSourceType::ePlane ? type = Source::model_t::plane : type = Source::model_t::point;
-        source->model.setRT(type);
-        source->mute.setRT(sourceMute.getStep() == eOnOffState::eOn);
-        source->gain.setRT(Param::fromDb(sourceVol.get()));
-
-        // get source input level
-        float inputLevel;
-        source->mute.get() ? inputLevel = 0.0f : inputLevel = buffer.getRMSLevel(0, 0, buffer.getNumSamples());
-        sourceLevel.set(Param::toDb(inputLevel));
-
         // update host audio play head information to get transport state
         updateHostInfo();
-        AudioPlayHead::CurrentPositionInfo hostPlayHead = positionInfo[getAudioIndex()];
+        AudioPlayHead::CurrentPositionInfo hostPlayHead = positionInfo[getGUIIndex()];
 
-        // call internal ssr process function of renderer only if host is playing
+        // update plugin source input level
+        bool sourceIsMuted = sourceMute.getStep() == eOnOffState::eOn;
+        float inputLevel;
+        sourceIsMuted ? inputLevel = 0.0f : inputLevel = buffer.getRMSLevel(0, 0, buffer.getNumSamples());
+        sourceLevel.set(Param::toDb(inputLevel));
+
+        // update SSR data and call process function of SSR renderer only if host is playing
         if (hostPlayHead.isPlaying)
         {
+#if PERFORMANCE_TEST_JUCESSR == 1
+            pcRendererSetup.start();
+#endif
+            // update listener parameter
+            Position listenerPos = Position(referenceX.get(), referenceY.get());
+            renderer->state.reference_position.setRT(listenerPos);
+            renderer->state.reference_orientation.setRT(Orientation(referenceOrientation.get() + refOrientationOffset));
+            renderer->state.amplitude_reference_distance.setRT(amplitudeReferenceDistance.get());
+
+            // update source parameter
+            ssr::RendererBase<ssr::BinauralRenderer>::Source *source = renderer->get_source(sourceID);
+            Position sourcePos = Position(sourceX.get(), sourceY.get());
+            source->position.setRT(sourcePos);
+            source->orientation.setRT((listenerPos - sourcePos).orientation());
+            Source::model_t type;
+            sourceType.getStep() == eSourceType::ePlane ? type = Source::model_t::plane : type = Source::model_t::point;
+            source->model.setRT(type);
+            source->mute.setRT(sourceIsMuted);
+            source->gain.setRT(Param::fromDb(sourceVol.get()));
+#if PERFORMANCE_TEST_JUCESSR == 1
+            pcRendererSetup.stop();
+            pcRendering.start();
+#endif
+
+            // call internal process function of SSR renderer
             renderer->audio_callback(getBlockSize()
                 , buffer.getArrayOfWritePointers() // NOTE: write = read pointer, read is just const
                 , buffer.getArrayOfWritePointers());
-        }
+#if PERFORMANCE_TEST_JUCESSR == 1
+            pcRendering.stop();
+#endif
 
-        // normalize volume due to missing normalization in the convolution of the SSR renderer
-        if (getSampleRate() != 44100.0)
-        {
-            // reference is volume at sample rate of 44.1 kHz, for now
-            float gain = (static_cast<float>(44100.0 / getSampleRate()));
-            for (int c = 0; c < buffer.getNumChannels(); ++c)
+            // normalize volume due to missing normalization in the convolution of the SSR renderer
+            if (getSampleRate() != 44100.0)
             {
-                FloatVectorOperations::multiply(buffer.getWritePointer(c, 0), gain, buffer.getNumSamples());
+                // reference is volume at sample rate of 44.1 kHz, for now
+                float gain = (static_cast<float>(44100.0 / getSampleRate()));
+                for (int c = 0; c < buffer.getNumChannels(); ++c)
+                {
+                    FloatVectorOperations::multiply(buffer.getWritePointer(c, 0), gain, buffer.getNumSamples());
+                }
             }
         }
 
-        // get ssr output level
+        // update plugin output level
         outputLevelLeft.set(Param::toDb(buffer.getRMSLevel(0, 0, buffer.getNumSamples())));
         outputLevelRight.set(Param::toDb(buffer.getRMSLevel(1, 0, buffer.getNumSamples())));
     }
@@ -230,6 +253,10 @@ void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& m
     {
         buffer.clear();
     }
+
+#if PERFORMANCE_TEST_JUCESSR == 1
+    pcProcessing.stop();
+#endif
 }
 
 //==============================================================================
@@ -325,7 +352,10 @@ void PluginAudioProcessor::updateHostInfo()
     // use double buffering
     if (AudioPlayHead* pHead = getPlayHead())
     {
-        if (pHead->getCurrentPosition(positionInfo[getAudioIndex()])) {
+        // save newest info in positionInfo[getAudioIndex()] and swap 
+        // indexes if successful, otherwise reset it
+        if (pHead->getCurrentPosition(positionInfo[getAudioIndex()]))
+        {
             positionIndex.exchange(getGUIIndex());
             return;
         }

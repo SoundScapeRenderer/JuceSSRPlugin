@@ -130,13 +130,15 @@ public:
 private:
     Colour levelColour = Colours::green;
     float skewFactor = 1.0f;
+
+    /// all values below arre in decibel
     float currentLevelLeft = -96.0f;
     float currentLevelRight = -96.0f;
 
     const float minLevel = -96.0f;
     const float maxLevel = 12.0f;
     const float clipLevel = 0.0f;
-    const float decaySpeed = 1.0f;
+    const float decaySpeed = 0.5f;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OutputLevelComponent)
 };

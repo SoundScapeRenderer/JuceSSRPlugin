@@ -108,8 +108,9 @@ public:
     //==============================================================================
 
     /** 
-     * Current position information of audio playhead using double buffering.
-     * Call positionInfo[getAudioIndex()] to get the newest info.
+     * Current position information of audio playhead. Should be updated using
+     * double-buffering. Save newest info in positionInfo[getAudioIndex()] then swap
+     * indexes. Call positionInfo[getGUIIndex()] to always get valid data.
      */
     std::array<AudioPlayHead::CurrentPositionInfo, 2> positionInfo;
 

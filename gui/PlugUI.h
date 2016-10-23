@@ -69,8 +69,8 @@ private:
 
     void timerCallback() override;
 
-//#define DEBUG_TEXT
-#ifdef DEBUG_TEXT
+#define DEBUG_TEXT 0
+#if DEBUG_TEXT == 1
     ScopedPointer<Label> debugText;
 #endif
     //[/UserVariables]

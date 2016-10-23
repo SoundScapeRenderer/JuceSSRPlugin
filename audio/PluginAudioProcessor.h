@@ -104,6 +104,13 @@ private:
      * See positionInfo in PluginParams to get access to bpm or transport state of the host.
      */
     void updateHostInfo();
+    
+#define PERFORMANCE_TEST_JUCESSR 0
+#if PERFORMANCE_TEST_JUCESSR == 1
+    PerformanceCounter pcProcessing; /// whole processing
+    PerformanceCounter pcRendererSetup; /// renderer setup
+    PerformanceCounter pcRendering; /// rendering
+#endif
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginAudioProcessor)
 };

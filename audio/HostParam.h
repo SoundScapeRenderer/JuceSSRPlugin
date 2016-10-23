@@ -53,7 +53,7 @@ public:
     void setValue(float newValue) override
     {
         jassert(newValue >= 0.0f && newValue <= 1.0f);
-        param.set(hostToEngine(newValue), true);
+        param.setHost(hostToEngine(newValue));
     }
     
     /**

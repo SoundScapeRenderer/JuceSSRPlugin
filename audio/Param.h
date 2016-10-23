@@ -39,7 +39,7 @@ public:
 
     /// string getter for name, host tag, serialization tag and unit
     const String& getName() const { return name_; }
-    const String& getSerializationTag() const { return prefix_.isEmpty() ? serializationTag_ : prefix_ + serializationTag_; }
+    String getSerializationTag() const { return prefix_.isEmpty() ? serializationTag_ : prefix_ + " " + serializationTag_; }
     String getHostTag() const { return prefix_.isEmpty() ? hostTag_ : prefix_ + " " + hostTag_; }
     const String& getUnit() const { return unit_; }
 
@@ -65,7 +65,7 @@ public:
     /**
      * Set param value and dirtyFlag if lock is disabled.
      * Limits new value between minimum an maximum.
-     * Use this if values were changed from the host or
+     * Use this if values were changed by the host or
      * somewhere else and UI needs synchronization handling.
      * @param f new value
      * @param setDirty exchange dirtyFlag to true or false
@@ -94,6 +94,16 @@ public:
     {
         set(f);
         if (notifyHost) { listener.call(&Listener::paramUIChanged); }
+    }
+
+    /**
+     * Use this to set param values from host. This sets a new value via setUI
+     * and sets the dirty flag to true for further handling on the UI.
+     */
+    void setHost(float f)
+    {
+        setUI(f, false);
+        uiDirty.exchange(true);
     }
 
     /// virtual getter for values and strings

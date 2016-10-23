@@ -126,13 +126,14 @@ public:
     //==============================================================================
 
 private:
+    /// all values below arre in decibel
     double defaultValue = 0.0f;
 
     float currentLevel = -96.0f;
     const float minLevel = -96.0f;
     const float maxLevel = 12.0f;
     const float clipLevel = 0.0f;
-    const float decaySpeed = 1.0f;
+    const float decaySpeed = 0.5f;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VolLevelSlider)
 };

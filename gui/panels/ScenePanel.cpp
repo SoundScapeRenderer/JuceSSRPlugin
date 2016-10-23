@@ -28,7 +28,7 @@ ScenePanel::ScenePanel(PluginParams &p)
 
     addChildComponent(infoWindow = new ResizableWindow("info window", Colours::white, false));
     infoWindow->setAlwaysOnTop(true);
-    infoWindow->setContentOwned(new InfoPanel(), true);
+    infoWindow->setContentOwned(new InfoPanel(params), true);
 
     // create listener components
     addAndMakeVisible(listenerBackground = new ListenerBackgroundComponent());
@@ -43,7 +43,7 @@ ScenePanel::ScenePanel(PluginParams &p)
     sourceVolSlider->setRange(-96, 12, 0.01);
     sourceVolSlider->setTextBoxStyle(Slider::NoTextBox, false, 80, 20);
     sourceVolSlider->addListener(this);
-    sourceVolSlider->setSkewFactor(3);
+    sourceVolSlider->setSkewFactor(3.0);
     sourceVolSlider->setColour(Slider::backgroundColourId, PluginParams::sourceLevelColour);
     sourceVolSlider->setColour(Slider::textBoxOutlineColourId, PluginParams::sourceColourBlue);
     sourceVolSlider->setDefaultSliderValue(params.sourceVol.getDefaultUI());
@@ -70,7 +70,8 @@ ScenePanel::ScenePanel(PluginParams &p)
     setSize(920, 590);
 
     // register listener and source, must be called after size of scene has been set
-    registerListener(refListener, &params.referenceX, &params.referenceY, &params.referenceOrientation, std::bind(&ScenePanel::repositionRefListener, this));
+    registerListener(refListener, &params.referenceX, &params.referenceY, &params.referenceOrientation,
+        std::bind(&ScenePanel::repositionRefListener, this), std::bind(&ScenePanel::rotateRefListener, this));
     registerSource(sourceNode, &params.sourceX, &params.sourceY, std::bind(&ScenePanel::repositionSource, this));
     registerSlider(sourceVolSlider, &params.sourceVol);
 }
@@ -98,7 +99,7 @@ void ScenePanel::paint(Graphics& g)
 void ScenePanel::resized()
 {
     logoButton->setBounds(20, 510, 70, 70);
-    infoWindow->setBounds(20, 20, 280, 490);
+    infoWindow->setBounds(20, 20, 300, 500);
 
     // set source and listener position according to their position parameters and scene drag offset
     int listenerSizeScaled = static_cast<int>(refListenerSize * params.currentZoom.getUI() / 100.0f);
@@ -211,9 +212,7 @@ void ScenePanel::mouseDrag(const MouseEvent& e)
         float newAngle = radiansToDegrees(listenerCenterPosition.getAngleToPoint(mousePosition));
 
         params.referenceOrientation.setUI(-newAngle);
-        refListener->updateListenerOrientation(-newAngle + params.refOrientationOffset);
-
-        updateSourceOrientationAndPlaneWave(true, false);
+        rotateRefListener();
     }
 }
 
@@ -270,6 +269,12 @@ void ScenePanel::repositionRefListener()
 
     // update plane wave direction
     updateSourceOrientationAndPlaneWave(true, true);
+}
+
+void ScenePanel::rotateRefListener()
+{
+    refListener->updateListenerOrientation(params.referenceOrientation.getUI() + params.refOrientationOffset);
+    updateSourceOrientationAndPlaneWave(true, false);
 }
 
 void ScenePanel::repositionSource()

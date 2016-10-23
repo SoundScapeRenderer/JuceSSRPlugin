@@ -11,6 +11,7 @@
 
 /**
  * Parent class for all panel components that make use of the dirtyFlag of PluginParams (e.g. for automation).
+ * Use this to synchronize backend changes on the UI.
  * The child components in these panels have to be registered with their corresponding parameter.
  */
 class PanelBase : public Component, protected Timer
@@ -38,24 +39,26 @@ protected:
      * @param posX x position of reference listener
      * @param posY y position of reference listener
      * @param ori reference listener orientation
-     * @param hook callback function that should correctly reposition reference listener component
+     * @param hookPos callback function that should correctly reposition reference listener component
+     * @param hookOri callback function that should correctly rotate reference listener component
      */
-    void registerListener(ListenerComponent *l, Param *posX, Param *posY, Param *ori, const tHookFn hook = tHookFn())
+    void registerListener(ListenerComponent *l, Param *posX, Param *posY, Param *ori, const tHookFn hookPos = tHookFn(), const tHookFn hookOri = tHookFn())
     {
         l->updateListenerOrientation(ori->getUI() + params.refOrientationOffset);
 
         listenerReg[l] = { posX, posY, ori };
-        if (hook)
+        if (hookPos || hookOri)
         {
-            postUpdateHook[l] = hook;
-            hook();
+            postUpdateHook[l] = { hookPos, hookOri };
+            hookPos();
+            hookOri();
         }
     }
 
     /**
      * Check whether registered parameters of listener have been changed and synchronize its
      * position and orientation on UI.
-     * Registered callback function is called whenever listener position is dirty.
+     * Registered callback functions are called whenever listener's position or orientation is dirty.
      */
     void updateDirtyListener()
     {
@@ -70,7 +73,7 @@ protected:
                 {
                     if (itHook != postUpdateHook.end())
                     {
-                        itHook->second();
+                        itHook->second[0]();
                     }
                 }
             }
@@ -79,6 +82,10 @@ protected:
             if (l2p.second[2]->isUIDirty())
             {
                 l2p.first->updateListenerOrientation(l2p.second[2]->getUI() + params.refOrientationOffset);
+                if (itHook != postUpdateHook.end())
+                {
+                    itHook->second[1]();
+                }
             }
         }
     }
@@ -97,7 +104,7 @@ protected:
         sourceReg[s] = { posX, posY };
         if (hook)
         {
-            postUpdateHook[s] = hook;
+            postUpdateHook[s] = { hook };
             hook();
         }
     }
@@ -118,7 +125,7 @@ protected:
                     auto itHook = postUpdateHook.find(s2p.first);
                     if (itHook != postUpdateHook.end())
                     {
-                        itHook->second();
+                        itHook->second[0]();
                     }
                 }
             }
@@ -141,7 +148,7 @@ protected:
         sliderReg[s] = { p };
         if (hook)
         {
-            postUpdateHook[s] = hook;
+            postUpdateHook[s] = { hook };
             hook();
         }
     }
@@ -162,7 +169,7 @@ protected:
             auto itHook = postUpdateHook.find(it->first);
             if (itHook != postUpdateHook.end())
             {
-                itHook->second();
+                itHook->second[0]();
             }
             return true;
         }
@@ -183,7 +190,7 @@ protected:
                 auto itHook = postUpdateHook.find(s2p.first);
                 if (itHook != postUpdateHook.end())
                 {
-                    itHook->second();
+                    itHook->second[0]();
                 }
             }
         }
@@ -206,7 +213,7 @@ protected:
         buttonReg[b] = { state };
         if (hook)
         {
-            postUpdateHook[b] = hook;
+            postUpdateHook[b] = { hook };
             hook();
         }
     }
@@ -229,7 +236,7 @@ protected:
             auto itHook = postUpdateHook.find(it->first);
             if (itHook != postUpdateHook.end())
             {
-                itHook->second();
+                itHook->second[0]();
             }
             return true;
         }
@@ -250,7 +257,7 @@ protected:
                 auto itHook = postUpdateHook.find(b2p.first);
                 if (itHook != postUpdateHook.end())
                 {
-                    itHook->second();
+                    itHook->second[0]();
                 }
             }
         }
@@ -277,7 +284,7 @@ protected:
         sourceTypeReg[c] = { type };
         if (hook)
         {
-            postUpdateHook[c] = hook;
+            postUpdateHook[c] = { hook };
             hook();
         }
     }
@@ -298,7 +305,7 @@ protected:
             auto itHook = postUpdateHook.find(it->first);
             if (itHook != postUpdateHook.end())
             {
-                itHook->second();
+                itHook->second[0]();
             }
             return true;
         }
@@ -319,7 +326,7 @@ protected:
                 auto itHook = postUpdateHook.find(c2p.first);
                 if (itHook != postUpdateHook.end())
                 {
-                    itHook->second();
+                    itHook->second[0]();
                 }
             }
         }
@@ -338,7 +345,7 @@ protected:
     }
 
     PluginParams &params;
-    std::map<Component*, tHookFn> postUpdateHook;
+    std::map<Component*, std::array<tHookFn, 2>> postUpdateHook;
     std::map<ListenerComponent*, std::array<Param*, 3>> listenerReg;
     std::map<SourceNodeComponent*, std::array<Param*, 2>> sourceReg;
     std::map<Slider*, Param*> sliderReg;

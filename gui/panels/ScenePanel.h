@@ -88,6 +88,12 @@ private:
     void repositionRefListener();
 
     /**
+     * Rotate refListener on the UI according to his orientation.
+     * After rotating call updateSourcePlaneWave().
+     */
+    void rotateRefListener();
+
+    /**
      * Reposition sourceNode and make sure sourceVolSlider, sourceBackground
      * and sourceMenu follow it.
      * After repositioning call updateSourcePlaneWave().
