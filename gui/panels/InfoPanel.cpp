@@ -34,8 +34,8 @@ InfoPanel::InfoPanel (PluginParams &p)
     //[/Constructor_pre]
 
     addAndMakeVisible (infoLabel = new Label ("infoLabel",
-                                              CharPointer_UTF8 ("This is an open-source audio plug-in for spatial hearing which is based on the\n"
-                                              "\n"
+                                              CharPointer_UTF8 ("This is an open-source audio plug-in for spatial hearing\n"
+                                              "based on the\n"
                                               "\n"
                                               "\n"
                                               "\n"
@@ -155,7 +155,7 @@ BEGIN_JUCER_METADATA
   </BACKGROUND>
   <LABEL name="infoLabel" id="78b17336deacfe88" memberName="infoLabel"
          virtualName="" explicitFocusOrder="0" pos="16 170 268 232" edTextCol="ff000000"
-         edBkgCol="0" labelText="This is an open-source audio plug-in for spatial hearing which is based on the&#10;&#10;&#10;&#10;&#10;&#10;It is deveoped at QULab at the Technische Universit&#228;t Berlin."
+         edBkgCol="0" labelText="This is an open-source audio plug-in for spatial hearing&#10;based on the&#10;&#10;&#10;&#10;&#10;It is deveoped at QULab at the Technische Universit&#228;t Berlin."
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
          fontname="Default font" fontsize="15" bold="0" italic="0" justification="9"/>
   <HYPERLINKBUTTON name="ssr hyperlink" id="2cee26e8706479ea" memberName="ssrHyperlink"
