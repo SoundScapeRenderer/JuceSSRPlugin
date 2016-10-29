@@ -29,6 +29,19 @@ public:
     {
     }
     
+    /**
+     * Very important!!! LookAndFeel_V1 crashes sometimes due to slider's drop shadow effect
+     * so do not use it.
+     * Crash happens a lot when more than one instance of the plugin is used 
+     * and an editor is opened or closed while at least one other editor is already opened.
+     * Shadow effect works only occasionally, anyways.
+     */
+    ImageEffectFilter* getSliderEffect(Slider& s)
+    {
+        ignoreUnused(s);
+        return nullptr;
+    }
+
     //==============================================================================
 
     Typeface::Ptr getTypefaceForFont(const Font & font)

@@ -162,6 +162,9 @@ void PluginAudioProcessor::prepareToPlay(double sRate, int samplesPerBlock)
     {
         setupSuccessful = false;
     }
+
+    // delete temporary HRIR file since it is not necessary anymore
+    tempHrirFile->deleteTemporaryFile();
 }
 
 void PluginAudioProcessor::releaseResources()
