@@ -20,18 +20,6 @@
     <Filter Include="ssr\assets\ssr data\impulse_responses\hrirs">
       <UniqueIdentifier>{AC672AD6-31C3-77EE-C7DA-B9758F01F03B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ssr\assets\ssr data\impulse_responses\wfs_prefilters">
-      <UniqueIdentifier>{E4BAB513-CA81-929C-4BCA-0801707EAEF9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ssr\assets\ssr data\matlab_scripts">
-      <UniqueIdentifier>{6EDF1175-8296-7815-FCCA-70C23E297403}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ssr\assets\ssr data\reproduction_setups">
-      <UniqueIdentifier>{5AB80E80-FC54-63EA-854E-E334FF2F0790}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ssr\assets\ssr data\scenes">
-      <UniqueIdentifier>{95169A6B-2D44-1537-138C-C8F04C37CB9A}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ssr\audio">
       <UniqueIdentifier>{E2FD0048-617A-E5EF-BC5C-7B61D8C8C5A2}</UniqueIdentifier>
     </Filter>
@@ -361,21 +349,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\assets\ssr data\matlab_scripts\make_wfs_prefilter.m">
-      <Filter>ssr\assets\ssr data\matlab_scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\assets\ssr data\matlab_scripts\prepare_hrirs_kemar.m">
-      <Filter>ssr\assets\ssr data\matlab_scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr src\audioplayer.cpp">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr src\audiorecorder.cpp">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr src\configuration.cpp">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\audio\ssr src\directionalpoint.cpp">
       <Filter>ssr\audio\ssr src</Filter>
     </ClCompile>
@@ -383,48 +356,6 @@
       <Filter>ssr\audio\ssr src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\audio\ssr src\position.cpp">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr src\scene.cpp">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr src\ssr_aap.cpp">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr src\ssr_binaural.cpp">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr src\ssr_brs.cpp">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr src\ssr_generic.cpp">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr src\ssr_global.cpp">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr src\ssr_nfc_hoa.cpp">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr src\ssr_vbap.cpp">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr src\ssr_wfs.cpp">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr src\trackerintersense.cpp">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr src\trackerpolhemus.cpp">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr src\trackerrazor.cpp">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr src\trackervrpn.cpp">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\audio\ssr src\xmlparser.cpp">
       <Filter>ssr\audio\ssr src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\audio\PluginParams.cpp">
@@ -1710,12 +1641,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\audio\apf\biquad.h">
-      <Filter>ssr\audio\apf</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\apf\blockdelayline.h">
-      <Filter>ssr\audio\apf</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\audio\apf\combine_channels.h">
       <Filter>ssr\audio\apf</Filter>
     </ClInclude>
@@ -1728,12 +1653,6 @@
     <ClInclude Include="..\..\..\audio\apf\convolver.h">
       <Filter>ssr\audio\apf</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\audio\apf\default_thread_policy.h">
-      <Filter>ssr\audio\apf</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\apf\denormalprevention.h">
-      <Filter>ssr\audio\apf</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\audio\apf\dummy_thread_policy.h">
       <Filter>ssr\audio\apf</Filter>
     </ClInclude>
@@ -1743,25 +1662,13 @@
     <ClInclude Include="..\..\..\audio\apf\iterator.h">
       <Filter>ssr\audio\apf</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\audio\apf\jack_policy.h">
-      <Filter>ssr\audio\apf</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\apf\jackclient.h">
-      <Filter>ssr\audio\apf</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\audio\apf\lockfreefifo.h">
       <Filter>ssr\audio\apf</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\audio\apf\math.h">
       <Filter>ssr\audio\apf</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\audio\apf\mextools.h">
-      <Filter>ssr\audio\apf</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\audio\apf\mimoprocessor.h">
-      <Filter>ssr\audio\apf</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\apf\mimoprocessor_file_io.h">
       <Filter>ssr\audio\apf</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\audio\apf\misc.h">
@@ -1773,12 +1680,6 @@
     <ClInclude Include="..\..\..\audio\apf\pointer_policy.h">
       <Filter>ssr\audio\apf</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\audio\apf\portaudio_policy.h">
-      <Filter>ssr\audio\apf</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\apf\posix_thread_policy.h">
-      <Filter>ssr\audio\apf</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\audio\apf\rtlist.h">
       <Filter>ssr\audio\apf</Filter>
     </ClInclude>
@@ -1788,58 +1689,16 @@
     <ClInclude Include="..\..\..\audio\apf\sndfiletools.h">
       <Filter>ssr\audio\apf</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\audio\apf\stopwatch.h">
-      <Filter>ssr\audio\apf</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\audio\apf\stringtools.h">
       <Filter>ssr\audio\apf</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\aaprenderer.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\audioplayer.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\audiorecorder.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\audio\ssr src\binauralrenderer.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\brsrenderer.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\configuration.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\controller.h">
       <Filter>ssr\audio\ssr src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\audio\ssr src\directionalpoint.h">
       <Filter>ssr\audio\ssr src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\genericrenderer.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\hoacoefficients.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\laplace_coeffs_double.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\laplace_coeffs_float.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\loudspeaker.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\loudspeakerrenderer.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\audio\ssr src\maptools.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\nfchoarenderer.h">
       <Filter>ssr\audio\ssr src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\audio\ssr src\orientation.h">
@@ -1848,55 +1707,13 @@
     <ClInclude Include="..\..\..\audio\ssr src\position.h">
       <Filter>ssr\audio\ssr src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\posixpathtools.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\publisher.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\audio\ssr src\rendererbase.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\rendersubscriber.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\scene.h">
       <Filter>ssr\audio\ssr src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\audio\ssr src\source.h">
       <Filter>ssr\audio\ssr src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\audio\ssr src\ssr_global.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\subscriber.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\timetools.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\tracker.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\trackerintersense.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\trackerpolhemus.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\trackerrazor.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\trackervrpn.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\vbaprenderer.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\wfsrenderer.h">
-      <Filter>ssr\audio\ssr src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\audio\ssr src\xmlparser.h">
       <Filter>ssr\audio\ssr src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\audio\HostParam.h">
@@ -3386,75 +3203,6 @@
     <None Include="..\..\..\assets\ssr data\impulse_responses\hrirs\hrirs_fabian.wav">
       <Filter>ssr\assets\ssr data\impulse_responses\hrirs</Filter>
     </None>
-    <None Include="..\..\..\assets\ssr data\impulse_responses\hrirs\hrirs_fabian_documentation.pdf">
-      <Filter>ssr\assets\ssr data\impulse_responses\hrirs</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\impulse_responses\wfs_prefilters\wfs_prefilter_100_1300_44100.wav">
-      <Filter>ssr\assets\ssr data\impulse_responses\wfs_prefilters</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\impulse_responses\wfs_prefilters\wfs_prefilter_100_1300_48000.wav">
-      <Filter>ssr\assets\ssr data\impulse_responses\wfs_prefilters</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\impulse_responses\wfs_prefilters\wfs_prefilter_100_1800_44100.wav">
-      <Filter>ssr\assets\ssr data\impulse_responses\wfs_prefilters</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\impulse_responses\wfs_prefilters\wfs_prefilter_100_1800_48000.wav">
-      <Filter>ssr\assets\ssr data\impulse_responses\wfs_prefilters</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\impulse_responses\wfs_prefilters\wfs_prefilter_120_1500_44100.wav">
-      <Filter>ssr\assets\ssr data\impulse_responses\wfs_prefilters</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\reproduction_setups\2.0.asd">
-      <Filter>ssr\assets\ssr data\reproduction_setups</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\reproduction_setups\2.1.asd">
-      <Filter>ssr\assets\ssr data\reproduction_setups</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\reproduction_setups\5.1.asd">
-      <Filter>ssr\assets\ssr data\reproduction_setups</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\reproduction_setups\8channels.asd">
-      <Filter>ssr\assets\ssr data\reproduction_setups</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\reproduction_setups\asdf2html.xsl">
-      <Filter>ssr\assets\ssr data\reproduction_setups</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\reproduction_setups\circle.asd">
-      <Filter>ssr\assets\ssr data\reproduction_setups</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\reproduction_setups\loudspeaker_setup_with_nearly_all_features.asd">
-      <Filter>ssr\assets\ssr data\reproduction_setups</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\reproduction_setups\rostock_horizontal.asd">
-      <Filter>ssr\assets\ssr data\reproduction_setups</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\reproduction_setups\rounded_rectangle.asd">
-      <Filter>ssr\assets\ssr data\reproduction_setups</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\scenes\asdf2html.xsl">
-      <Filter>ssr\assets\ssr data\scenes</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\scenes\live_input.asd">
-      <Filter>ssr\assets\ssr data\scenes</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\asdf.xsd">
-      <Filter>ssr\assets\ssr data</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\local_ssr.sh">
-      <Filter>ssr\assets\ssr data</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\Makefile.am">
-      <Filter>ssr\assets\ssr data</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\ssr">
-      <Filter>ssr\assets\ssr data</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\ssr.conf.example">
-      <Filter>ssr\assets\ssr data</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\ssr.conf.local">
-      <Filter>ssr\assets\ssr data</Filter>
-    </None>
     <None Include="..\..\..\assets\DejaVuSansMono.ttf">
       <Filter>ssr\assets</Filter>
     </None>
@@ -3475,15 +3223,6 @@
     </None>
     <None Include="..\..\..\assets\soxHrir96000.wav">
       <Filter>ssr\assets</Filter>
-    </None>
-    <None Include="..\..\..\audio\ssr src\coding_style.txt">
-      <Filter>ssr\audio\ssr src</Filter>
-    </None>
-    <None Include="..\..\..\audio\ssr src\Doxyfile">
-      <Filter>ssr\audio\ssr src</Filter>
-    </None>
-    <None Include="..\..\..\audio\ssr src\Makefile.am">
-      <Filter>ssr\audio\ssr src</Filter>
     </None>
     <None Include="..\..\..\juce\modules\juce_audio_basics\juce_module_info">
       <Filter>Juce Modules\juce_audio_basics</Filter>

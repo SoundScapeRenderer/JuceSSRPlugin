@@ -15,12 +15,12 @@
 #include "PluginParams.h"
 
 #include "apf/pointer_policy.h"
-#include "apf/default_thread_policy.h"
+#include "apf/dummy_thread_policy.h"
 #include "ssr src/binauralrenderer.h"
 
 //==============================================================================
 /**
- * Common JUCE PluginProcessor. Derived from PluginParams for communication with UI.
+ * Implementing common JUCE PluginProcessor. Derived from PluginParams for communication with UI.
  * The SSR is incorporated in this class.
  */
 class PluginAudioProcessor : public AudioProcessor, public PluginParams

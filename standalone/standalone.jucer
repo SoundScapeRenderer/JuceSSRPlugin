@@ -41,53 +41,8 @@
           <GROUP id="{CE6BAAE5-2812-649C-EF49-B8FBC596A147}" name="hrirs">
             <FILE id="mDmWmq" name="hrirs_fabian.wav" compile="0" resource="1"
                   file="../assets/ssr data/impulse_responses/hrirs/hrirs_fabian.wav"/>
-            <FILE id="kJ3FJg" name="hrirs_fabian_documentation.pdf" compile="0"
-                  resource="0" file="../assets/ssr data/impulse_responses/hrirs/hrirs_fabian_documentation.pdf"/>
-          </GROUP>
-          <GROUP id="{305C4038-E375-6F9F-8B7A-FB9FFC3F01CC}" name="wfs_prefilters">
-            <FILE id="lPZTvX" name="wfs_prefilter_100_1300_44100.wav" compile="0"
-                  resource="0" file="../assets/ssr data/impulse_responses/wfs_prefilters/wfs_prefilter_100_1300_44100.wav"/>
-            <FILE id="P3aIMB" name="wfs_prefilter_100_1300_48000.wav" compile="0"
-                  resource="0" file="../assets/ssr data/impulse_responses/wfs_prefilters/wfs_prefilter_100_1300_48000.wav"/>
-            <FILE id="IC13LQ" name="wfs_prefilter_100_1800_44100.wav" compile="0"
-                  resource="0" file="../assets/ssr data/impulse_responses/wfs_prefilters/wfs_prefilter_100_1800_44100.wav"/>
-            <FILE id="fGiMZZ" name="wfs_prefilter_100_1800_48000.wav" compile="0"
-                  resource="0" file="../assets/ssr data/impulse_responses/wfs_prefilters/wfs_prefilter_100_1800_48000.wav"/>
-            <FILE id="tqhgH1" name="wfs_prefilter_120_1500_44100.wav" compile="0"
-                  resource="0" file="../assets/ssr data/impulse_responses/wfs_prefilters/wfs_prefilter_120_1500_44100.wav"/>
           </GROUP>
         </GROUP>
-        <GROUP id="{A8CFE084-E33C-0A95-56E6-0FB80AC8CC16}" name="matlab_scripts">
-          <FILE id="W7wdRa" name="make_wfs_prefilter.m" compile="0" resource="0"
-                file="../assets/ssr data/matlab_scripts/make_wfs_prefilter.m"/>
-          <FILE id="b0TfS7" name="prepare_hrirs_kemar.m" compile="0" resource="0"
-                file="../assets/ssr data/matlab_scripts/prepare_hrirs_kemar.m"/>
-        </GROUP>
-        <GROUP id="{6C2B2490-3D2F-31F8-FCC3-8F0C5DDF8BB4}" name="reproduction_setups">
-          <FILE id="T9NEs3" name="2.0.asd" compile="0" resource="0" file="../assets/ssr data/reproduction_setups/2.0.asd"/>
-          <FILE id="qV96gm" name="2.1.asd" compile="0" resource="0" file="../assets/ssr data/reproduction_setups/2.1.asd"/>
-          <FILE id="X8d6Gm" name="5.1.asd" compile="0" resource="0" file="../assets/ssr data/reproduction_setups/5.1.asd"/>
-          <FILE id="U8P3t2" name="8channels.asd" compile="0" resource="0" file="../assets/ssr data/reproduction_setups/8channels.asd"/>
-          <FILE id="hVpycd" name="asdf2html.xsl" compile="0" resource="0" file="../assets/ssr data/reproduction_setups/asdf2html.xsl"/>
-          <FILE id="UJJAaq" name="circle.asd" compile="0" resource="0" file="../assets/ssr data/reproduction_setups/circle.asd"/>
-          <FILE id="FLED03" name="loudspeaker_setup_with_nearly_all_features.asd"
-                compile="0" resource="0" file="../assets/ssr data/reproduction_setups/loudspeaker_setup_with_nearly_all_features.asd"/>
-          <FILE id="l8O0Mf" name="rostock_horizontal.asd" compile="0" resource="0"
-                file="../assets/ssr data/reproduction_setups/rostock_horizontal.asd"/>
-          <FILE id="SOQPeT" name="rounded_rectangle.asd" compile="0" resource="0"
-                file="../assets/ssr data/reproduction_setups/rounded_rectangle.asd"/>
-        </GROUP>
-        <GROUP id="{3ECA758E-5365-2968-927C-A997F0B85D6C}" name="scenes">
-          <FILE id="K3L7J0" name="asdf2html.xsl" compile="0" resource="0" file="../assets/ssr data/scenes/asdf2html.xsl"/>
-          <FILE id="IqlYTJ" name="live_input.asd" compile="0" resource="0" file="../assets/ssr data/scenes/live_input.asd"/>
-        </GROUP>
-        <FILE id="tl5zLW" name="asdf.xsd" compile="0" resource="0" file="../assets/ssr data/asdf.xsd"/>
-        <FILE id="ZIltKA" name="local_ssr.sh" compile="0" resource="0" file="../assets/ssr data/local_ssr.sh"/>
-        <FILE id="yc4e0Q" name="Makefile.am" compile="0" resource="0" file="../assets/ssr data/Makefile.am"/>
-        <FILE id="Jhept8" name="ssr" compile="0" resource="0" file="../assets/ssr data/ssr"/>
-        <FILE id="Rv0ENZ" name="ssr.conf.example" compile="0" resource="0"
-              file="../assets/ssr data/ssr.conf.example"/>
-        <FILE id="NRpkSk" name="ssr.conf.local" compile="0" resource="0" file="../assets/ssr data/ssr.conf.local"/>
       </GROUP>
       <FILE id="ce1fuw" name="DejaVuSansMono.ttf" compile="0" resource="1"
             file="../assets/DejaVuSansMono.ttf"/>
@@ -103,123 +58,42 @@
     </GROUP>
     <GROUP id="{B34AD2A1-B9DC-9F4A-B8C1-C639906E6312}" name="audio">
       <GROUP id="{D6ABDE06-C62E-4815-8D6C-FEF55F2D652C}" name="apf">
-        <FILE id="TRu4Xw" name="biquad.h" compile="0" resource="0" file="../audio/apf/biquad.h"/>
-        <FILE id="QcnOgl" name="blockdelayline.h" compile="0" resource="0"
-              file="../audio/apf/blockdelayline.h"/>
         <FILE id="nxPJW9" name="combine_channels.h" compile="0" resource="0"
               file="../audio/apf/combine_channels.h"/>
         <FILE id="bQnfna" name="commandqueue.h" compile="0" resource="0" file="../audio/apf/commandqueue.h"/>
         <FILE id="hbLwvn" name="container.h" compile="0" resource="0" file="../audio/apf/container.h"/>
         <FILE id="AFAYUE" name="convolver.h" compile="0" resource="0" file="../audio/apf/convolver.h"/>
-        <FILE id="ulgnga" name="default_thread_policy.h" compile="0" resource="0"
-              file="../audio/apf/default_thread_policy.h"/>
-        <FILE id="gwpe2C" name="denormalprevention.h" compile="0" resource="0"
-              file="../audio/apf/denormalprevention.h"/>
         <FILE id="qcgbN8" name="dummy_thread_policy.h" compile="0" resource="0"
               file="../audio/apf/dummy_thread_policy.h"/>
         <FILE id="biRW6W" name="fftwtools.h" compile="0" resource="0" file="../audio/apf/fftwtools.h"/>
         <FILE id="iykM9K" name="iterator.h" compile="0" resource="0" file="../audio/apf/iterator.h"/>
-        <FILE id="ESYgiq" name="jack_policy.h" compile="0" resource="0" file="../audio/apf/jack_policy.h"/>
-        <FILE id="rLEIdy" name="jackclient.h" compile="0" resource="0" file="../audio/apf/jackclient.h"/>
         <FILE id="xIQtOd" name="lockfreefifo.h" compile="0" resource="0" file="../audio/apf/lockfreefifo.h"/>
         <FILE id="ZwfphF" name="math.h" compile="0" resource="0" file="../audio/apf/math.h"/>
-        <FILE id="Lth9Hf" name="mextools.h" compile="0" resource="0" file="../audio/apf/mextools.h"/>
         <FILE id="YVXa6A" name="mimoprocessor.h" compile="0" resource="0" file="../audio/apf/mimoprocessor.h"/>
-        <FILE id="bm5m2f" name="mimoprocessor_file_io.h" compile="0" resource="0"
-              file="../audio/apf/mimoprocessor_file_io.h"/>
         <FILE id="c7B0nl" name="misc.h" compile="0" resource="0" file="../audio/apf/misc.h"/>
         <FILE id="yV3FML" name="parameter_map.h" compile="0" resource="0" file="../audio/apf/parameter_map.h"/>
         <FILE id="CXezLW" name="pointer_policy.h" compile="0" resource="0"
               file="../audio/apf/pointer_policy.h"/>
-        <FILE id="Ra504v" name="portaudio_policy.h" compile="0" resource="0"
-              file="../audio/apf/portaudio_policy.h"/>
-        <FILE id="BPlPus" name="posix_thread_policy.h" compile="0" resource="0"
-              file="../audio/apf/posix_thread_policy.h"/>
         <FILE id="dQaax3" name="rtlist.h" compile="0" resource="0" file="../audio/apf/rtlist.h"/>
         <FILE id="s6Hhq3" name="shareddata.h" compile="0" resource="0" file="../audio/apf/shareddata.h"/>
         <FILE id="EnGinZ" name="sndfiletools.h" compile="0" resource="0" file="../audio/apf/sndfiletools.h"/>
-        <FILE id="aoVmwx" name="stopwatch.h" compile="0" resource="0" file="../audio/apf/stopwatch.h"/>
         <FILE id="IpVpW6" name="stringtools.h" compile="0" resource="0" file="../audio/apf/stringtools.h"/>
       </GROUP>
       <GROUP id="{973BBC69-8991-2084-BB74-62EE62A870DE}" name="ssr src">
-        <FILE id="kVVhaB" name="aaprenderer.h" compile="0" resource="0" file="../audio/ssr src/aaprenderer.h"/>
-        <FILE id="L7KAuT" name="audioplayer.cpp" compile="0" resource="0" file="../audio/ssr src/audioplayer.cpp"/>
-        <FILE id="EfhvO8" name="audioplayer.h" compile="0" resource="0" file="../audio/ssr src/audioplayer.h"/>
-        <FILE id="NQAQLm" name="audiorecorder.cpp" compile="0" resource="0"
-              file="../audio/ssr src/audiorecorder.cpp"/>
-        <FILE id="HXbmJW" name="audiorecorder.h" compile="0" resource="0" file="../audio/ssr src/audiorecorder.h"/>
         <FILE id="TnTbiz" name="binauralrenderer.h" compile="0" resource="0"
               file="../audio/ssr src/binauralrenderer.h"/>
-        <FILE id="Eb37yG" name="brsrenderer.h" compile="0" resource="0" file="../audio/ssr src/brsrenderer.h"/>
-        <FILE id="oWykvJ" name="coding_style.txt" compile="0" resource="0"
-              file="../audio/ssr src/coding_style.txt"/>
-        <FILE id="qrNgpu" name="configuration.cpp" compile="0" resource="0"
-              file="../audio/ssr src/configuration.cpp"/>
-        <FILE id="lfTfN3" name="configuration.h" compile="0" resource="0" file="../audio/ssr src/configuration.h"/>
-        <FILE id="qOkY4z" name="controller.h" compile="0" resource="0" file="../audio/ssr src/controller.h"/>
-        <FILE id="gwPhqG" name="directionalpoint.cpp" compile="0" resource="0"
+        <FILE id="gwPhqG" name="directionalpoint.cpp" compile="1" resource="0"
               file="../audio/ssr src/directionalpoint.cpp"/>
         <FILE id="RftvIU" name="directionalpoint.h" compile="0" resource="0"
               file="../audio/ssr src/directionalpoint.h"/>
-        <FILE id="rYEU7C" name="Doxyfile" compile="0" resource="0" file="../audio/ssr src/Doxyfile"/>
-        <FILE id="KIm9SR" name="genericrenderer.h" compile="0" resource="0"
-              file="../audio/ssr src/genericrenderer.h"/>
-        <FILE id="e6TZov" name="hoacoefficients.h" compile="0" resource="0"
-              file="../audio/ssr src/hoacoefficients.h"/>
-        <FILE id="dbszNN" name="laplace_coeffs_double.h" compile="0" resource="0"
-              file="../audio/ssr src/laplace_coeffs_double.h"/>
-        <FILE id="gLw0QS" name="laplace_coeffs_float.h" compile="0" resource="0"
-              file="../audio/ssr src/laplace_coeffs_float.h"/>
-        <FILE id="tuIxPs" name="loudspeaker.h" compile="0" resource="0" file="../audio/ssr src/loudspeaker.h"/>
-        <FILE id="JACUac" name="loudspeakerrenderer.h" compile="0" resource="0"
-              file="../audio/ssr src/loudspeakerrenderer.h"/>
-        <FILE id="OqPGpt" name="Makefile.am" compile="0" resource="0" file="../audio/ssr src/Makefile.am"/>
         <FILE id="O4vKGS" name="maptools.h" compile="0" resource="0" file="../audio/ssr src/maptools.h"/>
-        <FILE id="zT67Tf" name="nfchoarenderer.h" compile="0" resource="0"
-              file="../audio/ssr src/nfchoarenderer.h"/>
         <FILE id="dI1DOG" name="orientation.cpp" compile="1" resource="0" file="../audio/ssr src/orientation.cpp"/>
         <FILE id="licsZZ" name="orientation.h" compile="0" resource="0" file="../audio/ssr src/orientation.h"/>
         <FILE id="opoG9S" name="position.cpp" compile="1" resource="0" file="../audio/ssr src/position.cpp"/>
         <FILE id="SNZZSE" name="position.h" compile="0" resource="0" file="../audio/ssr src/position.h"/>
-        <FILE id="KcXzVR" name="posixpathtools.h" compile="0" resource="0"
-              file="../audio/ssr src/posixpathtools.h"/>
-        <FILE id="ZEX81L" name="publisher.h" compile="0" resource="0" file="../audio/ssr src/publisher.h"/>
         <FILE id="XqZrQB" name="rendererbase.h" compile="0" resource="0" file="../audio/ssr src/rendererbase.h"/>
-        <FILE id="zEF2Lf" name="rendersubscriber.h" compile="0" resource="0"
-              file="../audio/ssr src/rendersubscriber.h"/>
-        <FILE id="xQn1P3" name="scene.cpp" compile="0" resource="0" file="../audio/ssr src/scene.cpp"/>
-        <FILE id="Cz3BMG" name="scene.h" compile="0" resource="0" file="../audio/ssr src/scene.h"/>
         <FILE id="LaQT20" name="source.h" compile="0" resource="0" file="../audio/ssr src/source.h"/>
-        <FILE id="st6TBx" name="ssr_aap.cpp" compile="0" resource="0" file="../audio/ssr src/ssr_aap.cpp"/>
-        <FILE id="dfumsH" name="ssr_binaural.cpp" compile="0" resource="0"
-              file="../audio/ssr src/ssr_binaural.cpp"/>
-        <FILE id="AU0vnv" name="ssr_brs.cpp" compile="0" resource="0" file="../audio/ssr src/ssr_brs.cpp"/>
-        <FILE id="IVJC6c" name="ssr_generic.cpp" compile="0" resource="0" file="../audio/ssr src/ssr_generic.cpp"/>
-        <FILE id="CZWp0L" name="ssr_global.cpp" compile="0" resource="0" file="../audio/ssr src/ssr_global.cpp"/>
         <FILE id="hccgAG" name="ssr_global.h" compile="0" resource="0" file="../audio/ssr src/ssr_global.h"/>
-        <FILE id="qVRDtB" name="ssr_nfc_hoa.cpp" compile="0" resource="0" file="../audio/ssr src/ssr_nfc_hoa.cpp"/>
-        <FILE id="eIROfg" name="ssr_vbap.cpp" compile="0" resource="0" file="../audio/ssr src/ssr_vbap.cpp"/>
-        <FILE id="oCfHdB" name="ssr_wfs.cpp" compile="0" resource="0" file="../audio/ssr src/ssr_wfs.cpp"/>
-        <FILE id="ItrRyN" name="subscriber.h" compile="0" resource="0" file="../audio/ssr src/subscriber.h"/>
-        <FILE id="lLHsfR" name="timetools.h" compile="0" resource="0" file="../audio/ssr src/timetools.h"/>
-        <FILE id="ZQ3YFp" name="tracker.h" compile="0" resource="0" file="../audio/ssr src/tracker.h"/>
-        <FILE id="dcwJn1" name="trackerintersense.cpp" compile="0" resource="0"
-              file="../audio/ssr src/trackerintersense.cpp"/>
-        <FILE id="JESTVP" name="trackerintersense.h" compile="0" resource="0"
-              file="../audio/ssr src/trackerintersense.h"/>
-        <FILE id="ZkKbhL" name="trackerpolhemus.cpp" compile="0" resource="0"
-              file="../audio/ssr src/trackerpolhemus.cpp"/>
-        <FILE id="YTwtGO" name="trackerpolhemus.h" compile="0" resource="0"
-              file="../audio/ssr src/trackerpolhemus.h"/>
-        <FILE id="ZB0Yth" name="trackerrazor.cpp" compile="0" resource="0"
-              file="../audio/ssr src/trackerrazor.cpp"/>
-        <FILE id="EArOnb" name="trackerrazor.h" compile="0" resource="0" file="../audio/ssr src/trackerrazor.h"/>
-        <FILE id="RV94MZ" name="trackervrpn.cpp" compile="0" resource="0" file="../audio/ssr src/trackervrpn.cpp"/>
-        <FILE id="qAjZfT" name="trackervrpn.h" compile="0" resource="0" file="../audio/ssr src/trackervrpn.h"/>
-        <FILE id="WeyU3z" name="vbaprenderer.h" compile="0" resource="0" file="../audio/ssr src/vbaprenderer.h"/>
-        <FILE id="aMF8ja" name="wfsrenderer.h" compile="0" resource="0" file="../audio/ssr src/wfsrenderer.h"/>
-        <FILE id="xpD5vr" name="xmlparser.cpp" compile="0" resource="0" file="../audio/ssr src/xmlparser.cpp"/>
-        <FILE id="ZXLW6x" name="xmlparser.h" compile="0" resource="0" file="../audio/ssr src/xmlparser.h"/>
       </GROUP>
       <FILE id="wz9VVI" name="HostParam.h" compile="0" resource="0" file="../audio/HostParam.h"/>
       <FILE id="AE7ljk" name="Param.h" compile="0" resource="0" file="../audio/Param.h"/>
@@ -273,7 +147,7 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2015 targetFolder="Builds/VisualStudio2015" extraDefs="NOMINMAX" externalLibraries="libfftw-3.3_Z7_d.lib&#10;libfftwf-3.3_Z7_d.lib&#10;libsndfileStatic_Z7_d.lib&#10;libxml2Static_d.lib"
+    <VS2015 targetFolder="Builds/VisualStudio2015" extraDefs="NOMINMAX" externalLibraries="libfftw-3.3_d.lib&#10;libfftwf-3.3_d.lib&#10;libsndfileStatic_d.lib"
             extraLinkerFlags="">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
