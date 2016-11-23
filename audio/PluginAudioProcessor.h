@@ -22,12 +22,6 @@
 /**
  * Common JUCE PluginProcessor. Derived from PluginParams for communication with UI.
  * The SSR is incorporated in this class.
- *
- * NOTE: For future addings of HRIR or prefilter files (for WFS) and further SSR renderers it is
- * recommended to implement a function in which you can change renderers and files.
- * Don't forget to use suspendProcessing() because the configurations can be time consuming
- * and meanwhile the processBlock() could try to use a not available renderer callback!
- * That function should be public to be accessible from the ConfigPanel.
  */
 class PluginAudioProcessor : public AudioProcessor, public PluginParams
 {
@@ -37,21 +31,21 @@ public:
 
     //==============================================================================
 
-    /// plugin audio processing callbacks
+    /// plugin audio processing callbacks, see AudioProcessor
     void prepareToPlay(double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
 
-    void processBlock(AudioSampleBuffer&, MidiBuffer&) override;
+    void processBlock(AudioSampleBuffer &buffer, MidiBuffer &midiMessages) override;
 
     //==============================================================================
 
-    /// audio processor editor stuff
+    /// audio processor editor stuff, see AudioProcessor
     AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override;
 
     //==============================================================================
 
-    /// plugin information about name, routing and midi
+    /// plugin information about name, routing and midi, see AudioProcessor
     const String getName() const override;
 
     const String getInputChannelName(int channelIndex) const override;
@@ -66,18 +60,18 @@ public:
 
     //==============================================================================
 
-    /// plugin programm getter and setter
+    /// plugin programm getter and setter, see AudioProcessor
     int getNumPrograms() override;
     int getCurrentProgram() override;
     void setCurrentProgram(int index) override;
     const String getProgramName(int index) override;
-    void changeProgramName(int index, const String& newName) override;
+    void changeProgramName(int index, const String &newName) override;
 
     //==============================================================================
 
-    /// host serializiation functions to read and write patches
-    void getStateInformation(MemoryBlock& destData) override;
-    void setStateInformation(const void* data, int sizeInBytes) override;
+    /// host serializiation functions to read and write patches, see AudioProcessor
+    void getStateInformation(MemoryBlock &destData) override;
+    void setStateInformation(const void *data, int sizeInBytes) override;
 
     //==============================================================================
 
@@ -102,6 +96,8 @@ private:
     /**
      * Update host information by updating information of host's audio playhead.
      * See positionInfo in PluginParams to get access to bpm or transport state of the host.
+     *
+     * This comes from the open-source synthesizer "Synister" (see http://the-synister.github.io/).
      */
     void updateHostInfo();
     

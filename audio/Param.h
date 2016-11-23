@@ -9,6 +9,8 @@
  * Base parameter class for float values. Uses a dirty flag to handle synchronization of the UI
  * and listener callbacks that can be used to notify host of changes.
  * Needs some atomic member to prevent state inconsistencies.
+ *
+ * Most of the code in this class comes from the open-source synthesizer "Synister" (see http://the-synister.github.io/).
  */
 class Param
 {
@@ -110,7 +112,7 @@ public:
     virtual float getUI() const { return get(); }
     virtual float getDefaultUI() const { return getDefault(); }
     virtual String getUIString() const { return getUIString(get()); }
-    virtual String getUIString(float v) const { return String::formatted("%f", v); }
+    virtual String getUIString(float v) const { return String(v, 3); }
 
     /**
      * Check whether this param's UI is dirty. Set dirty flag to false, after checking.

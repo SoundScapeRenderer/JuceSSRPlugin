@@ -71,7 +71,6 @@ public:
     //==============================================================================
 
 private:
-    PluginParams &params;
     Point<float> dragStartPosition = Point<float>(0.0f, 0.0f);
 
     const int refListenerSize = 85; //!< default reference listener size

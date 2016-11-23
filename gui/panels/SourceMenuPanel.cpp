@@ -28,7 +28,7 @@
 
 //==============================================================================
 SourceMenuPanel::SourceMenuPanel (PluginParams &p, SourceNodeComponent *s)
-    : PanelBase(p), params(p), sourceNode(s)
+    : PanelBase(p), sourceNode(s)
 {
     //[Constructor_pre] You can add your own custom stuff here..
     startTimerHz (60);
@@ -149,7 +149,7 @@ SourceMenuPanel::SourceMenuPanel (PluginParams &p, SourceNodeComponent *s)
     registerButton(muteToggle, &params.sourceMute, std::bind(&SourceMenuPanel::sourceMutedStateChanged, this));
     registerButton(fixToggle, &params.sourcePositionLock, std::bind(&SourceMenuPanel::sourceFixedPositionStateChanged, this));
 
-    registerSourceTypeBox(sourceModelBox, &params.sourceType, std::bind(&SourceMenuPanel::updatePlaneWaveVisibility, this));
+    registerComboBox<eSourceType>(sourceModelBox, &params.sourceType, std::bind(&SourceMenuPanel::updatePlaneWaveVisibility, this));
     //[/UserPreSize]
 
     setSize (250, 225);
@@ -222,7 +222,7 @@ void SourceMenuPanel::resized()
 void SourceMenuPanel::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 {
     //[UsercomboBoxChanged_Pre]
-    handleSourceTypeBox(comboBoxThatHasChanged);
+    handleComboBox<eSourceType>(comboBoxThatHasChanged);
     //[/UsercomboBoxChanged_Pre]
 
     if (comboBoxThatHasChanged == sourceModelBox)
@@ -306,9 +306,9 @@ BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="SourceMenuPanel" componentName=""
                  parentClasses="public PanelBase" constructorParams="PluginParams &amp;p, SourceNodeComponent *s"
-                 variableInitialisers="PanelBase(p), params(p), sourceNode(s)"
-                 snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
-                 fixedSize="1" initialWidth="250" initialHeight="225">
+                 variableInitialisers="PanelBase(p), sourceNode(s)" snapPixels="8"
+                 snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="1"
+                 initialWidth="250" initialHeight="225">
   <BACKGROUND backgroundColour="ffffffff"/>
   <LABEL name="position label" id="4fb7b389efd80fef" memberName="positionLabel"
          virtualName="" explicitFocusOrder="0" pos="8 17 80 16" textCol="ff808080"

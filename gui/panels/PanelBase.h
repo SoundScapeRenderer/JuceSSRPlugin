@@ -13,6 +13,8 @@
  * Parent class for all panel components that make use of the dirtyFlag of PluginParams (e.g. for automation).
  * Use this to synchronize backend changes on the UI.
  * The child components in these panels have to be registered with their corresponding parameter.
+ * 
+ * The main idea of this class comes from the open-source synthesizer "Synister" (see http://the-synister.github.io/).
  */
 class PanelBase : public Component, protected Timer
 {
@@ -266,22 +268,23 @@ protected:
     //==============================================================================
 
     /**
-     * Register source type ComboBox with corresponding ParamStepped<eSourceType> that needs to be checked.
-     * Use this to display and synchronize selected items of ComboBox on UI correctly.
-     * @param c ComboBox to handle and synchronize UI if ParamStepped<eSourceType> is dirty
-     * @param type ParamStepped<eSourceType> to register
+     * Register comboBox with corresponding ParamStepped<E> that needs to be checked.
+     * Use this to display and synchronize selected items of comboBox on UI correctly.
+     * @param c comboBox to handle and synchronize UI if ParamStepped<E> is dirty
+     * @param stepParam ParamStepped<E> to register
      * @param hook callback function
      */
-    void registerSourceTypeBox(ComboBox *c, ParamStepped<eSourceType> *type, const tHookFn hook = tHookFn())
+    template <typename E>
+    void registerComboBox(ComboBox *c, ParamStepped<E> *stepParam, const tHookFn hook = tHookFn())
     {        
         // fill combo box items
-        for (int i = 0; i < static_cast<int>(eSourceType::nSteps); ++i)
+        for (int i = 0; i < static_cast<int>(E::nSteps); ++i)
         {
-            c->addItem(TRANS(params.getSourceTypeNames(i)), i + 1);
+            c->addItem(stepParam->getUIString(i), i + 1);
         }
-        c->setSelectedItemIndex(static_cast<int>(type->getStep()), dontSendNotification);
+        c->setSelectedItemIndex(static_cast<int>(stepParam->getStep()), dontSendNotification);
 
-        sourceTypeReg[c] = { type };
+        comboBoxReg[c] = { stepParam };
         if (hook)
         {
             postUpdateHook[c] = { hook };
@@ -290,17 +293,18 @@ protected:
     }
 
     /**
-     * Handle ComboBox that has changed and set registered parameter.
+     * Handle comboBox that has changed and set registered ParamStepped<E>.
      * @comboBoxThatHasChanged box in the UI that has changed
-     * @return true if ComboBox is registered and could be handled
+     * @return true if comboBox is registered and could be handled
      */
-    bool handleSourceTypeBox(ComboBox* comboBoxThatHasChanged)
+    template <typename E>
+    bool handleComboBox(ComboBox* comboBoxThatHasChanged)
     {
-        auto it = sourceTypeReg.find(comboBoxThatHasChanged);
-        if (it != sourceTypeReg.end())
+        auto it = comboBoxReg.find(comboBoxThatHasChanged);
+        if (it != comboBoxReg.end())
         {
             int selectedId = comboBoxThatHasChanged->getSelectedItemIndex();
-            it->second->setUI(static_cast<float>(selectedId));
+            static_cast<ParamStepped<E>*>(it->second)->setUI(static_cast<float>(selectedId));
 
             auto itHook = postUpdateHook.find(it->first);
             if (itHook != postUpdateHook.end())
@@ -313,15 +317,18 @@ protected:
     }
 
     /**
-     * Check whether registered parameters of ComboBoxes have changed and synchronize its selected item on UI.
+     * Check whether registered parameters of comboBoxes have changed and synchronize its selected item on UI.
      */
-    void updateDirtySourceTypeBoxes()
+    void updateDirtyComboBoxes()
     {
-        for (auto c2p : sourceTypeReg)
+        for (auto c2p : comboBoxReg)
         {
             if (c2p.second->isUIDirty())
             {
-                c2p.first->setSelectedItemIndex(static_cast<int>(c2p.second->getStep()), dontSendNotification);
+                // dummy cast so we can use getStep(), works with any ParamStepped<E>
+                int index = static_cast<int>(static_cast<ParamStepped<eOnOffState>*>(c2p.second)->getStep());
+
+                c2p.first->setSelectedItemIndex(index, dontSendNotification);
 
                 auto itHook = postUpdateHook.find(c2p.first);
                 if (itHook != postUpdateHook.end())
@@ -341,14 +348,16 @@ protected:
 
         updateDirtySliders();
         updateDirtyButtons();
-        updateDirtySourceTypeBoxes();
+        updateDirtyComboBoxes();
     }
 
     PluginParams &params;
+
+private:
     std::map<Component*, std::array<tHookFn, 2>> postUpdateHook;
     std::map<ListenerComponent*, std::array<Param*, 3>> listenerReg;
     std::map<SourceNodeComponent*, std::array<Param*, 2>> sourceReg;
     std::map<Slider*, Param*> sliderReg;
     std::map<Button*, ParamStepped<eOnOffState>*> buttonReg;
-    std::map<ComboBox*, ParamStepped<eSourceType>*> sourceTypeReg;
+    std::map<ComboBox*, Param*> comboBoxReg; // comboBox for all types of ParamStepped<E>
 };

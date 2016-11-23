@@ -60,7 +60,6 @@ ConfigPanel::ConfigPanel (PluginAudioProcessor &p)
     rendererAlgorithmBox->setJustificationType (Justification::centredLeft);
     rendererAlgorithmBox->setTextWhenNothingSelected (TRANS("rendering algorithm"));
     rendererAlgorithmBox->setTextWhenNoChoicesAvailable (TRANS("select algorithm"));
-    rendererAlgorithmBox->addItem (TRANS("binaural synthesis"), 1);
     rendererAlgorithmBox->addListener (this);
 
     addAndMakeVisible (IRFileLabel = new Label ("IR file label",
@@ -82,12 +81,14 @@ ConfigPanel::ConfigPanel (PluginAudioProcessor &p)
 
     //[UserPreSize]
     // for now only binaural synthesis with hrirs_fabian is available
-    rendererAlgorithmBox->setSelectedItemIndex(0, dontSendNotification);
-    rendererAlgorithmBox->setEnabled(false);
+    registerComboBox<eRenderingAlgorithm>(rendererAlgorithmBox, &processor.renderingAlgorithm);
+
+    rendererAlgorithmBox->setItemEnabled(2, false);
+    rendererAlgorithmBox->setItemEnabled(3, false);
     IRFileBox->setSelectedItemIndex(0, dontSendNotification);
-    IRFileBox->setEnabled(false);
 
     registerSlider(ampRefDistanceSlider, &processor.amplitudeReferenceDistance);
+
     //[/UserPreSize]
 
     setSize (400, 500);
@@ -165,6 +166,7 @@ void ConfigPanel::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
     if (comboBoxThatHasChanged == rendererAlgorithmBox)
     {
         //[UserComboBoxCode_rendererAlgorithmBox] -- add your combo box handling code here..
+        handleComboBox<eRenderingAlgorithm>(comboBoxThatHasChanged);
         //[/UserComboBoxCode_rendererAlgorithmBox]
     }
     else if (comboBoxThatHasChanged == IRFileBox)
@@ -215,7 +217,7 @@ BEGIN_JUCER_METADATA
          fontsize="15" bold="0" italic="0" justification="33"/>
   <COMBOBOX name="renderer algorithm box" id="e038bb6efc51d085" memberName="rendererAlgorithmBox"
             virtualName="" explicitFocusOrder="0" pos="176 36 208 16" editable="0"
-            layout="33" items="binaural synthesis" textWhenNonSelected="rendering algorithm"
+            layout="33" items="" textWhenNonSelected="rendering algorithm"
             textWhenNoItems="select algorithm"/>
   <LABEL name="IR file label" id="61e57b70d01f48f7" memberName="IRFileLabel"
          virtualName="" explicitFocusOrder="0" pos="16 77 144 24" edTextCol="ff000000"

@@ -64,7 +64,6 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    PluginParams &params;
     ScopedPointer<CustomLookAndFeel> lnf;
 
     void timerCallback() override;

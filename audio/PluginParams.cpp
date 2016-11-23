@@ -9,8 +9,8 @@ namespace {
         "point source", "plane source", nullptr
     };
 
-    static const char *InputChannelNames[] = {
-        "left channel", "right channel", nullptr
+    static const char *RenderingAlgorithmNames[] = {
+        "binaural synthesis", "wave field synthesis", "ambisonics",  nullptr
     };
 }
 
@@ -25,30 +25,31 @@ const Colour PluginParams::sourceLevelColour(58, 239, 58);
 //==============================================================================
 
 PluginParams::PluginParams()
-    : sourceX("source x", "sourceX", "sourceX", "m", -50.0f, 50.0f, 0.0f)
-    , sourceY("source y", "sourceY", "sourceY", "m", -50.0f, 50.0f, 2.0f)
+    : sourceX("source x", "sourceX", "sourceX", "mtrs", -50.0f, 50.0f, 0.0f)
+    , sourceY("source y", "sourceY", "sourceY", "mtrs", -50.0f, 50.0f, 2.0f)
     , sourceOrientation("source orientation", "sourceOrientation", "sourceOrientation", "degs", -180.0f, 180.0f, 0.0f)
     , sourceVol("source vol", "sourceVol", "sourceVol", "dB", -96.0f, 12.0f, -6.0f)
     , sourceLevel("sourceLevel", "sourceLevel", "sourceLevel", "dB", -96.0f, 12.0f, -96.0f)
     , sourceMute("source muted", "sourceMute", "sourceMute", eOnOffState::eOff, OnOffStateNames)
     , sourceType("source type", "sourceType", "sourceType", eSourceType::ePoint, SourceTypeNames)
     , sourcePositionLock("source position lock", "sourcePositionLock", "sourcePositionLock", eOnOffState::eOff, OnOffStateNames)
-    , amplitudeReferenceDistance("amplitude reference distance", "amplitudeReferenceDistance", "amplitudeReferenceDistance", "m", 0.5f, 50.0f, 3.0f)
 
-    , referenceX("reference x", "referenceX", "referenceX", "m", -50.0f, 50.0f, 0.0f)
-    , referenceY("reference y", "referenceY", "referenceY", "m", -50.0f, 50.0f, 0.0f)
+    , referenceX("reference x", "referenceX", "referenceX", "mtrs", -50.0f, 50.0f, 0.0f)
+    , referenceY("reference y", "referenceY", "referenceY", "mtrs", -50.0f, 50.0f, 0.0f)
     , referenceOrientation("reference orientation", "referenceOrientation", "referenceOrientation", "degs", -180.0f, 180.0f, 0.0f)
     , refOrientationOffset(90.0f)
+    , amplitudeReferenceDistance("amplitude reference distance", "amplitudeReferenceDistance", "amplitudeReferenceDistance", " mtrs", 0.5f, 50.0f, 3.0f)
+    , renderingAlgorithm("rendering algorithm", "renderingAlgorithm", "renderingAlgorithm", eRenderingAlgorithm::eBinaural, RenderingAlgorithmNames)
 
     , outputLevelLeft("output level left", "outputLevelLeft", "outputLevelLeft", "dB", -96.0f, 12.0f, -96.0f)
     , outputLevelRight("outputlevel right", "outputLevelRight", "outputLevelRight", "dB", -96.0f, 12.0f, -96.0f)
 
     , currentZoom("current zoom", "currentZoom", "currentZoom", "%", 25.0f, 200.0f, 100.0f)
-    , sceneOffsetX("scene offset x", "sceneOffsetX", "sceneOffsetX", "m", -50.0f, 50.0f, 0.0f)
-    , sceneOffsetY("scene offset y", "sceneOffsetY", "sceneOffsetY", "m", -50.0f, 50.0f, -1.00f)
+    , sceneOffsetX("scene offset x", "sceneOffsetX", "sceneOffsetX", "mtrs", -50.0f, 50.0f, 0.0f)
+    , sceneOffsetY("scene offset y", "sceneOffsetY", "sceneOffsetY", "mtrs", -50.0f, 50.0f, -1.00f)
 
     , serializeParams{ &sourceX, &sourceY, &sourceOrientation, &sourceVol, &sourceMute, &sourceType, &sourcePositionLock,
-                       &amplitudeReferenceDistance, &referenceX, &referenceY, &referenceOrientation,
+                       &referenceX, &referenceY, &referenceOrientation, &amplitudeReferenceDistance, &renderingAlgorithm,
                        &currentZoom, &sceneOffsetX, &sceneOffsetY }
 
     , positionIndex(0)

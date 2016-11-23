@@ -53,7 +53,7 @@ public:
     void sourceMutedStateChanged();
 
     /**
-     * Lock source position params and repaint source node whenever fixPosition 
+     * Lock source position params and repaint source node whenever fixPosition
      * state is enabled or disabled.
      */
     void sourceFixedPositionStateChanged();
@@ -74,7 +74,6 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    PluginParams &params;
     SourceNodeComponent *sourceNode;
 
     void timerCallback() override;

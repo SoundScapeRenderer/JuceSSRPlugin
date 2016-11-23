@@ -36,7 +36,7 @@ public:
      * and an editor is opened or closed while at least one other editor is already opened.
      * Shadow effect works only occasionally, anyways.
      */
-    ImageEffectFilter* getSliderEffect(Slider& s)
+    ImageEffectFilter* getSliderEffect(Slider &s)
     {
         ignoreUnused(s);
         return nullptr;
@@ -44,7 +44,7 @@ public:
 
     //==============================================================================
 
-    Typeface::Ptr getTypefaceForFont(const Font & font)
+    Typeface::Ptr getTypefaceForFont(const Font &font)
     {
         ignoreUnused(font);
         return customFont;
@@ -52,7 +52,7 @@ public:
 
     //==============================================================================
 
-    void drawButtonBackground(Graphics& g, Button& button, const Colour& backgroundColour,
+    void drawButtonBackground(Graphics &g, Button &button, const Colour& backgroundColour,
                               bool isMouseOverButton, bool isButtonDown)
     {
         ignoreUnused(backgroundColour);
@@ -102,7 +102,7 @@ public:
 
     //==============================================================================
 
-    void drawComboBox(Graphics& g, int width, int height, bool isButtonDown,
+    void drawComboBox(Graphics &g, int width, int height, bool isButtonDown,
                       int buttonX, int buttonY, int buttonW, int buttonH, ComboBox& box)
     {
         // draw combobox background and outline
@@ -146,7 +146,7 @@ public:
 
     //==============================================================================
 
-    void drawPopupMenuBackground(Graphics& g, int width, int height)
+    void drawPopupMenuBackground(Graphics &g, int width, int height)
     {
         g.fillAll(Colours::white);
 

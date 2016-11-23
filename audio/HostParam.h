@@ -8,6 +8,8 @@
  * Parameter class for communication between host and plugin. This mainly implements JUCE's
  * AudioProcessorParameter functions and maps them onto our Param.h class.
  * If necessary, go there for further documentation.
+ *
+ * Most of the code in this class comes from the open-source synthesizer "Synister" (see http://the-synister.github.io/).
  */
 template<typename _par>
 class HostParam : public AudioProcessorParameter, public Param::Listener
@@ -41,7 +43,7 @@ public:
      * Called by the host to get the value of this parameter.
      * For further description, see AudioProcessorParameter.
      */
-    float getValue() const override
+    virtual float getValue() const override
     {
         return engineToHost(param.getUI());
     }
@@ -50,7 +52,7 @@ public:
      * Called by the host to set the value of this parameter.
      * For further description, see AudioProcessorParameter.
      */
-    void setValue(float newValue) override
+    virtual void setValue(float newValue) override
     {
         jassert(newValue >= 0.0f && newValue <= 1.0f);
         param.setHost(hostToEngine(newValue));

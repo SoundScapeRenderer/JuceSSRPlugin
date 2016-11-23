@@ -128,12 +128,14 @@ const String PluginAudioProcessor::getProgramName(int index)
     return String();
 }
 
-void PluginAudioProcessor::changeProgramName(int index, const String& newName)
+void PluginAudioProcessor::changeProgramName(int index, const String &newName)
 {
     ignoreUnused(index, newName);
 }
 
 //==============================================================================
+
+
 
 void PluginAudioProcessor::prepareToPlay(double sRate, int samplesPerBlock)
 {
@@ -141,16 +143,24 @@ void PluginAudioProcessor::prepareToPlay(double sRate, int samplesPerBlock)
     apf::parameter_map renderer_params;
     renderer_params.set<int>("sample_rate", static_cast<int>(sRate));
     renderer_params.set<int>("block_size", samplesPerBlock);
-    
-    // set hrir_file and hrir_size for binaural renderer, 0 for using complete size of hrir_file
-    renderer_params.set("hrir_file", createTempHRIRFile(sRate));
-    renderer_params.set("hrir_size", 0);
 
     try
     {
-        // create renderer
-        renderer.reset(new ssr::BinauralRenderer(renderer_params));
-        renderer->load_reproduction_setup();
+        // NOTE: For future addings of HRIR or prefilter files (e.g. for WFS) and further SSR renderers it is
+        // recommended to implement a function in which you can change renderers and files.
+        // Don't forget to use suspendProcessing() because the configurations can be time consuming
+        // and meanwhile the processBlock() could try to use a not available renderer callback!
+        // That function should be public to be accessible from the ConfigPanel.         
+        if (renderingAlgorithm.getStep() == eRenderingAlgorithm::eBinaural)
+        {
+            // set hrir_file and hrir_size for binaural renderer, 0 for using complete size of hrir_file
+            renderer_params.set("hrir_file", createTempHRIRFile(sRate));
+            renderer_params.set("hrir_size", 0);
+
+            // create renderer
+            renderer.reset(new ssr::BinauralRenderer(renderer_params));
+            renderer->load_reproduction_setup();
+        }
 
         // add only one input source
         apf::parameter_map sourceParam;
@@ -173,7 +183,7 @@ void PluginAudioProcessor::releaseResources()
     // spare memory, etc.
 }
 
-void PluginAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
+void PluginAudioProcessor::processBlock(AudioSampleBuffer &buffer, MidiBuffer &midiMessages)
 {
 #if PERFORMANCE_TEST_JUCESSR == 1
     pcProcessing.start();
@@ -276,12 +286,12 @@ AudioProcessorEditor* PluginAudioProcessor::createEditor()
 
 //==============================================================================
 
-void PluginAudioProcessor::getStateInformation(MemoryBlock& destData)
+void PluginAudioProcessor::getStateInformation(MemoryBlock &destData)
 {
     PluginParams::writeXMLPatchHost(destData);
 }
 
-void PluginAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
+void PluginAudioProcessor::setStateInformation(const void *data, int sizeInBytes)
 {
     PluginParams::readXMLPatchHost(data, sizeInBytes);
 }
@@ -291,8 +301,8 @@ void PluginAudioProcessor::setStateInformation(const void* data, int sizeInBytes
 String PluginAudioProcessor::createTempHRIRFile(double sRate)
 {
     // load suitable HRIR file into a MemoryInputStream
-    // NOTE: comparing doubles (sample rates) is not nice but here it is possible since (pre-resampled) HRIR files
-    // from memory only has zeros after dots and there are no prior calculations involved
+    // NOTE: comparing doubles is not nice but here it is possible since the samplerates of the
+    // HRIR files are whole numbers and there are no prior calculations involved
     MemoryInputStream *in;
     sRate == 48000.0 ? in = new MemoryInputStream(BinaryData::soxHrir48000_wav, BinaryData::soxHrir48000_wavSize, false)
         : (sRate == 96000.0 ? in = new MemoryInputStream(BinaryData::soxHrir96000_wav, BinaryData::soxHrir96000_wavSize, false)

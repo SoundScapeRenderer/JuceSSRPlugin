@@ -15,7 +15,7 @@
 
 //==============================================================================
 ScenePanel::ScenePanel(PluginParams &p)
-    : PanelBase(p), params(p)
+    : PanelBase(p)
 {
     // create clickable button and info window
     addAndMakeVisible(logoButton = new ImageButton("logoButton"));

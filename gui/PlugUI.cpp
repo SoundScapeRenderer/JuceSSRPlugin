@@ -28,7 +28,7 @@
 
 //==============================================================================
 PlugUI::PlugUI (PluginParams &p)
-    : PanelBase(p), params(p)
+    : PanelBase(p)
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
@@ -255,9 +255,9 @@ BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="PlugUI" componentName=""
                  parentClasses="public PanelBase" constructorParams="PluginParams &amp;p"
-                 variableInitialisers="PanelBase(p), params(p)" snapPixels="8"
-                 snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="1"
-                 initialWidth="950" initialHeight="650">
+                 variableInitialisers="PanelBase(p)" snapPixels="8" snapActive="1"
+                 snapShown="1" overlayOpacity="0.330" fixedSize="1" initialWidth="950"
+                 initialHeight="650">
   <BACKGROUND backgroundColour="fff9f9f9"/>
   <GENERICCOMPONENT name="scene" id="31a3828dbcedcc3f" memberName="scene" virtualName=""
                     explicitFocusOrder="0" pos="15 12 920 590" class="ScenePanel"

@@ -15,9 +15,18 @@ enum class eSourceType : int {
     nSteps = 2
 };
 
+enum class eRenderingAlgorithm : int {
+    eBinaural = 0,
+    eWFS = 1,
+    eAmbisonics = 2,
+    nSteps = 3
+};
+
 /**
  * This class contains all parameters of the plugin as well as 
  * functions for serialization in a custom XML format.
+ *
+ * The serialization code comes from the open-source synthesizer "Synister" (see http://the-synister.github.io/).
  */
 class PluginParams {
 public:
@@ -35,13 +44,14 @@ public:
     ParamStepped<eOnOffState> sourceMute; //!< source muted {eOff, eOn}
     ParamStepped<eSourceType> sourceType; //!< source type {ePoint, ePlane}
     ParamStepped<eOnOffState> sourcePositionLock; //!< source position locked {eOff, eOn}
-    Param amplitudeReferenceDistance; //!< SSR's amplitude reference distance in range [0.5f ... 50.0f]m
 
     /// reference listener related parameters
     Param referenceX; //!< reference listener x position in range [-50.0f ... 50.0f]m
     Param referenceY; //!< reference listener y position (inverted y axis)  in range [-50.0f ... 50.0f]m
     Param referenceOrientation; //!< reference listener orientation in range [-180.0f ... 180.0f]degs
     const float refOrientationOffset; //!< offset due to reference listener image's default orientation
+    Param amplitudeReferenceDistance; //!< SSR's amplitude reference distance in range [0.5f ... 50.0f]m
+    ParamStepped<eRenderingAlgorithm> renderingAlgorithm; //!< rendering algorithm {eBinaural}
 
     /// output level related parameters
     Param outputLevelLeft; //!< left output level in range [-96.0f ... 12.0f]dB

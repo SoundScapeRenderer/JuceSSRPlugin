@@ -34,7 +34,7 @@ public:
     
     void paint (Graphics& g)
     {
-        g.fillAll(isMouseOver ? Colours::white.darker(0.025f) : Colours::white);
+        g.fillAll(isMouseOver ? Colours::white.darker(0.015f) : Colours::white);
         g.setColour(Colours::grey.brighter());
         g.drawRect(0.0f, 0.0f, static_cast<float>(getWidth()), static_cast<float>(getHeight()), 0.5f);
 
