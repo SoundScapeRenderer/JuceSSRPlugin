@@ -8,29 +8,8 @@
       <GROUP id="{4159F569-61FE-B8ED-AE6A-6C96693883A6}" name="ssr data">
         <GROUP id="{B177C1FB-50F6-1AF7-0D31-353B95E5525C}" name="images">
           <FILE id="WFNNFC" name="listener.png" compile="0" resource="1" file="../assets/ssr data/images/listener.png"/>
-          <FILE id="A5BqO9" name="listener_background.png" compile="0" resource="1"
-                file="../assets/ssr data/images/listener_background.png"/>
           <FILE id="V40SRr" name="listener_shadow.png" compile="0" resource="1"
                 file="../assets/ssr data/images/listener_shadow.png"/>
-          <FILE id="KPLznL" name="pause_button.png" compile="0" resource="1"
-                file="../assets/ssr data/images/pause_button.png"/>
-          <FILE id="lIFftf" name="pause_button_pressed.png" compile="0" resource="1"
-                file="../assets/ssr data/images/pause_button_pressed.png"/>
-          <FILE id="oBCZi7" name="play_button.png" compile="0" resource="1" file="../assets/ssr data/images/play_button.png"/>
-          <FILE id="EWv2m4" name="play_button_pressed.png" compile="0" resource="1"
-                file="../assets/ssr data/images/play_button_pressed.png"/>
-          <FILE id="txYPZL" name="processing_button.png" compile="0" resource="1"
-                file="../assets/ssr data/images/processing_button.png"/>
-          <FILE id="LVjtPc" name="processing_button_pressed.png" compile="0"
-                resource="1" file="../assets/ssr data/images/processing_button_pressed.png"/>
-          <FILE id="sNRdvr" name="scene_menu_item.png" compile="0" resource="1"
-                file="../assets/ssr data/images/scene_menu_item.png"/>
-          <FILE id="oxIYTJ" name="scene_menu_item_selected.png" compile="0" resource="1"
-                file="../assets/ssr data/images/scene_menu_item_selected.png"/>
-          <FILE id="qgnT0O" name="skip_back_button.png" compile="0" resource="1"
-                file="../assets/ssr data/images/skip_back_button.png"/>
-          <FILE id="MkT0nD" name="skip_back_button_pressed.png" compile="0" resource="1"
-                file="../assets/ssr data/images/skip_back_button_pressed.png"/>
           <FILE id="WHspOD" name="source_shadow.png" compile="0" resource="1"
                 file="../assets/ssr data/images/source_shadow.png"/>
           <FILE id="MqeQwk" name="ssr_logo.png" compile="0" resource="1" file="../assets/ssr data/images/ssr_logo.png"/>

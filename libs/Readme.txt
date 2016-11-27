@@ -20,11 +20,4 @@
     - using "Project files to compile FFTW 3.3 with Visual Studio 2010"
       download link: ftp://ftp.fftw.org/pub/fftw/fftw-3.3-libs-visual-studio-2010.zip
     - follow Readme.txt in zip
-
-  ========== LibXML2 ==========
     
-    - from http://hostagebrain.blogspot.de/search/label/libxml2
-    - last access: 01.10.2016
-
-    - needs to be build via MSVC console 
-    - follow the instructions on the website

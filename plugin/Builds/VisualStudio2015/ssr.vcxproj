@@ -58,7 +58,7 @@
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\..\juce\modules;..\..\..\vst;../../../audio/;../../../gui;../../../libs/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;NOMINMAX;JUCER_VS2015_78A5022=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;DEBUG;_DEBUG;NOMINMAX;JUCER_VS2015_78A5022=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader/>
@@ -83,7 +83,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <AdditionalLibraryDirectories>../../../libs/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
-      <AdditionalDependencies>libfftw-3.3_d.lib;libfftwf-3.3_d.lib;libsndfileStatic_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfftw-3.3.lib;libfftwf-3.3.lib;libsndfileStatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/FORCE:multiple %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Bscmake>
@@ -102,7 +102,7 @@
     <ClCompile>
       <Optimization>Full</Optimization>
       <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\..\juce\modules;..\..\..\vst;../../../audio/;../../../gui;../../../libs/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;NOMINMAX;JUCER_VS2015_78A5022=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;NOMINMAX;JUCER_VS2015_78A5022=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader/>
@@ -128,7 +128,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalLibraryDirectories>../../../libs/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
-      <AdditionalDependencies>libfftw-3.3_d.lib;libfftwf-3.3_d.lib;libsndfileStatic_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfftw-3.3.lib;libfftwf-3.3.lib;libsndfileStatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/FORCE:multiple %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Bscmake>
@@ -1790,18 +1790,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\assets\ssr data\images\listener.png"/>
-    <None Include="..\..\..\assets\ssr data\images\listener_background.png"/>
     <None Include="..\..\..\assets\ssr data\images\listener_shadow.png"/>
-    <None Include="..\..\..\assets\ssr data\images\pause_button.png"/>
-    <None Include="..\..\..\assets\ssr data\images\pause_button_pressed.png"/>
-    <None Include="..\..\..\assets\ssr data\images\play_button.png"/>
-    <None Include="..\..\..\assets\ssr data\images\play_button_pressed.png"/>
-    <None Include="..\..\..\assets\ssr data\images\processing_button.png"/>
-    <None Include="..\..\..\assets\ssr data\images\processing_button_pressed.png"/>
-    <None Include="..\..\..\assets\ssr data\images\scene_menu_item.png"/>
-    <None Include="..\..\..\assets\ssr data\images\scene_menu_item_selected.png"/>
-    <None Include="..\..\..\assets\ssr data\images\skip_back_button.png"/>
-    <None Include="..\..\..\assets\ssr data\images\skip_back_button_pressed.png"/>
     <None Include="..\..\..\assets\ssr data\images\source_shadow.png"/>
     <None Include="..\..\..\assets\ssr data\images\ssr_logo.png"/>
     <None Include="..\..\..\assets\ssr data\images\ssr_logo_large.png"/>

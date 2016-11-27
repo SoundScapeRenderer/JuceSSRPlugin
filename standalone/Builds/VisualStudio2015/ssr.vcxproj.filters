@@ -3137,40 +3137,7 @@
     <None Include="..\..\..\assets\ssr data\images\listener.png">
       <Filter>ssr\assets\ssr data\images</Filter>
     </None>
-    <None Include="..\..\..\assets\ssr data\images\listener_background.png">
-      <Filter>ssr\assets\ssr data\images</Filter>
-    </None>
     <None Include="..\..\..\assets\ssr data\images\listener_shadow.png">
-      <Filter>ssr\assets\ssr data\images</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\images\pause_button.png">
-      <Filter>ssr\assets\ssr data\images</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\images\pause_button_pressed.png">
-      <Filter>ssr\assets\ssr data\images</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\images\play_button.png">
-      <Filter>ssr\assets\ssr data\images</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\images\play_button_pressed.png">
-      <Filter>ssr\assets\ssr data\images</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\images\processing_button.png">
-      <Filter>ssr\assets\ssr data\images</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\images\processing_button_pressed.png">
-      <Filter>ssr\assets\ssr data\images</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\images\scene_menu_item.png">
-      <Filter>ssr\assets\ssr data\images</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\images\scene_menu_item_selected.png">
-      <Filter>ssr\assets\ssr data\images</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\images\skip_back_button.png">
-      <Filter>ssr\assets\ssr data\images</Filter>
-    </None>
-    <None Include="..\..\..\assets\ssr data\images\skip_back_button_pressed.png">
       <Filter>ssr\assets\ssr data\images</Filter>
     </None>
     <None Include="..\..\..\assets\ssr data\images\source_shadow.png">

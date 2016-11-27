@@ -15,29 +15,8 @@
       <GROUP id="{EAAD66E5-803A-F91C-1956-D5B72E1DC2F3}" name="ssr data">
         <GROUP id="{77AC766F-6F35-01B2-8751-CAA30D5F05D0}" name="images">
           <FILE id="eT50TU" name="listener.png" compile="0" resource="1" file="../assets/ssr data/images/listener.png"/>
-          <FILE id="Je0Pnk" name="listener_background.png" compile="0" resource="1"
-                file="../assets/ssr data/images/listener_background.png"/>
           <FILE id="Ov1Jl3" name="listener_shadow.png" compile="0" resource="1"
                 file="../assets/ssr data/images/listener_shadow.png"/>
-          <FILE id="Pxd9wr" name="pause_button.png" compile="0" resource="1"
-                file="../assets/ssr data/images/pause_button.png"/>
-          <FILE id="aMPqtw" name="pause_button_pressed.png" compile="0" resource="1"
-                file="../assets/ssr data/images/pause_button_pressed.png"/>
-          <FILE id="PeDvfx" name="play_button.png" compile="0" resource="1" file="../assets/ssr data/images/play_button.png"/>
-          <FILE id="K6UBkC" name="play_button_pressed.png" compile="0" resource="1"
-                file="../assets/ssr data/images/play_button_pressed.png"/>
-          <FILE id="TcLVQo" name="processing_button.png" compile="0" resource="1"
-                file="../assets/ssr data/images/processing_button.png"/>
-          <FILE id="DEO9pP" name="processing_button_pressed.png" compile="0"
-                resource="1" file="../assets/ssr data/images/processing_button_pressed.png"/>
-          <FILE id="zXUdbr" name="scene_menu_item.png" compile="0" resource="1"
-                file="../assets/ssr data/images/scene_menu_item.png"/>
-          <FILE id="CGs7yQ" name="scene_menu_item_selected.png" compile="0" resource="1"
-                file="../assets/ssr data/images/scene_menu_item_selected.png"/>
-          <FILE id="abxKmE" name="skip_back_button.png" compile="0" resource="1"
-                file="../assets/ssr data/images/skip_back_button.png"/>
-          <FILE id="Wn3iUZ" name="skip_back_button_pressed.png" compile="0" resource="1"
-                file="../assets/ssr data/images/skip_back_button_pressed.png"/>
           <FILE id="FNw3xp" name="source_shadow.png" compile="0" resource="1"
                 file="../assets/ssr data/images/source_shadow.png"/>
           <FILE id="klZITH" name="ssr_logo.png" compile="0" resource="1" file="../assets/ssr data/images/ssr_logo.png"/>
@@ -152,7 +131,7 @@
   </MAINGROUP>
   <EXPORTFORMATS>
     <VS2015 targetFolder="Builds/VisualStudio2015" vstFolder="../vst/" extraDefs="NOMINMAX"
-            externalLibraries="libfftw-3.3_d.lib&#10;libfftwf-3.3_d.lib&#10;libsndfileStatic_d.lib"
+            externalLibraries="libfftw-3.3.lib&#10;libfftwf-3.3.lib&#10;libsndfileStatic.lib"
             extraLinkerFlags="">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
