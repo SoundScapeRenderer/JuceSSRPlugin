@@ -10,7 +10,7 @@ namespace {
     };
 
     static const char *RenderingAlgorithmNames[] = {
-        "binaural synthesis", "wave field synthesis", "ambisonics",  nullptr
+        "binaural synthesis", "wave field synthesis (coming soon)", "ambisonics (coming soon)",  nullptr
     };
 }
 

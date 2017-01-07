@@ -1,36 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="gb8eHM" name="ssr" projectType="guiapp" version="1.0.0" bundleIdentifier="de.tu-berlin.qu.ssrstandalone"
-              includeBinaryInAppConfig="1" jucerVersion="3.2.0" companyName="QU Lab, TU Berlin"
-              companyWebsite="http://www.qu.tu-berlin.de">
-  <MAINGROUP id="EgmEsS" name="ssr">
+<JUCERPROJECT id="gb8eHM" name="standalone" projectType="guiapp" version="1.0.0"
+              bundleIdentifier="de.tu-berlin.qu.ssrstandalone" includeBinaryInAppConfig="1"
+              jucerVersion="3.2.0" companyName="QU Lab, TU Berlin" companyWebsite="http://www.qu.tu-berlin.de">
+  <MAINGROUP id="EgmEsS" name="standalone">
     <GROUP id="{74BBF3D3-63F7-C0D4-94BA-D30A101BB85C}" name="assets">
       <GROUP id="{4159F569-61FE-B8ED-AE6A-6C96693883A6}" name="ssr data">
         <GROUP id="{B177C1FB-50F6-1AF7-0D31-353B95E5525C}" name="images">
           <FILE id="WFNNFC" name="listener.png" compile="0" resource="1" file="../assets/ssr data/images/listener.png"/>
-          <FILE id="A5BqO9" name="listener_background.png" compile="0" resource="1"
-                file="../assets/ssr data/images/listener_background.png"/>
           <FILE id="V40SRr" name="listener_shadow.png" compile="0" resource="1"
                 file="../assets/ssr data/images/listener_shadow.png"/>
-          <FILE id="KPLznL" name="pause_button.png" compile="0" resource="1"
-                file="../assets/ssr data/images/pause_button.png"/>
-          <FILE id="lIFftf" name="pause_button_pressed.png" compile="0" resource="1"
-                file="../assets/ssr data/images/pause_button_pressed.png"/>
-          <FILE id="oBCZi7" name="play_button.png" compile="0" resource="1" file="../assets/ssr data/images/play_button.png"/>
-          <FILE id="EWv2m4" name="play_button_pressed.png" compile="0" resource="1"
-                file="../assets/ssr data/images/play_button_pressed.png"/>
-          <FILE id="txYPZL" name="processing_button.png" compile="0" resource="1"
-                file="../assets/ssr data/images/processing_button.png"/>
-          <FILE id="LVjtPc" name="processing_button_pressed.png" compile="0"
-                resource="1" file="../assets/ssr data/images/processing_button_pressed.png"/>
-          <FILE id="sNRdvr" name="scene_menu_item.png" compile="0" resource="1"
-                file="../assets/ssr data/images/scene_menu_item.png"/>
-          <FILE id="oxIYTJ" name="scene_menu_item_selected.png" compile="0" resource="1"
-                file="../assets/ssr data/images/scene_menu_item_selected.png"/>
-          <FILE id="qgnT0O" name="skip_back_button.png" compile="0" resource="1"
-                file="../assets/ssr data/images/skip_back_button.png"/>
-          <FILE id="MkT0nD" name="skip_back_button_pressed.png" compile="0" resource="1"
-                file="../assets/ssr data/images/skip_back_button_pressed.png"/>
           <FILE id="WHspOD" name="source_shadow.png" compile="0" resource="1"
                 file="../assets/ssr data/images/source_shadow.png"/>
           <FILE id="MqeQwk" name="ssr_logo.png" compile="0" resource="1" file="../assets/ssr data/images/ssr_logo.png"/>
@@ -57,49 +36,24 @@
                   resource="0" file="../assets/ssr data/impulse_responses/wfs_prefilters/wfs_prefilter_120_1500_44100.wav"/>
           </GROUP>
         </GROUP>
-        <GROUP id="{A8CFE084-E33C-0A95-56E6-0FB80AC8CC16}" name="matlab_scripts">
-          <FILE id="W7wdRa" name="make_wfs_prefilter.m" compile="0" resource="0"
-                file="../assets/ssr data/matlab_scripts/make_wfs_prefilter.m"/>
-          <FILE id="b0TfS7" name="prepare_hrirs_kemar.m" compile="0" resource="0"
-                file="../assets/ssr data/matlab_scripts/prepare_hrirs_kemar.m"/>
+        <GROUP id="{3B0D12D4-E2BC-95E3-D608-08966DD7C911}" name="juce ssr data">
+          <GROUP id="{38B4C0BC-D551-643E-FD00-0FA75EF0A08F}" name="images">
+            <FILE id="acfko7" name="lock icon.png" compile="0" resource="1" file="../assets/juce ssr data/images/lock icon.png"/>
+            <FILE id="NDNLkn" name="mute icon.png" compile="0" resource="1" file="../assets/juce ssr data/images/mute icon.png"/>
+            <FILE id="UMoz3O" name="plus icon.png" compile="0" resource="1" file="../assets/juce ssr data/images/plus icon.png"/>
+            <FILE id="OxS0X4" name="settings icon.png" compile="0" resource="1"
+                  file="../assets/juce ssr data/images/settings icon.png"/>
+          </GROUP>
+          <GROUP id="{BB20E22C-1F99-1C64-92EB-D28A23FAC573}" name="impulse_responses">
+            <FILE id="yQ5kum" name="soxHrir48000.wav" compile="0" resource="1"
+                  file="../assets/juce ssr data/impulse_responses/soxHrir48000.wav"/>
+            <FILE id="uGY5ZJ" name="soxHrir96000.wav" compile="0" resource="1"
+                  file="../assets/juce ssr data/impulse_responses/soxHrir96000.wav"/>
+          </GROUP>
+          <FILE id="DZCRFh" name="DejaVuSansMono.ttf" compile="0" resource="1"
+                file="../assets/juce ssr data/DejaVuSansMono.ttf"/>
         </GROUP>
-        <GROUP id="{6C2B2490-3D2F-31F8-FCC3-8F0C5DDF8BB4}" name="reproduction_setups">
-          <FILE id="T9NEs3" name="2.0.asd" compile="0" resource="0" file="../assets/ssr data/reproduction_setups/2.0.asd"/>
-          <FILE id="qV96gm" name="2.1.asd" compile="0" resource="0" file="../assets/ssr data/reproduction_setups/2.1.asd"/>
-          <FILE id="X8d6Gm" name="5.1.asd" compile="0" resource="0" file="../assets/ssr data/reproduction_setups/5.1.asd"/>
-          <FILE id="U8P3t2" name="8channels.asd" compile="0" resource="0" file="../assets/ssr data/reproduction_setups/8channels.asd"/>
-          <FILE id="hVpycd" name="asdf2html.xsl" compile="0" resource="0" file="../assets/ssr data/reproduction_setups/asdf2html.xsl"/>
-          <FILE id="UJJAaq" name="circle.asd" compile="0" resource="0" file="../assets/ssr data/reproduction_setups/circle.asd"/>
-          <FILE id="FLED03" name="loudspeaker_setup_with_nearly_all_features.asd"
-                compile="0" resource="0" file="../assets/ssr data/reproduction_setups/loudspeaker_setup_with_nearly_all_features.asd"/>
-          <FILE id="l8O0Mf" name="rostock_horizontal.asd" compile="0" resource="0"
-                file="../assets/ssr data/reproduction_setups/rostock_horizontal.asd"/>
-          <FILE id="SOQPeT" name="rounded_rectangle.asd" compile="0" resource="0"
-                file="../assets/ssr data/reproduction_setups/rounded_rectangle.asd"/>
-        </GROUP>
-        <GROUP id="{3ECA758E-5365-2968-927C-A997F0B85D6C}" name="scenes">
-          <FILE id="K3L7J0" name="asdf2html.xsl" compile="0" resource="0" file="../assets/ssr data/scenes/asdf2html.xsl"/>
-          <FILE id="IqlYTJ" name="live_input.asd" compile="0" resource="0" file="../assets/ssr data/scenes/live_input.asd"/>
-        </GROUP>
-        <FILE id="tl5zLW" name="asdf.xsd" compile="0" resource="0" file="../assets/ssr data/asdf.xsd"/>
-        <FILE id="ZIltKA" name="local_ssr.sh" compile="0" resource="0" file="../assets/ssr data/local_ssr.sh"/>
-        <FILE id="yc4e0Q" name="Makefile.am" compile="0" resource="0" file="../assets/ssr data/Makefile.am"/>
-        <FILE id="Jhept8" name="ssr" compile="0" resource="0" file="../assets/ssr data/ssr"/>
-        <FILE id="Rv0ENZ" name="ssr.conf.example" compile="0" resource="0"
-              file="../assets/ssr data/ssr.conf.example"/>
-        <FILE id="NRpkSk" name="ssr.conf.local" compile="0" resource="0" file="../assets/ssr data/ssr.conf.local"/>
       </GROUP>
-      <FILE id="ce1fuw" name="DejaVuSansMono.ttf" compile="0" resource="1"
-            file="../assets/DejaVuSansMono.ttf"/>
-      <FILE id="vljkJH" name="lock icon.png" compile="0" resource="1" file="../assets/lock icon.png"/>
-      <FILE id="AeJ81q" name="mute icon.png" compile="0" resource="1" file="../assets/mute icon.png"/>
-      <FILE id="jCX9mS" name="plus icon.png" compile="0" resource="1" file="../assets/plus icon.png"/>
-      <FILE id="PVNyzl" name="settings icon.png" compile="0" resource="1"
-            file="../assets/settings icon.png"/>
-      <FILE id="MRPZb9" name="soxHrir48000.wav" compile="0" resource="1"
-            file="../assets/soxHrir48000.wav"/>
-      <FILE id="SNYq4j" name="soxHrir96000.wav" compile="0" resource="1"
-            file="../assets/soxHrir96000.wav"/>
     </GROUP>
     <GROUP id="{B34AD2A1-B9DC-9F4A-B8C1-C639906E6312}" name="audio">
       <GROUP id="{D6ABDE06-C62E-4815-8D6C-FEF55F2D652C}" name="apf">
@@ -273,15 +227,16 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2015 targetFolder="Builds/VisualStudio2015" extraDefs="NOMINMAX" externalLibraries="libfftw-3.3_Z7_d.lib&#10;libfftwf-3.3_Z7_d.lib&#10;libsndfileStatic_Z7_d.lib&#10;libxml2Static_d.lib"
-            extraLinkerFlags="">
+    <VS2015 targetFolder="Builds/VisualStudio2015" extraDefs="NOMINMAX" externalLibraries="libfftw-3.3_Z7.lib&#10;libfftwf-3.3_Z7.lib&#10;libsndfileStatic_Z7.lib&#10;libxml2Static.lib"
+            extraLinkerFlags="" smallIcon="f7K4bX" bigIcon="f7K4bX">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="1" optimisation="1" targetName="standalone" headerPath="../../../audio/&#10;../../../gui&#10;../../../libs/"
-                       libraryPath="../../../libs/"/>
+                       isDebug="1" optimisation="1" targetName="juce_ssr_standalone_d"
+                       headerPath="../../../audio&#10;../../../gui&#10;../../../libs"
+                       libraryPath="../../../libs/debug"/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="0" optimisation="3" targetName="standalone" libraryPath="../../../libs/"
-                       headerPath="../../../audio/&#10;../../../gui&#10;../../../libs/"/>
+                       isDebug="0" optimisation="3" targetName="juce_ssr_standalone"
+                       libraryPath="../../../libs/release" headerPath="../../../audio&#10;../../../gui&#10;../../../libs"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../juce/modules"/>

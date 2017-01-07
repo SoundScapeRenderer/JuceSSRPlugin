@@ -40,7 +40,7 @@ InfoPanel::InfoPanel (PluginParams &p)
                                               "\n"
                                               "\n"
                                               "\n"
-                                              "It is deveoped at QULab at the Technische Universit\xc3\xa4t Berlin.")));
+                                              "It is developed at QULab at the Technische Universit\xc3\xa4t Berlin.")));
     infoLabel->setFont (Font (15.00f, Font::plain));
     infoLabel->setJustificationType (Justification::topLeft);
     infoLabel->setEditable (false, false, false);
@@ -122,7 +122,7 @@ void InfoPanel::resized()
     //[/UserPreResize]
 
     infoLabel->setBounds (16, 170, 268, 232);
-    ssrHyperlink->setBounds (16, 225, 268, 30);
+    ssrHyperlink->setBounds (16, 227, 268, 30);
     authorLabel->setBounds (16, 445, 268, 40);
     versionLabel->setBounds (120, 109, 164, 24);
     //[UserResized] Add your own custom resize handling here..
@@ -155,11 +155,11 @@ BEGIN_JUCER_METADATA
   </BACKGROUND>
   <LABEL name="infoLabel" id="78b17336deacfe88" memberName="infoLabel"
          virtualName="" explicitFocusOrder="0" pos="16 170 268 232" edTextCol="ff000000"
-         edBkgCol="0" labelText="This is an open-source audio plug-in for spatial hearing&#10;based on the&#10;&#10;&#10;&#10;&#10;It is deveoped at QULab at the Technische Universit&#228;t Berlin."
+         edBkgCol="0" labelText="This is an open-source audio plug-in for spatial hearing&#10;based on the&#10;&#10;&#10;&#10;&#10;It is developed at QULab at the Technische Universit&#228;t Berlin."
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
          fontname="Default font" fontsize="15" bold="0" italic="0" justification="9"/>
   <HYPERLINKBUTTON name="ssr hyperlink" id="2cee26e8706479ea" memberName="ssrHyperlink"
-                   virtualName="" explicitFocusOrder="0" pos="16 225 268 30" tooltip="http://spatialaudio.net/ssr/"
+                   virtualName="" explicitFocusOrder="0" pos="16 227 268 30" tooltip="http://spatialaudio.net/ssr/"
                    buttonText="SoundScape Renderer" connectedEdges="0" needsCallback="0"
                    radioGroupId="0" url="http://spatialaudio.net/ssr/"/>
   <LABEL name="author label" id="1de163a2e8abc9e" memberName="authorLabel"

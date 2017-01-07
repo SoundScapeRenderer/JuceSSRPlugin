@@ -14,9 +14,9 @@ BEGIN
     BLOCK "040904E4"
     BEGIN
       VALUE "CompanyName",  "QU Lab, TU Berlin\0"
-      VALUE "FileDescription",  "ssr\0"
+      VALUE "FileDescription",  "standalone\0"
       VALUE "FileVersion",  "1.0.0\0"
-      VALUE "ProductName",  "ssr\0"
+      VALUE "ProductName",  "standalone\0"
       VALUE "ProductVersion",  "1.0.0\0"
     END
   END
@@ -28,3 +28,6 @@ BEGIN
 END
 
 #endif
+
+IDI_ICON1 ICON DISCARDABLE "icon.ico"
+IDI_ICON2 ICON DISCARDABLE "icon.ico"
