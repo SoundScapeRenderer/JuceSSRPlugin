@@ -1,0 +1,2 @@
+This is not a complete functioning JUCE standalone version of the SoundScape Renderer.
+Tis standalone was created for reasons of convenience so that GUI related code can be monitored with this and do not need to be tested as a plug-in in a DAW.
