@@ -1,5 +1,8 @@
 ============ Sources used for MSVC static libs ============
 
+- for this prototype all static libs are compiled for 32-bit Windows systems
+- for future configurations (Mac OS X or 64-bit systems) suitable static libs have to be created
+
   ========== LibSndFile ==========
     
     - from https://github.com/lordmulder/libsndfile-MSVC
@@ -28,3 +31,4 @@
 
     - needs to be build via MSVC console 
     - follow the instructions on the website
+    - this is not used by the prototype (maybe in the future)
